@@ -173,25 +173,37 @@ Future<void> signHap(LocalFileSystem localFileSystem, String unsignedFile,
   }
   final Directory resultBackup = localFileSystem
       .directory(globals.fs.path.join(signToolHome, 'result.bak'));
+
+  String projectHome = globals.fs.directory(getOhosBuildDirectory()).path;
+  final Directory projectSignHistory = localFileSystem
+      .directory(globals.fs.path.join(projectHome, 'signature'));
+
+  bool isNeedCopySignHistory = true;
   //如果result.bak不存在，代表是第一次构建，拷贝result.bak。 以后每一次result，都从result.bak还原
   if (!resultBackup.existsSync()) {
     copyDirectory(result, resultBackup);
-  } else {
+  } else if (!projectSignHistory.existsSync()) {
     result.deleteSync(recursive: true);
     copyDirectory(resultBackup, result);
+  } else {
+    isNeedCopySignHistory = false;
+    copyDirectory(projectSignHistory, result);
   }
 
-  final List<String> cmdCreateCertAndProfile = <String>[];
-  cmdCreateCertAndProfile.add('python3');
-  cmdCreateCertAndProfile
-      .add(globals.fs.path.join(signToolHome, 'autosign.py'));
-  cmdCreateCertAndProfile.add('createAppCertAndProfile');
+  if (isNeedCopySignHistory) {
+    final List<String> cmdCreateCertAndProfile = <String>[];
+    cmdCreateCertAndProfile.add('python3');
+    cmdCreateCertAndProfile
+        .add(globals.fs.path.join(signToolHome, 'autosign.py'));
+    cmdCreateCertAndProfile.add('createAppCertAndProfile');
 
-  await invokeCmd(
-      command: cmdCreateCertAndProfile,
-      workDirectory: signToolHome,
-      processManager: globals.processManager,
-      logger: logger);
+    await invokeCmd(
+        command: cmdCreateCertAndProfile,
+        workDirectory: signToolHome,
+        processManager: globals.processManager,
+        logger: logger);
+    copyDirectory(result, projectSignHistory);    
+  }
 
   final List<String> cmdSignHap = <String>[];
   if (isWindows) {
