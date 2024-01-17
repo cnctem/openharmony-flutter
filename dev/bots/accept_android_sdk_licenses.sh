@@ -21,3 +21,5 @@ echo "Flutter SDK directory is: $PWD"
 # Accept licenses.
 echo "Accepting Android licenses."
 accept_android_licenses || (error "Accepting Android licenses failed." && false)
+
+
