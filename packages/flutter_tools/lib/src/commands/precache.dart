@@ -56,6 +56,8 @@ class PrecacheCommand extends FlutterCommand {
         help: 'Precache the flutter runner artifacts.', hide: !verboseHelp);
     argParser.addFlag('use-unsigned-mac-binaries',
         help: 'Precache the unsigned macOS binaries when available.', hide: !verboseHelp);
+    argParser.addFlag('ohos',
+        help: 'Precache artifacts for ohos desktop development.');
   }
 
   final Cache _cache;
