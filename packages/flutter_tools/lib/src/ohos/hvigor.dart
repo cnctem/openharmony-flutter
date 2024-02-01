@@ -535,8 +535,6 @@ void cleanAndCopyFlutterRuntime(
   // 优先级从高到底依次为: 1. engine产物目录; 2. 项目中的 har/har_product 目录; 3. flutter_flutter 中的模板目录
   final String originHarPath =
       getOriginHarPath(ohosProject, ohosRootPath, suffix);
-  final String originEngineSoPath =
-      getOriginFlutterSoPath(ohosProject, ohosRootPath, suffix);
 
   String desHarPath = '';
   if (ohosProject.isModule) {
@@ -549,17 +547,6 @@ void cleanAndCopyFlutterRuntime(
   final File originHarFile = globals.localFileSystem.file(originHarPath);
   originHarFile.copySync(desHarPath);
   logger?.printStatus('originHarFile: $originHarFile');
-
-  //copy ohos engine so
-  if (originEngineSoPath == null) {
-    throwToolExit("flutter engine runtime  file 'libflutter.so' no found");
-  }
-  logger?.printStatus('flutterEngineSoPath: $originEngineSoPath');
-
-  final String destEngineSoPath = getEngineSoPath(ohosRootPath, targetPlatform, ohosProject);
-  ensureParentExists(destEngineSoPath);
-  final File flutterEngineSoFile = globals.localFileSystem.file(originEngineSoPath);
-  flutterEngineSoFile.copySync(destEngineSoPath);
 
   final String vmServiceSoDest = getVmServiceSoDest(ohosRootPath, targetPlatform, ohosProject);
   final File vmServiceSoDestFile = globals.localFileSystem.file(vmServiceSoDest);
