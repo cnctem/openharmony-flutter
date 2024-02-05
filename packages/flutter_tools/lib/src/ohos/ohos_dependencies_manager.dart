@@ -111,7 +111,7 @@ List<OhosDependence> parseDependenciesFromType(
     return list;
   }
   final Map<String, dynamic> dependencies =
-      config[configKey] as Map<String, dynamic>;
+      config[configKey] as Map<String, dynamic>? ?? {};
   for (final String symbol in dependencies.keys) {
     final String moduleName = symbol;
     final String modulePath = dependencies[symbol] as String;
@@ -128,7 +128,7 @@ Future<void> addDependencies(
   final dynamic config =
       parsePakcageConfig(flutterProject.ohos.flutterModulePackageFile);
   final Map<String, dynamic> dependencies =
-      config['dependencies'] as Map<String, dynamic>;
+      config['dependencies'] as Map<String, dynamic>? ?? {};
 
   for (final OhosDependence dependence in list) {
     dependencies[dependence.moduleName] =
