@@ -73,6 +73,9 @@ class DevelopmentArtifact {
   /// Artifacts required for the Flutter Runner.
   static const DevelopmentArtifact flutterRunner = DevelopmentArtifact._('flutter_runner', feature: flutterFuchsiaFeature);
 
+  /// Artifacts required for Ohos development.
+  static const DevelopmentArtifact ohos = DevelopmentArtifact._('ohos', feature: flutterOhosFeature);
+
   /// Artifacts required for any development platform.
   ///
   /// This does not need to be explicitly returned from requiredArtifacts as
@@ -93,6 +96,7 @@ class DevelopmentArtifact {
     fuchsia,
     universal,
     flutterRunner,
+    ohos,
   ];
 
   @override

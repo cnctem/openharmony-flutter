@@ -51,7 +51,10 @@ enum Artifact {
   constFinder,
 
   /// the flutter engine runtime
+  // TODO: 应该包所有的so都打包成har
+  flutterEngineHar,
   flutterEngineSo,
+  flutterEngineVmserviceSo,
 
   /// The dart binary used to execute any of the required snapshots.
   engineDartBinary,
@@ -216,8 +219,12 @@ String? _artifactToFileName(Artifact artifact, [ TargetPlatform? platform, Build
       return 'font-subset$exe';
     case Artifact.constFinder:
       return 'const_finder.dart.snapshot';
+    case Artifact.flutterEngineHar:
+      return 'flutter_embedding.har';
     case Artifact.flutterEngineSo:
       return 'libflutter.so';
+    case Artifact.flutterEngineVmserviceSo:
+      return 'libflutter_vmservice.so';
     case Artifact.engineDartBinary:
       return 'dart$exe';
   }
@@ -514,6 +521,8 @@ class CachedArtifacts implements Artifacts {
       case Artifact.windowsCppClientWrapper:
       case Artifact.windowsDesktopPath:
       case Artifact.flutterEngineSo:
+      case Artifact.flutterEngineHar:
+      case Artifact.flutterEngineVmserviceSo:
       case Artifact.engineDartBinary:
         return _getHostArtifactPath(artifact, platform, mode);
     }
@@ -548,6 +557,8 @@ class CachedArtifacts implements Artifacts {
       case Artifact.windowsCppClientWrapper:
       case Artifact.windowsDesktopPath:
       case Artifact.flutterEngineSo:
+      case Artifact.flutterEngineHar:
+      case Artifact.flutterEngineVmserviceSo:
       case Artifact.engineDartBinary:
         return _getHostArtifactPath(artifact, platform, mode);
     }
@@ -594,6 +605,8 @@ class CachedArtifacts implements Artifacts {
       case Artifact.windowsCppClientWrapper:
       case Artifact.windowsDesktopPath:
       case Artifact.flutterEngineSo:
+      case Artifact.flutterEngineHar:
+      case Artifact.flutterEngineVmserviceSo:
       case Artifact.engineDartBinary:
         return _getHostArtifactPath(artifact, platform, mode);
     }
@@ -602,6 +615,11 @@ class CachedArtifacts implements Artifacts {
   String _getOhosArtifactPath(Artifact artifact, TargetPlatform platform, BuildMode mode) {
     final String? engineDir = _getEngineArtifactsPath(platform, mode);
     switch (artifact) {
+      case Artifact.flutterEngineVmserviceSo:
+      case Artifact.flutterEngineHar:
+      case Artifact.flutterEngineSo:
+        return _fileSystem.path
+            .join(engineDir!, _artifactToFileName(artifact, platform, mode)!);
       case Artifact.genSnapshot:
       case Artifact.frontendServerSnapshotForEngineDartSdk:
       case Artifact.constFinder:
@@ -623,7 +641,6 @@ class CachedArtifacts implements Artifacts {
       case Artifact.vmSnapshotData:
       case Artifact.windowsCppClientWrapper:
       case Artifact.windowsDesktopPath:
-      case Artifact.flutterEngineSo:
       case Artifact.engineDartBinary:
         return _getHostArtifactPath(artifact, platform, mode);
     }
@@ -695,6 +712,8 @@ class CachedArtifacts implements Artifacts {
       case Artifact.fuchsiaKernelCompiler:
         throw StateError('Artifact $artifact not available for platform $platform.');
       case Artifact.flutterEngineSo:
+      case Artifact.flutterEngineHar:
+      case Artifact.flutterEngineVmserviceSo:
         return _cache.getArtifactDirectory('engine')
             .childFile(_artifactToFileName(artifact)!)
             .path;
@@ -738,6 +757,17 @@ class CachedArtifacts implements Artifacts {
       case TargetPlatform.android:
         assert(false, 'cannot use TargetPlatform.android to look up artifacts');
         return null;
+      case TargetPlatform.ohos:
+      case TargetPlatform.ohos_arm:
+      case TargetPlatform.ohos_arm64:
+      case TargetPlatform.ohos_x64:
+        if (mode == BuildMode.debug || mode == null) {
+          return _fileSystem.path.join(engineDir, platformName);
+        }
+        final String suffix = mode != BuildMode.debug
+            ? '-${snakeCase(getModeName(mode), '-')}'
+            : '';
+        return _fileSystem.path.join(engineDir, platformName + suffix);
     }
   }
 
@@ -989,6 +1019,8 @@ class CachedLocalEngineArtifacts implements LocalEngineArtifacts {
       case Artifact.linuxHeaders:
       case Artifact.windowsDesktopPath:
       case Artifact.windowsCppClientWrapper:
+      case Artifact.flutterEngineHar:
+      case Artifact.flutterEngineVmserviceSo:
       case Artifact.flutterEngineSo:
         return _fileSystem.path.join(_hostEngineOutPath, artifactFileName);
       case Artifact.frontendServerSnapshotForEngineDartSdk:

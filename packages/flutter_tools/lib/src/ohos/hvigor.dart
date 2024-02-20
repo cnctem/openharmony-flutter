@@ -533,10 +533,11 @@ void cleanAndCopyFlutterRuntime(
   final String suffix = getEmbeddingHarFileSuffix(buildInfo, ohosBuildData);
   // 复制 har 和 so 文件
   // 优先级从高到底依次为: 1. engine产物目录; 2. 项目中的 har/har_product 目录; 3. flutter_flutter 中的模板目录
-  final String originHarPath =
-      getOriginHarPath(ohosProject, ohosRootPath, suffix);
-  final String originEngineSoPath =
-      getOriginFlutterSoPath(ohosProject, ohosRootPath, suffix);
+  final String originHarPath = getOriginHarPath(
+      ohosProject, ohosRootPath, suffix, targetPlatform, buildInfo);
+  // so文件路径
+  final String originEngineSoPath = getOriginFlutterSoPath(
+      ohosProject, ohosRootPath, suffix, targetPlatform, buildInfo);
 
   String desHarPath = '';
   if (ohosProject.isModule) {
@@ -547,6 +548,10 @@ void cleanAndCopyFlutterRuntime(
   }
   ensureParentExists(desHarPath);
   final File originHarFile = globals.localFileSystem.file(originHarPath);
+  final File desHarFile = globals.localFileSystem.file(desHarPath);
+  if (desHarFile.existsSync()) {
+    desHarFile.deleteSync();
+  }
   originHarFile.copySync(desHarPath);
   logger?.printStatus('originHarFile: $originHarFile');
 
@@ -559,14 +564,20 @@ void cleanAndCopyFlutterRuntime(
   final String destEngineSoPath = getEngineSoPath(ohosRootPath, targetPlatform, ohosProject);
   ensureParentExists(destEngineSoPath);
   final File flutterEngineSoFile = globals.localFileSystem.file(originEngineSoPath);
+  final File destEngineSoFile = globals.localFileSystem.file(destEngineSoPath);
+  if (destEngineSoFile.existsSync()) {
+    destEngineSoFile.deleteSync();
+  }
   flutterEngineSoFile.copySync(destEngineSoPath);
 
   final String vmServiceSoDest = getVmServiceSoDest(ohosRootPath, targetPlatform, ohosProject);
   final File vmServiceSoDestFile = globals.localFileSystem.file(vmServiceSoDest);
   if (buildInfo.isProfile) {
     // copy libvmservice_snapshot.so
-    final String vmserviceSoSrc = getOriginVmserviceSoPath(ohosProject, ohosRootPath, suffix);
-    final File vmserviceSoSrcFile = globals.localFileSystem.file(vmserviceSoSrc);
+    final String vmserviceSoSrc = getOriginVmserviceSoPath(
+        ohosProject, ohosRootPath, suffix, targetPlatform, buildInfo);
+    final File vmserviceSoSrcFile =
+        globals.localFileSystem.file(vmserviceSoSrc);
     vmserviceSoSrcFile.copySync(vmServiceSoDest);
   } else {
     if (vmServiceSoDestFile.existsSync()) {
@@ -625,14 +636,17 @@ String getTmplPath() {
   return path;
 }
 
-String getOriginHarPath(
-    OhosProject ohosProject, String ohosRootPath, String suffix) {
+String getOriginHarPath(OhosProject ohosProject, String ohosRootPath,
+    String suffix, TargetPlatform targetPlatform, BuildInfo buildInfo) {
   String target1 = '', target2 = '', target3 = '';
   // 优先级从高到底依次为: 1. engine产物目录; 2. 项目中的 har/har_product 目录; 3. flutter_flutter 中的模板目录
   // 1
-  final String? localEnginePath = getLocalEnginePath();
-  if (localEnginePath != null) {
-    target1 = globals.fs.path.join(localEnginePath, 'ohos', HAR_FILE_NAME);
+  final String? localEngineHarPath = globals.artifacts?.getArtifactPath(
+      Artifact.flutterEngineHar,
+      platform: targetPlatform,
+      mode: buildInfo.mode);
+  if (localEngineHarPath != null) {
+    target1 = localEngineHarPath;
     if (globals.fs.file(target1).existsSync()) {
       return target1;
     }
@@ -660,14 +674,17 @@ String getOriginHarPath(
       'File $HAR_FILE_NAME not found in [$target1, $target2, $target3]');
 }
 
-String getOriginFlutterSoPath(
-    OhosProject ohosProject, String ohosRootPath, String suffix) {
+String getOriginFlutterSoPath(OhosProject ohosProject, String ohosRootPath,
+    String suffix, TargetPlatform targetPlatform, BuildInfo buildInfo) {
   String target1 = '', target2 = '', target3 = '';
-  // 优先级从高到底依次为: 1. engine产物目录; 2. 项目中的 har/har_product 目录; 3. flutter_flutter 中的模板目录
+  // 优先级从高到底依次为: 1. engine产物目录(包含local和来自bin/artifacts/engine/ohos-xx); 2. 项目中的 har/har_product 目录; 3. flutter_flutter 中的模板目录
   // 1
-  final String? localEnginePath = getLocalEnginePath();
-  if (localEnginePath != null) {
-    target1 = globals.fs.path.join(localEnginePath, FLUTTER_ENGINE_SO);
+  final String? localEngineSoPath = globals.artifacts?.getArtifactPath(
+      Artifact.flutterEngineSo,
+      platform: targetPlatform,
+      mode: buildInfo.mode);
+  if (localEngineSoPath != null) {
+    target1 = localEngineSoPath;
     if (globals.fs.file(target1).existsSync()) {
       return target1;
     }
@@ -691,15 +708,17 @@ String getOriginFlutterSoPath(
       'File $FLUTTER_ENGINE_SO not found in [$target1, $target2, $target3]');
 }
 
-String getOriginVmserviceSoPath(
-    OhosProject ohosProject, String ohosRootPath, String suffix) {
+String getOriginVmserviceSoPath(OhosProject ohosProject, String ohosRootPath,
+    String suffix, TargetPlatform targetPlatform, BuildInfo buildInfo) {
   String target1 = '', target2 = '', target3 = '';
   // 优先级从高到底依次为: 1. engine产物目录; 2. 项目中的 har/har_product 目录; 3. flutter_flutter 中的模板目录
   // 1
-  final String? localEnginePath = getLocalEnginePath();
-  if (localEnginePath != null) {
-    target1 = globals.fs.path.join(localEnginePath,
-        'gen/flutter/shell/vmservice/ohos/libs', VMSERVICE_SNAPSHOT_SO);
+  final String? localEngineVmServiceSoPath = globals.artifacts?.getArtifactPath(
+      Artifact.flutterEngineVmserviceSo,
+      platform: targetPlatform,
+      mode: buildInfo.mode);
+  if (localEngineVmServiceSoPath == null) {
+    target1 = localEngineVmServiceSoPath!;
     if (globals.fs.file(target1).existsSync()) {
       return target1;
     }
@@ -854,7 +873,7 @@ class OhosHvigorBuilder implements OhosBuilder {
       {required TargetPlatform targetPlatform, Logger? logger}) async {
     /**
      * 0. checkEnv
-     * 1. excute flutter assemble
+     * 1. execute flutter assemble
      * 2. copy flutter asset to flutter module
      * 3. copy flutter runtime
      * 4. ohpm install
