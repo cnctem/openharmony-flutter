@@ -119,7 +119,13 @@ Flutter SDK 仓库
            "issuer": "pki_internal"
        }
        ```
-   4. 应用构建依赖[Flutter Engine](https://github.com/flutter/engine)构建产物：`ohos_debug_unopt_arm64` 与 `ohos_release_arm64`，请在Flutter Tools指令运行参数中添加：`--local-engine=src/out/<engine产物目录\>` 可在该路径下载[编译产物](https://docs.qq.com/sheet/DUnljRVBYUWZKZEtF?tab=BB08J2)，engine路径指向需带上`src/out`目录
+   4. 应用构建依赖[Flutter Engine](https://github.com/flutter/engine)构建产物。如使用本地引擎，请在`Flutter Tools`指令中添加`--local-engine`相关参数，例如：
+      ```
+      flutter run --local-engine-src-path=path/to/my/engine/src --local-engine=ohos_debug_unopt_arm64 --debug
+      flutter run --local-engine-src-path=path/to/my/engine/src --local-engine=ohos_profile_arm64 --profile
+      flutter run --local-engine-src-path=path/to/my/engine/src --local-engine=ohos_release_arm64 --release
+      ```
+      >可在该路径下载[编译产物](https://docs.qq.com/sheet/DUnljRVBYUWZKZEtF?tab=BB08J2)
 
       上述所有环境变量的配置（Windows下环境变量配置请在‘编辑系统环境变量’中设置），可参考下面的示例（其中user和具体代码路径请替换成实际路径）：
 
