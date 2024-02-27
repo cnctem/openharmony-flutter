@@ -1586,7 +1586,7 @@ class OhosViewController {
     assert(meta != null);
     assert(meta!.containsKey('width'));
     assert(meta!.containsKey('height'));
-    return Size(meta!['width']! as double, meta['height']! as double);
+    return Size(double.parse(meta!['width'].toString()), double.parse(meta['height']!.toString()));
   }
 
   Future<void> _sendCreateMessage(
