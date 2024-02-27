@@ -56,6 +56,7 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
 
     2. The application build relies on [Flutter Engine](https://github.com/flutter/engine) to build products: `ohos_debug_unopt_arm64` and `ohos_release_arm64`. Please add: `--local-engine= in the Flutter Tools command running parameters. --local-engine=src/out/<engine product directory\>`. Can be downloaded at this path [Compiled product](https://docs.qq.com/sheet/DUnljRVBYUWZKZEtF?tab=BB08J2)
 
+
        For the configuration of all the above environment variables (for environment variable configuration under Windows, please set it in 'Edit System Environment Variables'), you can refer to the following example (please replace user and specific code path with the actual path):
 
        ```
@@ -77,6 +78,66 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
        export PATH=$NODE_HOME/bin:$PATH
        ```
 
+    3. Signature
+
+    You can sign the application using either of the following two methods.
+
+    (1) Signing with `Deveco Studio`
+
+    - Open the ohos directory of the project using Deveco Studio.
+    - Click on File > Project Structure > Project > Signing Configs. Check the Automatically generate signature option, wait for the automatic signing process to complete, and then click OK.
+    - Review the configuration information in build-profile.json5. Add the certificate information generated from the automatic signing process to the configuration.
+
+    (2) Signing with signing tool
+
+    - Download [Signature Tool](https://gitee.com/openharmony/developtools_hapsigner), and checkout a specific version as below:
+      ```
+      git clone git@gitee.com:openharmony/developtools_hapsigner.git
+      git checkout 997e4824de4028f55521d00c8c3523713fbb5580
+      ```
+
+    - Configure the environment variable `SIGN_TOOL_HOME`
+      ```
+      export SIGN_TOOL_HOME=/home/<user>/ohos/developtools_hapsigner/autosign
+      ```
+    - Execute the gradle command to compile and obtain hap-sign-tool.jar. Make sure it is in thedirectory: ./  hapsigntool/hap_sign_tool/build/libs/hap-sign-tool.jar. (gradle version recommended 7.x)
+      ```
+      gradle build
+      ```
+    - Edit the `autosign.config` and `createAppCertAndProfile.config` files in the autosign directory andmodify   their values:
+      ```
+      sign.profile.inFile=profile_tmp.json
+      ```
+    - In the autosign directory (the command `chmod 777 *.sh` must be executed first in linux and   macenvironments, and there is no need to execute this command in Windows environment), add   the`profile_tmp_template.json` file and edit it as follows:
+      ```
+      {
+          "version-name": "2.0.0",
+          "version-code": 2,
+          "app-distribution-type": "os_integration",
+          "uuid": "5027b99e-5f9e-465d-9508-a9e0134ffe18",
+          "validity": {
+              "not-before": 1594865258,
+              "not-after": 1689473258
+          },
+          "type": "release",
+          "bundle-info": {
+              "developer-id": "OpenHarmony",
+              "distribution-certificate": "-----BEGIN CERTIFICATE-----\nMIICSTCCA  +gAwIBAgIFAJV7uNUwCgYIKoZIzj0EAwIwYzELMAkGA1UEBhMCQ04x\nFDASBgNVBAoMC09wZW5IYXJtb255MRkwFwYDVQLDBB  PcGVuSGFybW9ueS   BUZWTZMBcGA1UECwwQT3Blbkhhcm1vbnkgVGVhbTEoMCYGA1UEAwwf\nT3Blbkhhcm1vbnkgQXBwbGljYXRpb24gUmVsZWFzZT  ZMBMGByqGSM49AgEGCCqG\nSM49AwEHA0IABAW8pFu7tHGUuWtddD5wvazc1qN8t s9UPZH4pecbb/  bSFWKh7X7R\neTVaRrCTSSdovI1dhoV5GjuFsKW+jT2TwSjazBpMB0GA1UdDgQWBBScyywAaAMj\nI7HcuIS42lvZx0L  +zAJBgNVHRMEAjAAMA4GA1UdDwEB/  wQEAwIHgDATBgNVHSUE\nDDAKBggrBgEFBQcDAzAYBgwrBgEEAY9bAoJ4AQMECDAGAgEBCgEAMAoGCCqGSM49\nBAMCA2gAMGU  CFfNidGo6uK6KGTzT1T5bY1NCHTH3P3muy5X1xudOgxWoOqIbnk\ntmQYB78dxWEHLQIxANfApAlXAD/  0hnyNC8RDzfLOPEeay6jU9FXJj3AoR90rwZpR\noN9sYD6Oks4VGRw6yQ==\n-----END CERTIFICATE-----\n",
+              "bundle-name": "{{ohosId}}",
+              "apl": "normal",
+              "app-feature": "hos_normal_app"
+          },
+          "acls": {
+              "allowed-acls": [
+                  ""
+              ]
+          },
+          "permissions": {
+              "restricted-permissions": []
+          },
+          "issuer": "pki_internal"
+      }
+      ```
 ## Build steps
 
 1. Run `flutter doctor -v` to check whether the environment variable configuration is correct. **Futter** and **OpenHarmony** should both be ok. If the two prompts indicate that the environment is missing, just follow the prompts to fill in the corresponding environment.
