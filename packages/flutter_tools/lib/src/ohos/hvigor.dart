@@ -46,15 +46,11 @@ const String OHOS_DTA_FILE_NAME = 'icudtl.dat';
 
 const String FLUTTER_ASSETS_PATH = 'flutter_assets';
 
-const String FLUTTER_ENGINE_SO = 'libflutter.so';
-
-const String VMSERVICE_SNAPSHOT_SO = 'libvmservice_snapshot.so';
-
 const String APP_SO_ORIGIN = 'app.so';
 
 const String APP_SO = 'libapp.so';
 
-const String HAR_FILE_NAME = 'flutter_embedding.har';
+const String HAR_FILE_NAME = 'flutter.har';
 
 final bool isWindows = globals.platform.isWindows;
 
@@ -88,22 +84,6 @@ String getProjectAssetsPath(String ohosRootPath, OhosProject ohosProject) {
 String getDatPath(String ohosRootPath, OhosProject ohosProject) {
   return globals.fs.path.join(
       getProjectAssetsPath(ohosRootPath, ohosProject), OHOS_DTA_FILE_NAME);
-}
-
-/// eg:entry/libs/arm64-v8a/libflutter.so
-String getEngineSoPath(String ohosRootPath, TargetPlatform targetPlatform,
-    OhosProject ohosProject) {
-  return globals.fs.path.join(
-      getProjectArchPath(ohosRootPath, targetPlatform, ohosProject),
-      FLUTTER_ENGINE_SO);
-}
-
-/// eg:entry/libs/arm64-v8a/libvmservice_snapshot.so
-String getVmServiceSoDest(String ohosRootPath, TargetPlatform targetPlatform,
-    OhosProject ohosProject) {
-  return globals.fs.path.join(
-      getProjectArchPath(ohosRootPath, targetPlatform, ohosProject),
-      VMSERVICE_SNAPSHOT_SO);
 }
 
 /// eg:entry/libs/arm64-v8a/libapp.so
@@ -204,7 +184,12 @@ Future<void> signHap(LocalFileSystem localFileSystem, String unsignedFile,
 
   if (isNeedCopySignHistory) {
     final List<String> cmdCreateCertAndProfile = <String>[];
-    cmdCreateCertAndProfile.add('python3');
+    if (isWindows) {
+      cmdCreateCertAndProfile.add('py');
+      cmdCreateCertAndProfile.add('-3');
+    } else {
+      cmdCreateCertAndProfile.add('python3');
+    }
     cmdCreateCertAndProfile
         .add(globals.fs.path.join(signToolHome, 'autosign.py'));
     cmdCreateCertAndProfile.add('createAppCertAndProfile');
@@ -281,10 +266,8 @@ Future<void> ohpmInstall(
     {required ProcessManager processManager,
     required String entryPath,
     Logger? logger}) async {
-  final String ohpmHome = Platform.environment['OHPM_HOME']!;
-  final String ohpmPath = globals.fs.path.join(ohpmHome, 'bin', 'ohpm');
   final List<String> command = <String>[
-    ohpmPath,
+    'ohpm',
     'install',
   ];
   logger?.printTrace('invoke at:$entryPath ,command: ${command.join(' ')}');
@@ -390,7 +373,6 @@ void checkFlutterEnv(Logger? logger) {
     checkPlatformEnvironment('PUB_HOSTED_URL', logger);
     checkPlatformEnvironment('FLUTTER_STORAGE_BASE_URL', logger);
   }
-  checkPlatformEnvironment('OHPM_HOME', logger);
 }
 
 /// flutter构建
@@ -530,8 +512,6 @@ void cleanAndCopyFlutterRuntime(
   // 优先级从高到底依次为: 1. engine产物目录; 2. 项目中的 har/har_product 目录; 3. flutter_flutter 中的模板目录
   final String originHarPath =
       getOriginHarPath(ohosProject, ohosRootPath, suffix);
-  final String originEngineSoPath =
-      getOriginFlutterSoPath(ohosProject, ohosRootPath, suffix);
 
   String desHarPath = '';
   if (ohosProject.isModule) {
@@ -544,31 +524,6 @@ void cleanAndCopyFlutterRuntime(
   final File originHarFile = globals.localFileSystem.file(originHarPath);
   originHarFile.copySync(desHarPath);
   logger?.printStatus('originHarFile: $originHarFile');
-
-  //copy ohos engine so
-  if (originEngineSoPath == null) {
-    throwToolExit("flutter engine runtime  file 'libflutter.so' no found");
-  }
-  logger?.printStatus('flutterEngineSoPath: $originEngineSoPath');
-
-  final String destEngineSoPath = getEngineSoPath(ohosRootPath, targetPlatform, ohosProject);
-  ensureParentExists(destEngineSoPath);
-  final File flutterEngineSoFile = globals.localFileSystem.file(originEngineSoPath);
-  flutterEngineSoFile.copySync(destEngineSoPath);
-
-  final String vmServiceSoDest = getVmServiceSoDest(ohosRootPath, targetPlatform, ohosProject);
-  final File vmServiceSoDestFile = globals.localFileSystem.file(vmServiceSoDest);
-  if (buildInfo.isProfile) {
-    // copy libvmservice_snapshot.so
-    final String vmserviceSoSrc = getOriginVmserviceSoPath(ohosProject, ohosRootPath, suffix);
-    final File vmserviceSoSrcFile = globals.localFileSystem.file(vmserviceSoSrc);
-    vmserviceSoSrcFile.copySync(vmServiceSoDest);
-  } else {
-    if (vmServiceSoDestFile.existsSync()) {
-      vmServiceSoDestFile.deleteSync();
-    }
-  }
-
   logger?.printStatus('copy flutter runtime to project end');
 }
 
@@ -585,13 +540,13 @@ String getEmbeddingHarFileSuffix(
   return '${buildInfo.isDebug ? 'debug' : buildInfo.isProfile ? 'profile' : 'release'}.$apiVersion';
 }
 
-/// 获取本地构建的flutter_embedding.har文件路径
+/// 获取本地构建的flutter.har文件路径
 String? getLocalArtifactEmbeddingHarPath() {
   final Artifacts artifacts = globals.artifacts!;
   if (artifacts.isLocalEngine && artifacts is LocalEngineArtifacts) {
     final String engineOutPath = artifacts.engineOutPath;
     final String outputEmbeddingHar = globals.fs.path
-        .join(engineOutPath, 'ohos', HAR_FILE_NAME);
+        .join(engineOutPath, HAR_FILE_NAME);
     final String outputEmbeddingHarAbs =
         globals.fs.path.normalize(outputEmbeddingHar);
 
@@ -627,7 +582,7 @@ String getOriginHarPath(
   // 1
   final String? localEnginePath = getLocalEnginePath();
   if (localEnginePath != null) {
-    target1 = globals.fs.path.join(localEnginePath, 'ohos', HAR_FILE_NAME);
+    target1 = globals.fs.path.join(localEnginePath, HAR_FILE_NAME);
     if (globals.fs.file(target1).existsSync()) {
       return target1;
     }
@@ -653,69 +608,6 @@ String getOriginHarPath(
 
   throwToolExit(
       'File $HAR_FILE_NAME not found in [$target1, $target2, $target3]');
-}
-
-String getOriginFlutterSoPath(
-    OhosProject ohosProject, String ohosRootPath, String suffix) {
-  String target1 = '', target2 = '', target3 = '';
-  // 优先级从高到底依次为: 1. engine产物目录; 2. 项目中的 har/har_product 目录; 3. flutter_flutter 中的模板目录
-  // 1
-  final String? localEnginePath = getLocalEnginePath();
-  if (localEnginePath != null) {
-    target1 = globals.fs.path.join(localEnginePath, FLUTTER_ENGINE_SO);
-    if (globals.fs.file(target1).existsSync()) {
-      return target1;
-    }
-  }
-
-  // 2
-  target2 = globals.fs.path
-      .join(ohosRootPath, 'har', 'har_product', '$FLUTTER_ENGINE_SO.$suffix');
-  if (globals.fs.file(target2).existsSync()) {
-    return target2;
-  }
-
-  // 3
-  target3 = globals.fs.path
-      .join(getTmplPath(), '$FLUTTER_ENGINE_SO.$suffix');
-  if (globals.fs.file(target3).existsSync()) {
-    return target3;
-  }
-
-  throwToolExit(
-      'File $FLUTTER_ENGINE_SO not found in [$target1, $target2, $target3]');
-}
-
-String getOriginVmserviceSoPath(
-    OhosProject ohosProject, String ohosRootPath, String suffix) {
-  String target1 = '', target2 = '', target3 = '';
-  // 优先级从高到底依次为: 1. engine产物目录; 2. 项目中的 har/har_product 目录; 3. flutter_flutter 中的模板目录
-  // 1
-  final String? localEnginePath = getLocalEnginePath();
-  if (localEnginePath != null) {
-    target1 = globals.fs.path.join(localEnginePath,
-        'gen/flutter/shell/vmservice/ohos/libs', VMSERVICE_SNAPSHOT_SO);
-    if (globals.fs.file(target1).existsSync()) {
-      return target1;
-    }
-  }
-
-  // 2
-  target2 = globals.fs.path.join(
-      ohosRootPath, 'har', 'har_product', '$VMSERVICE_SNAPSHOT_SO.$suffix');
-  if (globals.fs.file(target2).existsSync()) {
-    return target2;
-  }
-
-  // 3
-  target3 = globals.fs.path
-      .join(getTmplPath(), '$VMSERVICE_SNAPSHOT_SO.$suffix');
-  if (globals.fs.file(target3).existsSync()) {
-    return target3;
-  }
-
-  throwToolExit(
-      'File $VMSERVICE_SNAPSHOT_SO not found in [$target1, $target2, $target3]');
 }
 
 class OhosHvigorBuilder implements OhosBuilder {
@@ -832,21 +724,16 @@ class OhosHvigorBuilder implements OhosBuilder {
     final String buildProfileConfig = buildProfile.readAsStringSync();
     final dynamic obj = JSON5.parse(buildProfileConfig);
     dynamic signingConfigs = obj['app']?['signingConfigs'];
+    if (signingConfigs is List && signingConfigs.isEmpty) {
+      logger?.printError('请通过DevEco Studio打开ohos工程后配置调试签名(File -> Project Structure -> Signing Configs 勾选Automatically generate signature)');
+      return;
+    }
     if (signingConfigs is List && signingConfigs.isNotEmpty) {
       final File signedFile = globals.localFileSystem.file(desSignedFile);
       if (signedFile.existsSync()) {
         return;
       }
     }
-
-    final String unsignedFile = globals.fs.path.join(
-        ohosRootPath,
-        ohosProject.mainModuleName,
-        'build/default/outputs/default',
-        'entry-default-unsigned.hap');
-
-    await signHap(globals.localFileSystem, unsignedFile, desSignedFile, logger,
-        ohosBuildData.appInfo!.bundleName);
   }
 
   Future<void> flutterBuildPre(

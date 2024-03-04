@@ -23,19 +23,53 @@ const String kOhosSdkRoot = 'OHOS_SDK_HOME';
 const String kHmosHome = 'HOS_SDK_HOME';
 
 const List<String> supportSdkVersion = <String>['10', '11', '9'];
+// for api11 developer preview
+const Map<int, String> sdkVersionMap = {11: 'HarmonyOS-NEXT-DP1', 10: 'HarmonyOS-NEXT-DP0'};
 
-class OhosSdk {
-  OhosSdk(this._sdkDir) {
-    init();
+abstract class HarmonySdk {
+  // name
+  String get name;
+  // sdk path
+  String get sdkPath;
+  // hdc path
+  String? get hdcPath;
+  // available api list
+  List<String> get apiAvailable;
+  // is valid sdk
+  bool get isValidDirectory;
+
+  static HarmonySdk? locateHarmonySdk() {
+    final OhosSdk? ohosSdk = OhosSdk.localOhosSdk();
+    final HmosSdk? hmosSdk = HmosSdk.localHmosSdk();
+    if (ohosSdk != null) {
+      return ohosSdk;
+    } else if (hmosSdk != null) {
+      return hmosSdk;
+    } else {
+      return null;
+    }
   }
+}
+
+class OhosSdk implements HarmonySdk {
+  OhosSdk(this._sdkDir);
 
   final Directory _sdkDir;
 
+  @override
+  String get name => 'OpenHarmonySDK';
+
+  @override
   String get sdkPath => _sdkDir.path;
 
-  String? hdcPath;
+  @override
+  String? get hdcPath => getHdcPath(_sdkDir.path);
 
-  List<String>? apiAvailable;
+  @override
+  List<String> get apiAvailable => getAvailableApi();
+
+  @override
+  bool get isValidDirectory => validSdkDirectory(_sdkDir.path);
 
   static OhosSdk? localOhosSdk() {
     String? findOhosHomeDir() {
@@ -78,8 +112,17 @@ class OhosSdk {
   }
 
   static String? getHdcPath(String sdkPath) {
+    final bool isWindows = globals.platform.isWindows;
+    // find it in api11 developer preview folder
+    for (final int api in sdkVersionMap.keys) {
+      final File file = globals.fs.file(globals.fs.path
+          .join(sdkPath, sdkVersionMap[api], 'base', 'toolchains', isWindows ? 'hdc.exe' : 'hdc'));
+      if (file.existsSync()) {
+        return file.path;
+      }
+    }
+    // if hdc not found, find it in previous version
     for (final String folder in supportSdkVersion) {
-      final bool isWindows = globals.platform.isWindows;
       final File file = globals.fs.file(globals.fs.path
           .join(sdkPath, folder, 'toolchains', isWindows ? 'hdc.exe' : 'hdc'));
       if (file.existsSync()) {
@@ -91,28 +134,55 @@ class OhosSdk {
 
   List<String> getAvailableApi() {
     final List<String> list = <String>[];
-    for (final String folder in supportSdkVersion) {
+     // for api11 developer preview
+    for (final int api in sdkVersionMap.keys) {
       final Directory directory =
-          globals.fs.directory(globals.fs.path.join(sdkPath, folder));
+          globals.fs.directory(globals.fs.path.join(sdkPath, sdkVersionMap[api]));
       if (directory.existsSync()) {
-        list.add(folder);
+        list.add(sdkVersionMap[api]!);
+      }
+    }
+    // if not found, find it in previous version
+    if (list.isEmpty) {
+      for (final String folder in supportSdkVersion) {
+        final Directory directory =
+            globals.fs.directory(globals.fs.path.join(sdkPath, folder));
+        if (directory.existsSync()) {
+          list.add(folder);
+        }
       }
     }
     return list;
   }
 
-  void init() {
-    hdcPath = getHdcPath(_sdkDir.path);
-    apiAvailable = getAvailableApi();
-  }
 }
 
-class HmosSdk {
+class HmosSdk implements HarmonySdk {
   HmosSdk(this._sdkDir);
 
   final Directory _sdkDir;
 
+  @override
+  String get name => 'HarmonyOSSDK';
+
+  @override
+  String? get hdcPath => getHdcPath(_sdkDir.path);
+
+  @override
   String get sdkPath => _sdkDir.path;
+
+  @override
+  List<String> get apiAvailable => getAvailableApi();
+
+  @override
+  bool get isValidDirectory => validSdkDirectory(sdkPath);
+
+   List<String> getAvailableApi() {
+    File file = globals.fs.file(globals.fs.path.join(sdkPath, 'base'));
+    return <String>[
+      file.path,
+    ];
+  }
 
   static HmosSdk? localHmosSdk() {
     String? findHmosHomeDir() {
@@ -141,83 +211,35 @@ class HmosSdk {
     return HmosSdk(globals.fs.directory(hmosHomeDir));
   }
 
+  static String? getHdcPath(String sdkPath) {
+    final bool isWindows = globals.platform.isWindows;
+    // find it in api11 developer preview folder
+    for (final int api in sdkVersionMap.keys) {
+      final File file = globals.fs.file(globals.fs.path
+          .join(sdkPath, sdkVersionMap[api], 'base', 'toolchains', isWindows ? 'hdc.exe' : 'hdc'));
+      if (file.existsSync()) {
+        return file.path;
+      }
+    }
+    // if hdc not found, find it in previous version
+    for (final String folder in supportSdkVersion) {
+      final File file = globals.fs.file(globals.fs.path
+          .join(sdkPath, folder, 'toolchains', isWindows ? 'hdc.exe' : 'hdc'));
+      if (file.existsSync()) {
+        return file.path;
+      }
+    }
+    return null;
+  }
+
+
   //harmonyOsSdk，包含目录hmscore和openharmony
   static bool validSdkDirectory(String hmosHomeDir) {
     final Directory directory = globals.fs.directory(hmosHomeDir);
-    return directory.childDirectory('hmscore').existsSync() &&
-        directory.childDirectory('openharmony').existsSync();
-  }
-}
-
-/// help user to sign hap file
-class SignTool {
-  SignTool(this.signToolHome);
-
-  static const String SIGN_TOOL_HOME_KEY = 'SIGN_TOOL_HOME';
-
-  static const String SIGN_TOOL_CONFIG_KEY = 'signTool-home';
-
-  static SignTool? local() {
-    String? signToolHome;
-    if (globals.config.containsKey(SIGN_TOOL_CONFIG_KEY)) {
-      signToolHome = globals.config.getValue(SIGN_TOOL_CONFIG_KEY) as String?;
-    } else if (globals.platform.environment.containsKey(SIGN_TOOL_HOME_KEY)) {
-      signToolHome = globals.platform.environment[SIGN_TOOL_HOME_KEY];
-    }
-    if (signToolHome != null) {
-      return SignTool(signToolHome);
-    } else {
-      return null;
-    }
-  }
-
-  final String signToolHome;
-
-  bool validJar() {
-    // _signToolHome: ~/sdk/developtools_hapsigner/autosign
-    // ~/sdk/developtools_hapsigner/hapsigntool/hap_sign_tool/build/libs/hap-sign-tool.jar
-    final File hapSignToolJar = globals.fs
-        .directory(signToolHome)
-        .parent
-        .childDirectory('hapsigntool')
-        .childDirectory('hap_sign_tool')
-        .childDirectory('build')
-        .childDirectory('libs')
-        .childFile('hap-sign-tool.jar');
-    return hapSignToolJar.existsSync();
-  }
-}
-
-/// OpenHarmony package manager tool
-class Ohpm {
-  Ohpm(this._ohpmHome);
-
-  static const String OHPM_HOME = 'OHPM_HOME';
-
-  static const String OHPM_CONFIG_KEY = 'ohpm-home';
-
-  static Ohpm? local() {
-    String? ohpmHome;
-    if (globals.config.containsKey(OHPM_CONFIG_KEY)) {
-      ohpmHome = globals.config.getValue(OHPM_CONFIG_KEY) as String?;
-    } else if (globals.platform.environment.containsKey(OHPM_HOME)) {
-      ohpmHome = globals.platform.environment[OHPM_HOME];
-    }
-    if (ohpmHome != null) {
-      return Ohpm(ohpmHome);
-    } else {
-      return null;
-    }
-  }
-
-  final String _ohpmHome;
-
-  String? getOhpmBinPath() {
-    final bool isWindows = globals.platform.isWindows;
-    final File ohpm = globals.fs
-        .directory(_ohpmHome)
-        .childDirectory('bin')
-        .childFile(isWindows ? 'ohpm.bat' : 'ohpm');
-    return ohpm.existsSync() ? ohpm.path : null;
+    return (directory.childDirectory('hmscore').existsSync() &&
+        directory.childDirectory('openharmony').existsSync()) ||
+        // for api11 developer preview
+        (directory.childDirectory('HarmonyOS-NEXT-DP1').existsSync() && 
+        directory.childDirectory('licenses').existsSync());
   }
 }
