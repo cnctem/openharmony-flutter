@@ -547,12 +547,14 @@ void cleanAndCopyFlutterRuntime(
     OhosBuildData ohosBuildData) {
   logger?.printStatus('copy flutter runtime to project start');
   // copy ohos font-family support
-  final File ohosDta = globals.localFileSystem.file(globals.fs.path.join(
-      ohosProject.flutterRuntimeAssertOriginPath.path,
-      'dta',
-      OHOS_DTA_FILE_NAME));
-  final String copyDes = getDatPath(ohosRootPath, ohosProject);
-  ohosDta.copySync(copyDes);
+  if (buildInfo.isDebug) {
+    final File ohosDta = globals.localFileSystem.file(globals.fs.path.join(
+    ohosProject.flutterRuntimeAssertOriginPath.path,
+    'dta',
+    OHOS_DTA_FILE_NAME));
+    final String copyDes = getDatPath(ohosRootPath, ohosProject);
+    ohosDta.copySync(copyDes);
+  }
 
   final String suffix = getEmbeddingHarFileSuffix(buildInfo, ohosBuildData);
   // 复制 har 和 so 文件
