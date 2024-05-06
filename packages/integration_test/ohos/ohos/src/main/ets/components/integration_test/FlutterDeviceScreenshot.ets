@@ -15,7 +15,7 @@
 import {
   MethodChannel,
   MethodResult,
-} from '@ohos/flutter_ohos';
+} from 'flutter';
 import UIAbility from '@ohos.app.ability.UIAbility';
 
 /**

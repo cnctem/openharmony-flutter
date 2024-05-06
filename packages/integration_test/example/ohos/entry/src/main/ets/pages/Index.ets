@@ -14,7 +14,7 @@
 */
 
 import common from '@ohos.app.ability.common';
-import { FlutterPage } from '@ohos/flutter_ohos';
+import { FlutterPage } from 'flutter';
 
 let storage = LocalStorage.getShared()
 const EVENT_BACK_PRESS = 'EVENT_BACK_PRESS'
