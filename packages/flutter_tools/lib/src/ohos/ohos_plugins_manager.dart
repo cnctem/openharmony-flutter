@@ -16,6 +16,7 @@
 import 'dart:convert';
 
 import 'package:json5/json5.dart';
+import 'package:path/path.dart';
 
 import '../base/common.dart';
 import '../base/file_system.dart';
@@ -143,7 +144,11 @@ Future<void> addPluginsOverrides(FlutterProject flutterProject) async {
   final Map<String, dynamic> overrides = config['overrides'] as Map<String, dynamic>? ?? <String, dynamic>{};
 
   for (final Plugin plugin in plugins) {
-    overrides[plugin.name] = globals.fs.path.join(plugin.path, OhosPlugin.kConfigKey);
+    final String pluginOhos = globals.fs.path.join(plugin.path, OhosPlugin.kConfigKey);
+    overrides[plugin.name] = pluginOhos;
+    if (useDeprecatedFlutterDependency(globals.fs.file(join(pluginOhos, 'oh-package.json5')))) {
+      globals.printWarning('OhosDependenciesManager: ${plugin.name} is using deprecated "@ohos/flutter_ohos", change to "flutter" instead.');
+    }
   }
   final String configNew = const JsonEncoder.withIndent('  ').convert(config);
   packageFile.writeAsStringSync(configNew, flush: true);
@@ -172,4 +177,14 @@ Future<void> removePluginsOverrides(FlutterProject flutterProject) async {
   }
   final String configNew = const JsonEncoder.withIndent('  ').convert(config);
   packageFile.writeAsStringSync(configNew, flush: true);
+}
+
+
+/// 检查对 Flutter 的依赖是否是 @ohos/flutter_ohos
+bool useDeprecatedFlutterDependency(File packageFile) {
+  final String packageConfig = packageFile.readAsStringSync();
+  final Map<String, dynamic> config = JSON5.parse(packageConfig) as Map<String, dynamic>;
+  final Map<String, dynamic> dependencies = config['dependencies'] as Map<String, dynamic>? ??
+      <String, dynamic>{};
+  return dependencies.containsKey('@ohos/flutter_ohos');
 }
