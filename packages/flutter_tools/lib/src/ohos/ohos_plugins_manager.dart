@@ -15,9 +15,12 @@
 
 import 'dart:io' as io;
 
+import 'package:json5/json5.dart';
+
 import '../base/common.dart';
 import '../base/file_system.dart';
 import '../build_info.dart';
+import '../cache.dart';
 import '../flutter_plugins.dart';
 import '../globals.dart' as globals;
 import '../platform_plugins.dart';
@@ -137,14 +140,11 @@ void checkDependencies(
 
   /// 如果包含@ohos/flutter_ohos，每次构建，都需要重新拷贝har文件，确保flutter.har文件的正确性
   if (dependencies.any(
-      (OhosDependence element) => element.moduleName == '@ohos/flutter_ohos'
-        || element.moduleName == 'flutter')) {
+      (OhosDependence element) => element.moduleName == '@ohos/flutter_ohos')) {
     final OhosDependence flutterOhosDepence = dependencies.firstWhere(
-        (OhosDependence element) => element.moduleName == '@ohos/flutter_ohos'
-          || element.moduleName == 'flutter');
+        (OhosDependence element) => element.moduleName == '@ohos/flutter_ohos');
     copyOhosEmbeddingHarToModule(
         modulePath, flutterOhosDepence, buildInfo, ohosBuildData);
-    checkFlutterDependency(packageConfigFile);
   }
 }
 

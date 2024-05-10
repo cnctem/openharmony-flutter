@@ -54,7 +54,6 @@ Future<void> checkOhosPluginsDependencies(FlutterProject flutterProject) async {
       .map((Plugin p) => p.platforms[OhosPlugin.kConfigKey]! as OhosPlugin)
       .toList();
 
-  await checkFlutterDependency(flutterProject.ohos.flutterModulePackageFile);
   if (pluginList.isEmpty) {
     globals.printStatus(
         'OhosDependenciesManager: it no need to add plugins dependencies.');
@@ -154,17 +153,6 @@ Future<void> removeDependencies(
   final String configNew = JSON5.stringify(config, space: 2);
   flutterProject.ohos.flutterModulePackageFile
       .writeAsStringSync(configNew, flush: true);
-}
-
-/// 检查对 Flutter 的依赖是否是 @ohos/flutter_ohos
-Future<void> checkFlutterDependency(File packageFile) async {
-  final dynamic config = parsePakcageConfig(packageFile);
-  final Map<String, dynamic> dependencies = config['dependencies'] as Map<String, dynamic>? ??
-      <String, dynamic>{};
-  if (dependencies.containsKey('@ohos/flutter_ohos')) {
-    globals.printWarning('OhosDependenciesManager: deprecated flutter dependency "@ohos/flutter_ohos" found in $packageFile, please use "flutter" instead.');
-    return;
-  }
 }
 
 dynamic parsePakcageConfig(File ohPackageFile) {

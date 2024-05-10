@@ -21,12 +21,12 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "flutter": "file:./har/flutter.har"
+    "@ohos/flutter_ohos": "file:./har/flutter.har"
   },
   "devDependencies": {
     "@ohos/hypium": "1.0.6"
   },
   "overrides": {
-    "flutter": "file:./har/flutter.har"
+    "@ohos/flutter_ohos": "file:./har/flutter.har"
   }
 }

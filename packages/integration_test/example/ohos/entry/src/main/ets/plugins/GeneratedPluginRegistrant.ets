@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { FlutterEngine, Log } from 'flutter';
+import { FlutterEngine, Log } from '@ohos/flutter_ohos';
 import IntegrationTestPlugin from '@ohos/integration_test'
 
 /**
