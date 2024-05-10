@@ -274,7 +274,7 @@ class HmosSdk implements HarmonySdk {
     final String? hmosHomeDir = findHmosHomeDir();
     if (hmosHomeDir == null) {
       // No dice.
-      globals.printError('Unable to locate an HarmonyOS SDK.');
+      // globals.printError('Unable to locate an HarmonyOS SDK.');
       return null;
     }
 
