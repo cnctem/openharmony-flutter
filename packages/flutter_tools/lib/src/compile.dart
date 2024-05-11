@@ -15,11 +15,9 @@ import 'base/common.dart';
 import 'base/file_system.dart';
 import 'base/io.dart';
 import 'base/logger.dart';
-import 'base/os.dart';
 import 'base/platform.dart';
 import 'build_info.dart';
 import 'convert.dart';
-import 'globals.dart' as globals;
 
 /// Opt-in changes to the dart compilers.
 const List<String> kDartCompilerExperiments = <String>[
@@ -284,17 +282,8 @@ class KernelCompiler {
       dartPluginRegistrantUri = packageConfig.toPackageUri(dartPluginRegistrantFileUri)?.toString() ??
         toMultiRootPath(dartPluginRegistrantFileUri, _fileSystemScheme, _fileSystemRoots, _fileSystem.path.separator == r'\');
     }
-    String? engineDartBinary;
-    if (globals.os.hostPlatform == HostPlatform.darwin_arm64) {
-      final Artifacts? artifacts = globals.artifacts;
-      if (artifacts is LocalEngineArtifacts) {
-        final LocalEngineArtifacts localEngineArtifacts = artifacts;
-        engineDartBinary = localEngineArtifacts.getArtifactPath(Artifact.engineDartBinary);
-      }
-    }
-    engineDartBinary = engineDartBinary ?? _artifacts.getHostArtifact(HostArtifact.engineDartBinary).path;
     final List<String> command = <String>[
-      engineDartBinary,
+      engineDartPath,
       '--disable-dart-dev',
       frontendServer,
       '--sdk-root',
@@ -753,17 +742,8 @@ class DefaultResidentCompiler implements ResidentCompiler {
     final String frontendServer = _artifacts.getArtifactPath(
       Artifact.frontendServerSnapshotForEngineDartSdk
     );
-    String? engineDartBinary;
-    if (globals.os.hostPlatform == HostPlatform.darwin_arm64) {
-      final Artifacts? artifacts = globals.artifacts;
-      if (artifacts is LocalEngineArtifacts) {
-        final LocalEngineArtifacts localEngineArtifacts = artifacts;
-        engineDartBinary = localEngineArtifacts.getArtifactPath(Artifact.engineDartBinary);
-      }
-    }
-    engineDartBinary = engineDartBinary ?? _artifacts.getHostArtifact(HostArtifact.engineDartBinary).path;
     final List<String> command = <String>[
-      engineDartBinary,
+      _artifacts.getHostArtifact(HostArtifact.engineDartBinary).path,
       '--disable-dart-dev',
       frontendServer,
       '--sdk-root',

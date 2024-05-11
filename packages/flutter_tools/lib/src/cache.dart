@@ -53,7 +53,8 @@ class DevelopmentArtifact {
   static const DevelopmentArtifact iOS = DevelopmentArtifact._('ios', feature: flutterIOSFeature);
 
   /// Artifacts required for OpenHarmony development.
-  static const DevelopmentArtifact ohos = DevelopmentArtifact._('ohos', feature: flutterOhosFeature);
+  static const DevelopmentArtifact ohosGenSnapshot = DevelopmentArtifact._('ohos_gen_snapshot', feature: flutterOhosFeature);
+  static const DevelopmentArtifact ohosInternalBuild = DevelopmentArtifact._('ohos_internal_build', feature: flutterOhosFeature);
 
   /// Artifacts required for web development.
   static const DevelopmentArtifact web = DevelopmentArtifact._('web', feature: flutterWebFeature);
@@ -85,7 +86,8 @@ class DevelopmentArtifact {
     androidMaven,
     androidInternalBuild,
     iOS,
-    ohos,
+    ohosGenSnapshot,
+    ohosInternalBuild,
     web,
     macOS,
     windows,
@@ -471,6 +473,23 @@ class Cache {
       Uri.parse(overrideUrl);
     } on FormatException catch (err) {
       throwToolExit('"FLUTTER_STORAGE_BASE_URL" contains an invalid URI:\n$err');
+    }
+    _maybeWarnAboutStorageOverride(overrideUrl);
+    return overrideUrl;
+  }
+
+  /// The prefix for URLs that store Ohos Flutter engine artifacts that are fetched
+  /// during the installation of the Flutter SDK.
+  String get ohosStorageBaseUrl {
+    final String? overrideUrl = _platform.environment['OHOS_FLUTTER_STORAGE_BASE_URL'];
+    if (overrideUrl == null) {
+      return '';
+    }
+    // verify that this is a valid URI.
+    try {
+      Uri.parse(overrideUrl);
+    } on FormatException catch (err) {
+      throwToolExit('"OHOS_FLUTTER_STORAGE_URL_PREFIX" contains an invalid URI:\n$err');
     }
     _maybeWarnAboutStorageOverride(overrideUrl);
     return overrideUrl;
@@ -863,6 +882,9 @@ abstract class EngineCachedArtifact extends CachedArtifact {
   /// A list of the dart package directories to download.
   List<String> getPackageDirs();
 
+  /// The base URL for the storage bucket from which the artifact is downloaded.
+  String get storageBaseUrl => cache.storageBaseUrl;
+
   @override
   bool isUpToDateInner(FileSystem fileSystem) {
     final Directory pkgDir = cache.getCacheDir('pkg');
@@ -895,7 +917,7 @@ abstract class EngineCachedArtifact extends CachedArtifact {
     FileSystem fileSystem,
     OperatingSystemUtils operatingSystemUtils,
   ) async {
-    final String url = '${cache.storageBaseUrl}/flutter_infra_release/flutter/$version/';
+    final String url = '$storageBaseUrl/flutter_infra_release/flutter/$version/';
 
     final Directory pkgDir = cache.getCacheDir('pkg');
     for (final String pkgName in getPackageDirs()) {

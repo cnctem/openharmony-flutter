@@ -631,18 +631,6 @@ enum OhosArch {
   x86_64,
 }
 
-
-bool isOhosPlatform(TargetPlatform? targetPlatform){
-  switch(targetPlatform){
-    case TargetPlatform.ohos:
-    case TargetPlatform.ohos_arm:
-    case TargetPlatform.ohos_arm64:
-    case TargetPlatform.ohos_x64:
-      return true;
-  }
-  return false;
-}
-
 /// The default set of iOS device architectures to build for.
 List<DarwinArch> defaultIOSArchsForEnvironment(
   EnvironmentType environmentType,
