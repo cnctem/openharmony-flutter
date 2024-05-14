@@ -1402,6 +1402,36 @@ class AndroidViewSurface extends StatefulWidget {
   }
 }
 
+class OhosViewSurface extends StatefulWidget {
+  /// Construct an `OhosPlatformViewSurface`.
+  const OhosViewSurface({
+    super.key,
+    required this.controller,
+    required this.hitTestBehavior,
+    required this.gestureRecognizers,
+  }) : assert(controller != null),
+        assert(hitTestBehavior != null),
+        assert(gestureRecognizers != null);
+
+  /// The controller for the platform view integrated by this [OhosViewSurface].
+  ///
+  /// See [PlatformViewSurface.controller] for details.
+  final OhosViewController controller;
+
+  /// Which gestures should be forwarded to the PlatformView.
+  ///
+  /// See [PlatformViewSurface.gestureRecognizers] for details.
+  final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers;
+
+  /// {@macro flutter.widgets.AndroidView.hitTestBehavior}
+  final PlatformViewHitTestBehavior hitTestBehavior;
+
+  @override
+  State<StatefulWidget> createState() {
+    return _OhosViewSurfaceState();
+  }
+}
+
 class _AndroidViewSurfaceState extends State<AndroidViewSurface> {
   @override
   void initState() {
@@ -1442,6 +1472,46 @@ class _AndroidViewSurfaceState extends State<AndroidViewSurface> {
   }
 }
 
+class _OhosViewSurfaceState extends State<OhosViewSurface> {
+  @override
+  void initState() {
+    super.initState();
+    if (!widget.controller.isCreated) {
+      // Schedule a rebuild once creation is complete and the final dislay
+      // type is known.
+      widget.controller.addOnPlatformViewCreatedListener(_onPlatformViewCreated);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeOnPlatformViewCreatedListener(_onPlatformViewCreated);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.controller.requiresViewComposition) {
+      return _PlatformLayerBasedOhosViewSurface(
+        controller: widget.controller,
+        hitTestBehavior: widget.hitTestBehavior,
+        gestureRecognizers: widget.gestureRecognizers,
+      );
+    } else {
+      return _TextureBasedOhosViewSurface(
+        controller: widget.controller,
+        hitTestBehavior: widget.hitTestBehavior,
+        gestureRecognizers: widget.gestureRecognizers,
+      );
+    }
+  }
+
+  void _onPlatformViewCreated(int _) {
+    // Trigger a re-build based on the current controller state.
+    setState(() {});
+  }
+}
+
 // Displays an Android platform view via GL texture.
 class _TextureBasedAndroidViewSurface extends PlatformViewSurface {
   const _TextureBasedAndroidViewSurface({
@@ -1468,6 +1538,31 @@ class _TextureBasedAndroidViewSurface extends PlatformViewSurface {
   }
 }
 
+class _TextureBasedOhosViewSurface extends PlatformViewSurface {
+  const _TextureBasedOhosViewSurface({
+    required OhosViewController super.controller,
+    required super.hitTestBehavior,
+    required super.gestureRecognizers,
+  }) : assert(controller != null),
+        assert(hitTestBehavior != null),
+        assert(gestureRecognizers != null);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    final OhosViewController viewController = controller as OhosViewController;
+    // Use GL texture based composition.
+    // App should use GL texture unless they require to embed a SurfaceView.
+    final RenderOhosView renderBox = RenderOhosView(
+      viewController: viewController,
+      gestureRecognizers: gestureRecognizers,
+      hitTestBehavior: hitTestBehavior,
+    );
+    viewController.pointTransformer =
+        (Offset position) => renderBox.globalToLocal(position);
+    return renderBox;
+  }
+}
+
 class _PlatformLayerBasedAndroidViewSurface extends PlatformViewSurface {
   const _PlatformLayerBasedAndroidViewSurface({
     required AndroidViewController super.controller,
@@ -1480,6 +1575,26 @@ class _PlatformLayerBasedAndroidViewSurface extends PlatformViewSurface {
   @override
   RenderObject createRenderObject(BuildContext context) {
     final AndroidViewController viewController = controller as AndroidViewController;
+    final PlatformViewRenderBox renderBox =
+        super.createRenderObject(context) as PlatformViewRenderBox;
+    viewController.pointTransformer =
+        (Offset position) => renderBox.globalToLocal(position);
+    return renderBox;
+  }
+}
+
+class _PlatformLayerBasedOhosViewSurface extends PlatformViewSurface {
+  const _PlatformLayerBasedOhosViewSurface({
+    required OhosViewController super.controller,
+    required super.hitTestBehavior,
+    required super.gestureRecognizers,
+  }) : assert(controller != null),
+        assert(hitTestBehavior != null),
+        assert(gestureRecognizers != null);
+
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    final OhosViewController viewController = controller as OhosViewController;
     final PlatformViewRenderBox renderBox =
         super.createRenderObject(context) as PlatformViewRenderBox;
     viewController.pointTransformer =
