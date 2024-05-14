@@ -191,6 +191,30 @@ class PlatformViewsService {
     return controller;
   }
 
+  static SurfaceOhosViewController initSurfaceOhosView({
+    required int id,
+    required String viewType,
+    required TextDirection layoutDirection,
+    dynamic creationParams,
+    MessageCodec<dynamic>? creationParamsCodec,
+    VoidCallback? onFocus,
+  }) {
+    assert(id != null);
+    assert(viewType != null);
+    assert(layoutDirection != null);
+    assert(creationParams == null || creationParamsCodec != null);
+
+    final SurfaceOhosViewController controller = SurfaceOhosViewController._(
+      viewId: id,
+      viewType: viewType,
+      layoutDirection: layoutDirection,
+      creationParams: creationParams,
+      creationParamsCodec: creationParamsCodec,
+    );
+    _instance._focusCallbacks[id] = onFocus ?? () {};
+    return controller;
+  }
+
   /// {@macro flutter.services.PlatformViewsService.initAndroidView}
   ///
   /// When this factory is used, the Android view and Flutter widgets are
@@ -208,6 +232,26 @@ class PlatformViewsService {
     VoidCallback? onFocus,
   }) {
     final ExpensiveAndroidViewController controller = ExpensiveAndroidViewController._(
+      viewId: id,
+      viewType: viewType,
+      layoutDirection: layoutDirection,
+      creationParams: creationParams,
+      creationParamsCodec: creationParamsCodec,
+    );
+
+    _instance._focusCallbacks[id] = onFocus ?? () {};
+    return controller;
+  }
+
+  static ExpensiveOhosViewController initExpensiveOhosView({
+    required int id,
+    required String viewType,
+    required TextDirection layoutDirection,
+    dynamic creationParams,
+    MessageCodec<dynamic>? creationParamsCodec,
+    VoidCallback? onFocus,
+  }) {
+    final ExpensiveOhosViewController controller = ExpensiveOhosViewController._(
       viewId: id,
       viewType: viewType,
       layoutDirection: layoutDirection,
@@ -1749,6 +1793,71 @@ class SurfaceAndroidViewController extends AndroidViewController {
   }
 }
 
+class SurfaceOhosViewController extends OhosViewController {
+  SurfaceOhosViewController._({
+    required super.viewId,
+    required super.viewType,
+    required super.layoutDirection,
+    super.creationParams,
+    super.creationParamsCodec,
+  })  : super._();
+
+  // By default, assume the implementation will be texture-based.
+  _OhosViewControllerInternals _internals = _TextureOhosViewControllerInternals();
+
+  @override
+  bool get _createRequiresSize => true;
+
+  @override
+  Future<bool> _sendCreateMessage({required Size size, Offset? position}) async {
+    assert(!size.isEmpty, 'trying to create $TextureAndroidViewController without setting a valid size.');
+
+    final dynamic response = await _OhosViewControllerInternals.sendCreateMessage(
+      viewId: viewId,
+      viewType: _viewType,
+      hybrid: false,
+      hybridFallback: true,
+      layoutDirection: _layoutDirection,
+      creationParams: _creationParams,
+      size: size,
+      position: position,
+    );
+    if (response is int) {
+      (_internals as _TextureOhosViewControllerInternals).textureId = response;
+    } else {
+      // A null response indicates fallback to Hybrid Composition, so swap out
+      // the implementation.
+      _internals = _HybridOhosViewControllerInternals();
+    }
+    return true;
+  }
+
+  @override
+  int? get textureId {
+    return _internals.textureId;
+  }
+
+  @override
+  bool get requiresViewComposition {
+    return _internals.requiresViewComposition;
+  }
+
+  @override
+  Future<void> _sendDisposeMessage() {
+    return _internals.sendDisposeMessage(viewId: viewId);
+  }
+
+  @override
+  Future<Size> _sendResizeMessage(Size size) {
+    return _internals.setSize(size, viewId: viewId, viewState: _state);
+  }
+
+  @override
+  Future<void> setOffset(Offset off) {
+    return _internals.setOffset(off, viewId: viewId, viewState: _state);
+  }
+}
+
 /// Controls an Android view that is composed using the Android view hierarchy.
 /// This controller is created from the [PlatformViewsService.initExpensiveAndroidView] factory.
 class ExpensiveAndroidViewController extends AndroidViewController {
@@ -1768,6 +1877,58 @@ class ExpensiveAndroidViewController extends AndroidViewController {
   @override
   Future<void> _sendCreateMessage({required Size? size, Offset? position}) async {
     await _AndroidViewControllerInternals.sendCreateMessage(
+      viewId: viewId,
+      viewType: _viewType,
+      hybrid: true,
+      layoutDirection: _layoutDirection,
+      creationParams: _creationParams,
+      position: position,
+    );
+  }
+
+  @override
+  int? get textureId {
+    return _internals.textureId;
+  }
+
+  @override
+  bool get requiresViewComposition {
+    return _internals.requiresViewComposition;
+  }
+
+  @override
+  Future<void> _sendDisposeMessage() {
+    return _internals.sendDisposeMessage(viewId: viewId);
+  }
+
+  @override
+  Future<Size> _sendResizeMessage(Size size) {
+    return _internals.setSize(size, viewId: viewId, viewState: _state);
+  }
+
+  @override
+  Future<void> setOffset(Offset off) {
+    return _internals.setOffset(off, viewId: viewId, viewState: _state);
+  }
+}
+
+class ExpensiveOhosViewController extends OhosViewController {
+  ExpensiveOhosViewController._({
+    required super.viewId,
+    required super.viewType,
+    required super.layoutDirection,
+    super.creationParams,
+    super.creationParamsCodec,
+  })  : super._();
+
+  final _OhosViewControllerInternals _internals = _HybridOhosViewControllerInternals();
+
+  @override
+  bool get _createRequiresSize => false;
+
+  @override
+  Future<void> _sendCreateMessage({required Size? size, Offset? position}) async {
+    await _OhosViewControllerInternals.sendCreateMessage(
       viewId: viewId,
       viewType: _viewType,
       hybrid: true,
@@ -2217,6 +2378,42 @@ class _HybridAndroidViewControllerInternals extends _AndroidViewControllerIntern
     required int viewId,
     required _AndroidViewState viewState,
   }) {
+    throw UnimplementedError('Not supported for hybrid composition.');
+  }
+
+  @override
+  Future<void> sendDisposeMessage({required int viewId}) {
+    return SystemChannels.platform_views.invokeMethod<void>('dispose', <String, dynamic>{
+      'id': viewId,
+      'hybrid': true,
+    });
+  }
+}
+
+class _HybridOhosViewControllerInternals extends _OhosViewControllerInternals {
+  @override
+  int get textureId {
+    throw UnimplementedError('Not supported for hybrid composition.');
+  }
+
+  @override
+  bool get requiresViewComposition => true;
+
+  @override
+  Future<Size> setSize(
+      Size size, {
+        required int viewId,
+        required _OhosViewState viewState,
+      }) {
+    throw UnimplementedError('Not supported for hybrid composition.');
+  }
+
+  @override
+  Future<void> setOffset(
+      Offset offset, {
+        required int viewId,
+        required _OhosViewState viewState,
+      }) {
     throw UnimplementedError('Not supported for hybrid composition.');
   }
 
