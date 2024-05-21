@@ -2308,7 +2308,9 @@ class _TextureOhosViewControllerInternals extends _OhosViewControllerInternals {
     assert(meta != null);
     assert(meta!.containsKey('width'));
     assert(meta!.containsKey('height'));
-    return Size(meta!['width']! as double, meta['height']! as double);
+    int width = meta!['width']! as int;
+    int height = meta!['height']! as int;
+    return Size(width.toDouble(), height.toDouble());
   }
 
   @override
