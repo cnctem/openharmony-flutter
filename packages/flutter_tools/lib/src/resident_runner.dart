@@ -250,9 +250,9 @@ class FlutterDevice {
     subscription = observatoryUris!.listen((Uri? observatoryUri) async {
       // when on hdc server mode,the host is not local,change to hdc server
       final String? hdcServerHost = getHdcServerHost();
-      if(hdcServerHost!=null){
+      if (hdcServerHost != null) {
         const String localHost = '127.0.0.1';
-        observatoryUri = Uri.parse(observatoryUri?.toString()?.replaceAll(localHost, hdcServerHost)??localHost);
+        observatoryUri = Uri.parse(observatoryUri?.toString().replaceAll(localHost, hdcServerHost) ?? localHost);
       }
 
       // FYI, this message is used as a sentinel in tests.

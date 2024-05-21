@@ -49,12 +49,6 @@ enum Artifact {
   /// Tools related to subsetting or icon font files.
   fontSubset,
   constFinder,
-
-  /// the flutter engine runtime
-  flutterEngineSo,
-
-  /// The dart binary used to execute any of the required snapshots.
-  engineDartBinary,
 }
 
 /// A subset of [Artifact]s that are platform and build mode independent
@@ -216,10 +210,6 @@ String? _artifactToFileName(Artifact artifact, [ TargetPlatform? platform, Build
       return 'font-subset$exe';
     case Artifact.constFinder:
       return 'const_finder.dart.snapshot';
-    case Artifact.flutterEngineSo:
-      return 'libflutter.so';
-    case Artifact.engineDartBinary:
-      return 'dart$exe';
   }
 }
 
@@ -513,8 +503,6 @@ class CachedArtifacts implements Artifacts {
       case Artifact.vmSnapshotData:
       case Artifact.windowsCppClientWrapper:
       case Artifact.windowsDesktopPath:
-      case Artifact.flutterEngineSo:
-      case Artifact.engineDartBinary:
         return _getHostArtifactPath(artifact, platform, mode);
     }
   }
@@ -547,8 +535,6 @@ class CachedArtifacts implements Artifacts {
       case Artifact.vmSnapshotData:
       case Artifact.windowsCppClientWrapper:
       case Artifact.windowsDesktopPath:
-      case Artifact.flutterEngineSo:
-      case Artifact.engineDartBinary:
         return _getHostArtifactPath(artifact, platform, mode);
     }
   }
@@ -593,16 +579,17 @@ class CachedArtifacts implements Artifacts {
       case Artifact.vmSnapshotData:
       case Artifact.windowsCppClientWrapper:
       case Artifact.windowsDesktopPath:
-      case Artifact.flutterEngineSo:
-      case Artifact.engineDartBinary:
         return _getHostArtifactPath(artifact, platform, mode);
     }
   }
 
   String _getOhosArtifactPath(Artifact artifact, TargetPlatform platform, BuildMode mode) {
-    final String? engineDir = _getEngineArtifactsPath(platform, mode);
+    final String engineDir = _getEngineArtifactsPath(platform, mode)!;
     switch (artifact) {
       case Artifact.genSnapshot:
+        assert(mode != BuildMode.debug, 'Artifact $artifact only available in non-debug mode.');
+        final String hostPlatform = getNameForHostPlatform(globals.platform.isMacOS ? HostPlatform.darwin_x64 : getCurrentHostPlatform());
+        return _fileSystem.path.join(engineDir, hostPlatform, _artifactToFileName(artifact));
       case Artifact.frontendServerSnapshotForEngineDartSdk:
       case Artifact.constFinder:
       case Artifact.flutterFramework:
@@ -623,8 +610,6 @@ class CachedArtifacts implements Artifacts {
       case Artifact.vmSnapshotData:
       case Artifact.windowsCppClientWrapper:
       case Artifact.windowsDesktopPath:
-      case Artifact.flutterEngineSo:
-      case Artifact.engineDartBinary:
         return _getHostArtifactPath(artifact, platform, mode);
     }
   }
@@ -694,14 +679,6 @@ class CachedArtifacts implements Artifacts {
       case Artifact.fuchsiaFlutterRunner:
       case Artifact.fuchsiaKernelCompiler:
         throw StateError('Artifact $artifact not available for platform $platform.');
-      case Artifact.flutterEngineSo:
-        return _cache.getArtifactDirectory('engine')
-            .childFile(_artifactToFileName(artifact)!)
-            .path;
-      case Artifact.engineDartBinary:
-        return _fileSystem.path.join(
-          _dartSdkPath(_cache), 'bin',
-          _artifactToFileName(artifact),);
     }
   }
 
@@ -732,11 +709,15 @@ class CachedArtifacts implements Artifacts {
       case TargetPlatform.android_arm64:
       case TargetPlatform.android_x64:
       case TargetPlatform.android_x86:
+      case TargetPlatform.ohos_arm:
+      case TargetPlatform.ohos_arm64:
+      case TargetPlatform.ohos_x64:
         assert(mode != null, 'Need to specify a build mode for platform $platform.');
         final String suffix = mode != BuildMode.debug ? '-${snakeCase(getModeName(mode!), '-')}' : '';
         return _fileSystem.path.join(engineDir, platformName + suffix);
       case TargetPlatform.android:
-        assert(false, 'cannot use TargetPlatform.android to look up artifacts');
+      case TargetPlatform.ohos:
+        assert(false, 'cannot use $platform to look up artifacts');
         return null;
     }
   }
@@ -837,9 +818,16 @@ class CachedLocalEngineArtifacts implements LocalEngineArtifacts {
   final CachedArtifacts _backupCache;
 
   /// this list hostArtifact will execute by the backup engine ,because local engine arch not match .
-  final List<HostArtifact> hostArtifactList = [
+  final List<HostArtifact> hostArtifactList = <HostArtifact>[
     HostArtifact.engineDartBinary,
     HostArtifact.impellerc,
+  ];
+
+  /// this list Artifact will execute by the backup engine ,because local engine arch not match .
+  final List<Artifact> ohosArtifactList = <Artifact>[
+    Artifact.flutterTester,
+    Artifact.fontSubset,
+    Artifact.genSnapshot,
   ];
 
   bool isOhosLocalEngine(){
@@ -848,7 +836,7 @@ class CachedLocalEngineArtifacts implements LocalEngineArtifacts {
 
   @override
   FileSystemEntity getHostArtifact(HostArtifact artifact) {
-    if(isOhosLocalEngine() && hostArtifactList.contains(artifact)){
+    if (isOhosLocalEngine() && hostArtifactList.contains(artifact)) {
       return _backupCache.getHostArtifact(artifact);
     }
     switch (artifact) {
@@ -928,6 +916,35 @@ class CachedLocalEngineArtifacts implements LocalEngineArtifacts {
     }
   }
 
+  String _getOhosArtifactPath(
+    Artifact artifact, {
+    TargetPlatform? platform,
+    BuildMode? mode,
+    EnvironmentType? environmentType,
+  }) {
+    const List<String> clangDirs = <String>['clang_x64', '.', 'clang_x86', 'clang_i386', 'clang_arm64'];
+    for (final String clangDir in clangDirs) {
+      final String artifactPath = _fileSystem.path.join(engineOutPath, clangDir, _artifactToFileName(artifact, platform, mode));
+      if (_processManager.canRun(artifactPath)) {
+        const int kExpectedExitCode = 255;
+        try {
+          if (_processManager.runSync(<String>[artifactPath]).exitCode == kExpectedExitCode) {
+            return artifactPath;
+          }
+        } on Exception {
+          // ohos artifact will exit with code 255 if it is passed the --help flag.
+          // This is a common case, so we catch the exception and continue.
+        }
+      }
+    }
+    return _backupCache.getArtifactPath(
+      artifact,
+      platform: platform,
+      mode: mode,
+      environmentType: environmentType,
+    );
+  }
+
   @override
   String getArtifactPath(
     Artifact artifact, {
@@ -935,6 +952,14 @@ class CachedLocalEngineArtifacts implements LocalEngineArtifacts {
     BuildMode? mode,
     EnvironmentType? environmentType,
   }) {
+    if (isOhosLocalEngine() && ohosArtifactList.contains(artifact)) {
+      return _getOhosArtifactPath(
+        artifact,
+        platform: platform,
+        mode: mode,
+        environmentType: environmentType,
+      );
+    }
     platform ??= _currentHostPlatform(_platform, _operatingSystemUtils);
     platform = _mapTargetPlatform(platform);
     final bool isDirectoryArtifact = artifact == Artifact.flutterPatchedSdkPath;
@@ -989,16 +1014,10 @@ class CachedLocalEngineArtifacts implements LocalEngineArtifacts {
       case Artifact.linuxHeaders:
       case Artifact.windowsDesktopPath:
       case Artifact.windowsCppClientWrapper:
-      case Artifact.flutterEngineSo:
         return _fileSystem.path.join(_hostEngineOutPath, artifactFileName);
       case Artifact.frontendServerSnapshotForEngineDartSdk:
         return _fileSystem.path.join(
           _getDartSdkPath(), 'bin', 'snapshots', artifactFileName,
-        );
-      case Artifact.engineDartBinary:
-        final String clangName = getClangNameForHostPlatform(getCurrentHostPlatform());
-        return _fileSystem.path.join(
-          engineOutPath, clangName, artifactFileName,
         );
     }
   }
@@ -1067,13 +1086,7 @@ class CachedLocalEngineArtifacts implements LocalEngineArtifacts {
   }
 
   String _genSnapshotPath(TargetPlatform? platform) {
-    late List<String> clangDirs;
-    if (isOhosPlatform(platform)) {
-      // on ohos platform, clang_x64 has compatibility first
-      clangDirs = <String>['clang_x64', 'clang_arm64', '.', 'clang_x86', 'clang_i386'];
-    } else {
-      clangDirs = <String>['.', 'clang_x64', 'clang_x86', 'clang_i386', 'clang_arm64'];
-    }
+    const List<String> clangDirs = <String>['.', 'clang_x64', 'clang_x86', 'clang_i386', 'clang_arm64'];
     final String genSnapshotName = _artifactToFileName(Artifact.genSnapshot)!;
     for (final String clangDir in clangDirs) {
       final String genSnapshotPath = _fileSystem.path.join(engineOutPath, clangDir, genSnapshotName);
@@ -1085,20 +1098,14 @@ class CachedLocalEngineArtifacts implements LocalEngineArtifacts {
   }
 
   String _flutterTesterPath(TargetPlatform platform) {
-    late List<String> clangDirs;
-    clangDirs = <String>['clang_x64', 'clang_arm64', '.', 'clang_x86', 'clang_i386'];
-    final String testerName = _artifactToFileName(Artifact.flutterTester)!;
-    if (_platform.isLinux || _platform.isMacOS || _platform.isWindows) {
-      for (final String clangDir in clangDirs) {
-        final String testerPath = _fileSystem.path.join(engineOutPath, clangDir, testerName);
-        if (_processManager.canRun(testerPath)) {
-          return testerPath;
-        }
-      }
-    } else {
-      throw Exception('Unsupported platform $platform.');
+    if (_platform.isLinux) {
+      return _fileSystem.path.join(engineOutPath, _artifactToFileName(Artifact.flutterTester));
+    } else if (_platform.isMacOS) {
+      return _fileSystem.path.join(engineOutPath, 'flutter_tester');
+    } else if (_platform.isWindows) {
+      return _fileSystem.path.join(engineOutPath, 'flutter_tester.exe');
     }
-    throw Exception('Unable to find $testerName');
+    throw Exception('Unsupported platform $platform.');
   }
 
   @override

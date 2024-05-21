@@ -37,6 +37,7 @@ class FlutterCache extends Cache {
     registerArtifact(AndroidGenSnapshotArtifacts(this, platform: platform));
     registerArtifact(AndroidInternalBuildArtifacts(this));
     registerArtifact(IOSEngineArtifacts(this, platform: platform));
+    registerArtifact(OhosGenSnapshotArtifacts(this, platform: platform));
     registerArtifact(FlutterWebSdk(this, platform: platform));
     registerArtifact(FlutterSdk(this, platform: platform));
     registerArtifact(WindowsEngineArtifacts(this, platform: platform));
@@ -511,6 +512,95 @@ class IOSEngineArtifacts extends EngineCachedArtifact {
   }
 }
 
+/// The artifact used to generate snapshots for Ohos builds.
+class OhosGenSnapshotArtifacts extends EngineCachedArtifact {
+  OhosGenSnapshotArtifacts(Cache cache, {
+    required Platform platform,
+  }) : _platform = platform,
+        super(
+        'ohos-sdk',
+        cache,
+        DevelopmentArtifact.ohosGenSnapshot,
+      );
+
+  final Platform _platform;
+
+  @override
+  List<String> getPackageDirs() => const <String>[];
+
+  @override
+  List<List<String>> getBinaryDirs() {
+    return <List<String>>[
+      if (cache.includeAllPlatforms) ...<List<String>>[
+        ..._osxBinaryDirsForOhos,
+        ..._linuxBinaryDirsForOhos,
+        ..._windowsBinaryDirsForOhos,
+        ..._dartSdks,
+      ] else if (_platform.isWindows)
+        ..._windowsBinaryDirsForOhos
+      else if (_platform.isMacOS)
+        ..._osxBinaryDirsForOhos
+      else if (_platform.isLinux)
+        ..._linuxBinaryDirsForOhos,
+    ];
+  }
+
+  @override
+  List<String> getLicenseDirs() {
+    return <String>[];
+  }
+
+  @override
+  String? get version => cache.getVersionFor('ohos-engine');
+
+  @override
+  String get storageBaseUrl => cache.ohosStorageBaseUrl;
+}
+
+/// Artifacts used for Ohos internal builds.
+class OhosInternalBuildArtifacts extends EngineCachedArtifact {
+  OhosInternalBuildArtifacts(Cache cache) : super(
+    'ohos-internal-build-artifacts',
+    cache,
+    DevelopmentArtifact.ohosInternalBuild,
+  );
+
+  @override
+  List<List<String>> getBinaryDirs() {
+    return <List<String>>[
+      ..._ohosBinaryDirs,
+    ];
+  }
+
+  @override
+  List<String> getLicenseDirs() {
+    return const <String>[];
+  }
+
+  @override
+  List<String> getPackageDirs() {
+    return <String>[];
+  }
+
+  @override
+  String? get version => cache.getVersionFor('ohos-engine');
+
+  @override
+  String get storageBaseUrl => cache.ohosStorageBaseUrl;
+
+  @override
+  Future<void> updateInner(
+    ArtifactUpdater artifactUpdater,
+    FileSystem fileSystem,
+    OperatingSystemUtils operatingSystemUtils,
+  ) async {
+    if (cache.ohosStorageBaseUrl.isEmpty) {
+      return;
+    }
+    await super.updateInner(artifactUpdater, fileSystem, operatingSystemUtils);
+  }
+}
+
 /// A cached artifact containing Gradle Wrapper scripts and binaries.
 ///
 /// While this is only required for Android, we need to always download it due
@@ -907,6 +997,31 @@ const List<List<String>> _androidBinaryDirs = <List<String>>[
   <String>['android-x64-profile', 'android-x64-profile/artifacts.zip'],
   <String>['android-x64-release', 'android-x64-release/artifacts.zip'],
   <String>['android-x86-jit-release', 'android-x86-jit-release/artifacts.zip'],
+];
+
+/// 目前只有arm64
+const List<List<String>> _osxBinaryDirsForOhos = <List<String>>[
+  <String>['ohos-arm64-profile/darwin-x64', 'ohos-arm64-profile/darwin-x64.zip'],
+  <String>['ohos-arm64-release/darwin-x64', 'ohos-arm64-release/darwin-x64.zip'],
+];
+
+/// 目前只有arm64
+const List<List<String>> _linuxBinaryDirsForOhos = <List<String>>[
+  <String>['ohos-arm64/linux-x64', 'ohos-arm64/linux-x64.zip'],
+  <String>['ohos-arm64-profile/linux-x64', 'ohos-arm64-profile/linux-x64.zip'],
+  <String>['ohos-arm64-release/linux-x64', 'ohos-arm64-release/linux-x64.zip'],
+];
+
+/// 目前只有arm64
+const List<List<String>> _windowsBinaryDirsForOhos = <List<String>>[
+  <String>['ohos-arm64-profile/windows-x64', 'ohos-arm64-profile/windows-x64.zip'],
+  <String>['ohos-arm64-release/windows-x64', 'ohos-arm64-release/windows-x64.zip'],
+];
+
+/// 目前只有arm64
+const List<List<String>> _ohosBinaryDirs = <List<String>>[
+  <String>['ohos-arm64-profile', 'ohos-arm64-profile/artifacts.zip'],
+  <String>['ohos-arm64-release', 'ohos-arm64-release/artifacts.zip'],
 ];
 
 const List<List<String>> _dartSdks = <List<String>> [
