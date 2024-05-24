@@ -982,6 +982,9 @@ class CachedLocalEngineArtifacts implements LocalEngineArtifacts {
         final String productOrNo = mode.isRelease ? '_product' : '';
         return _fileSystem.path.join(engineOutPath, 'flutter$jitOrAot${productOrNo}_runner-0.far');
       case Artifact.fontSubset:
+        if (isOhosLocalEngine()) {
+          return _backupCache.getArtifactPath(artifact);
+        }
         return _fileSystem.path.join(_hostEngineOutPath, artifactFileName);
       case Artifact.constFinder:
         return _fileSystem.path.join(_hostEngineOutPath, 'gen', artifactFileName);
