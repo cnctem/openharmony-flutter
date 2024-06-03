@@ -935,7 +935,10 @@ class OhosProject extends FlutterProjectPlatform {
     return editableHostAppDirectory.childDirectory(mainModuleName);
   }
 
-  Directory get mainModuleDirectory => ohosRoot.childDirectory(mainModuleName);
+  Directory get mainModuleDirectory {
+    return globals.fs.directory(globals.fs.path
+        .join(ohosRoot.path, ohosBuildData.moduleInfo.mainModuleSrcPath));
+  }
 
   List<Directory> get moduleDirectorys {
     final List<Directory> list = ohosBuildData.moduleInfo.moduleList
@@ -996,7 +999,7 @@ class OhosProject extends FlutterProjectPlatform {
       .childDirectory('default')
       .childDirectory('outputs')
       .childDirectory('default')
-      .childFile('entry-default-signed.hap');
+      .childFile('$mainModuleName-default-signed.hap');
 
   File get flutterModulePackageFile =>
       flutterModuleDirectory.childFile('oh-package.json5');
