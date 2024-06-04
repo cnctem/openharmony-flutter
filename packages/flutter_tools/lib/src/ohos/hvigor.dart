@@ -520,7 +520,15 @@ void cleanAndCopyFlutterRuntime(
   }
 
   // 复制 flutter.har
-  final String originHarPath = getOriginHarPath(ohosBuildInfo.buildInfo, ohosBuildData);
+  String? localEngineHarPath = globals.artifacts?.getArtifactPath(
+      Artifact.flutterEngineHar,
+      platform: getTargetPlatformForName(getPlatformNameForOhosArch(ohosBuildInfo.targetArchs.first)),
+      mode: ohosBuildInfo.buildInfo.mode);
+
+  if (!globals.fs.file(localEngineHarPath).existsSync()) {
+    // 如果不存在缓存也不存在localengine, 使用模板预置har
+    localEngineHarPath = getOriginHarPath(ohosBuildInfo.buildInfo, ohosBuildData);
+  }
 
   String desHarPath = '';
   if (ohosProject.isModule) {
@@ -529,9 +537,9 @@ void cleanAndCopyFlutterRuntime(
     desHarPath = globals.fs.path.join(ohosRootPath, 'har', HAR_FILE_NAME);
   }
   ensureParentExists(desHarPath);
-  final File originHarFile = globals.localFileSystem.file(originHarPath);
+  final File originHarFile = globals.localFileSystem.file(localEngineHarPath);
   originHarFile.copySync(desHarPath);
-  logger?.printStatus('copy from: $originHarPath to $desHarPath');
+  logger?.printStatus('copy from: $localEngineHarPath to $desHarPath');
   logger?.printStatus('copy flutter runtime to project end');
 }
 
@@ -702,7 +710,7 @@ class OhosHvigorBuilder implements OhosBuilder {
   Future<void> flutterBuildPre(FlutterProject flutterProject, OhosBuildInfo ohosBuildInfo, String target) async {
     /**
      * 0. checkEnv
-     * 1. excute flutter assemble
+     * 1. execute flutter assemble
      * 2. copy flutter asset to flutter module
      * 3. copy flutter runtime
      * 4. ohpm install
