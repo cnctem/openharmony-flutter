@@ -73,6 +73,7 @@ class DevelopmentShaderCompiler {
       case TargetPlatform.ohos_arm64:
       case TargetPlatform.ohos_arm:
       case TargetPlatform.ohos_x64:
+      case TargetPlatform.ohos:
         assert(!enableImpeller);
         _shaderTarget = ShaderTarget.sksl;
         break;
