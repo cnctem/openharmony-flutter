@@ -34,10 +34,9 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
       ```sh
       export PATH=<flutter_flutter path>/bin:$PATH
 
-      # Flutter pub domestic mirror
+      # Domestic mirror
       export PUB_HOSTED_URL=https://pub.flutter-io.cn
-      # Flutter openharmony mirror
-      export FLUTTER_STORAGE_BASE_URL=https://flutter-ohos.obs.cn-south-1.myhuaweicloud.com
+      export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
       ```
 
     3. The application build relies on [Flutter Engine](https://github.com/flutter/engine) to build products: `ohos_debug_unopt_arm64` and `ohos_release_arm64`. Please add: `--local-engine= in the Flutter Tools command running parameters. --local-engine=src/out/<engine product directory\>`. Can be downloaded at this path [Compiled product](https://docs.qq.com/sheet/DUnljRVBYUWZKZEtF?tab=BB08J2)
@@ -47,8 +46,7 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
        ```
        # Domestic mirror
        export PUB_HOSTED_URL=https://pub.flutter-io.cn
-       # Flutter openharmony mirror
-       export FLUTTER_STORAGE_BASE_URL=https://flutter-ohos.obs.cn-south-1.myhuaweicloud.com
+       export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 
        # The flutter_flutter directory pulled from Gitee
        export PATH=/home/<user>/ohos/flutter_flutter/bin:$PATH

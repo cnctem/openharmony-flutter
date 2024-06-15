@@ -32,11 +32,8 @@ Flutter SDK 仓库
 
      ```sh
      export PATH=<flutter_flutter path>/bin:$PATH
-
-     # Flutter pub国内镜像
      export PUB_HOSTED_URL=https://pub.flutter-io.cn
-     # Flutter 鸿蒙镜像
-     export FLUTTER_STORAGE_BASE_URL=https://flutter-ohos.obs.cn-south-1.myhuaweicloud.com
+     export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
      ```
     
    3. 应用构建依赖[Flutter Engine](https://github.com/flutter/engine)构建产物：`ohos_debug_unopt_arm64` 与 `ohos_release_arm64`，请在Flutter Tools指令运行参数中添加：`--local-engine=src/out/<engine产物目录\>` 可在该路径下载[编译产物](https://docs.qq.com/sheet/DUnljRVBYUWZKZEtF?tab=BB08J2)，engine路径指向需带上`src/out`目录
@@ -46,8 +43,7 @@ Flutter SDK 仓库
       ```sh
       # 国内镜像
       export PUB_HOSTED_URL=https://pub.flutter-io.cn
-      # Flutter 鸿蒙镜像
-      export FLUTTER_STORAGE_BASE_URL=https://flutter-ohos.obs.cn-south-1.myhuaweicloud.com
+      export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 
       # 拉取下来的flutter_flutter/bin目录
       export PATH=/home/<user>/ohos/flutter_flutter/bin:$PATH
