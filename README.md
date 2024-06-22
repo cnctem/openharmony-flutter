@@ -36,7 +36,10 @@ Flutter SDK 仓库
      export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
      ```
     
-   3. 应用构建依赖[Flutter Engine](https://github.com/flutter/engine)构建产物：`ohos_debug_unopt_arm64` 与 `ohos_release_arm64`，请在Flutter Tools指令运行参数中添加：`--local-engine=src/out/<engine产物目录\>` 可在该路径下载[编译产物](https://docs.qq.com/sheet/DUnljRVBYUWZKZEtF?tab=BB08J2)，engine路径指向需带上`src/out`目录
+   3. `--local-engine` 成为可选参数，可以不传。
+      - 使用示例：`--local-engine=src/out/<engine产物目录\>`
+      - 可在该路径下载[编译产物](https://docs.qq.com/sheet/DUnljRVBYUWZKZEtF?tab=BB08J2)
+      - engine路径指向需带上 `src/out` 目录
 
       上述所有环境变量的配置（Windows下环境变量配置请在‘编辑系统环境变量’中设置），可参考下面的示例（其中user和具体代码路径请替换成实际路径）：
 
@@ -68,16 +71,16 @@ Flutter SDK 仓库
    flutter create --platforms ohos <projectName>
 
    # 进入工程根目录编译
-   # 示例：flutter build hap [--target-platform ohos-arm64] --local-engine=<DIR>/src/out/ohos_release_arm64 --release
-   flutter build hap --local-engine=/home/user/engine_make/src/out/ohos_release_arm64 --release
+   # 示例：flutter build hap [--target-platform ohos-arm64] [--local-engine=<DIR>/src/out/ohos_release_arm64] --release
+   flutter build hap --release
    ```
 
 3. 通过`flutter devices`指令发现ohos设备之后，使用 `hdc -t <deviceId> install <hap file path>`进行安装。
 
 4. 也可直接使用下列指令运行：
 ```
-   # 示例：flutter run --local-engine=<DIR>/src/out/ohos_debug_unopt_arm64 -d <device-id>
-   flutter run --debug --local-engine=/home/user/engine_make/src/out/ohos_debug_unopt_arm64 -d <device-id>
+   # 示例：flutter run [--local-engine=<DIR>/src/out/ohos_debug_unopt_arm64] -d <device-id>
+   flutter run --debug -d <device-id>
 ```
 
 
@@ -93,9 +96,9 @@ Flutter SDK 仓库
 | devices | 已连接设备查找 | flutter devices                                                   |
 | install | 应用安装 | flutter install -t \<deviceId\> \<hap文件路径\>                                                   |
 | assemble | 资源打包 | flutter assemble                                                  |
-| build | 测试应用构建 | flutter build hap --target-platform ohos-arm64 --debug --local-engine=\<兼容ohos的debug engine产物路径\>         |
-| build | 正式应用构建 | flutter build hap --target-platform ohos-arm64 --release --local-engine=\<兼容ohos的release engine产物路径\>         |
-| run | 应用运行 | flutter run --local-engine=\<兼容ohos的engine产物路径\>                  |
+| build  | 测试应用构建 | flutter build hap --debug [--target-platform ohos-arm64] [--local-engine=\<兼容ohos的debug engine产物路径\>]       |
+| build  | 正式应用构建 | flutter build hap --release [--target-platform ohos-arm64] [--local-engine=\<兼容ohos的release engine产物路径\>]   |
+| run    | 应用运行 | flutter run [--local-engine=\<兼容ohos的engine产物路径\>]                |
 | attach | 调试模式 | flutter attach                                                    |
 | screenshot | 截屏 | flutter screenshot                                                 |
 
@@ -161,4 +164,12 @@ Flutter SDK 仓库
 
 9. 如果报`Invalid CEN header (invalid zip64 extra data field size)`异常，请更换Jdk版本，参见[JDK-8313765](https://bugs.openjdk.org/browse/JDK-8313765)
 
+10. 运行debug版本的flutter应用用到鸿蒙设备后报错（release和profile版本正常）
+    1. 报错信息: `Error while initializing the Dart VM: Wrong full snapshot version, expected '8af474944053df1f0a3be6e6165fa7cf' found 'adb4292f3ec25074ca70abcd2d5c7251'`
+    2. 解决方案: 依次执行以下操作
+        1. 设置环境变量 `export FLUTTER_STORAGE_BASE_URL=https://flutter-ohos.obs.cn-south-1.myhuaweicloud.com`
+        2. 删除 <flutter>/bin/cache 目录下的缓存
+        3. 执行 `flutter clean`，清除项目编译缓存
+        4. 运行 `flutter run -d $DEVICE --debug`
+    3. 补充信息: 运行android或ios出现类似错误，也可以尝试还原环境变量 FLUTTER_STORAGE_BASE_URL ，清除缓存后重新运行。 
 
