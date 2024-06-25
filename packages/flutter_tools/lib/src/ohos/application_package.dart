@@ -229,6 +229,9 @@ class OhosModule {
       return <OhosModule>[];
     }
     final Map<String, dynamic> buildProfile = JSON5.parse(buildProfileFile.readAsStringSync()) as Map<String, dynamic>;
+    if (!buildProfile.containsKey('modules')) {
+      throwToolExit("Ohos buildProfileFile not contains modules. ${buildProfileFile}");
+    }
     final List<dynamic> modules = buildProfile['modules'] as List<dynamic>;
     return modules.map((dynamic e) {
       final Map<String, dynamic> module = e as Map<String, dynamic>;
