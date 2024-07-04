@@ -18,43 +18,31 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
     *The following environment variable configuration is for Unix-like systems (Linux, Mac). You can directly refer to the configuration below. For environment variable configuration under Windows, please set it in ‘Edit System Environment Variables’*
 
    1. Download OpenHarmony SDK and configure environment variables
-   * The directory structure after decompression of the API11 developer preview version is as follows:
-      ```
-      /SDK
-      ├── HarmonyOS-NEXT-DP0
-      │   └── base
-      │   └── hms
-      ├── HarmonyOS-NEXT-DP1
-      │   └── base
-      │   └── hms
-      ...
-      ```
+    * API12, deveco-studio-5.0.0.300 or command-line-tools-5.0.0.300
+    * Configure environment variables (SDK, node, ohpm, hvigor)
 
-    * Configure environment variables
-
+       ```sh
+       export TOOL_HOME=/Applications/DevEco-Studio-5.0.3.300.app/Contents # For mac
+       export DEVECO_SDK_HOME=$TOOL_HOME/sdk # command-line-tools/sdk
+       export PATH=$TOOL_HOME/tools/ohpm/bin:$PATH # command-line-tools/ohpm/bin
+       export PATH=$TOOL_HOME/tools/hvigor/bin:$PATH # command-line-tools/hvigor/bin
+       export PATH=$TOOL_HOME/tools/node/bin:$PATH # command-line-tools/tool/node/bin
        ```
-       #HarmonyOS SDK, extract the directory after sdk/xxSDK.zip from the development kit package
-       export HOS_SDK_HOME=/home/<user>/ohos/sdk
 
-       #Unzip the bin subdirectory after commandline/commandline tools xxxx.zip in the development kit package
-       export PATH=$PATH:/home/<user>/ohos/command-line-tools/bin
-       ```
-    * Configure the path of sdkmgr (commandline/command-line-tools/sdkmanager/conf/config.properties), use the local path, and run sdkmgr list to verify, the path configuration of config.properties:
-      ```
-      sdk-directory=/home/<user>/ohos/sdk
-      ```
+   2. Download the current warehouse code `git clone https://gitee.com/openharmony-sig/flutter_flutter.git` through the code tool, and configure the environment
 
-   1. Download the current warehouse code `git clone https://gitee.com/openharmony-sig/flutter_flutter.git` through the code tool, and configure the environment
-
-      ```
+      ```sh
       export PATH=<flutter_flutter path>/bin:$PATH
 
-      # Flutter pub domestic mirror
+      # Domestic mirror
       export PUB_HOSTED_URL=https://pub.flutter-io.cn
       export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
       ```
 
-    2. The application build relies on [Flutter Engine](https://github.com/flutter/engine) to build products: `ohos_debug_unopt_arm64` and `ohos_release_arm64`. Please add: `--local-engine= in the Flutter Tools command running parameters. --local-engine=src/out/<engine product directory\>`. Can be downloaded at this path [Compiled product](https://docs.qq.com/sheet/DUnljRVBYUWZKZEtF?tab=BB08J2)
+    3. becomes an optional parameter and may not be passed.
+       - Usage example: `--local-engine=src/out/<engine产物目录\>`
+       - You can download [compiled product](https://docs.qq.com/sheet/DUnljRVBYUWZKZEtF?tab=BB08J2) from this path.
+       - The engine path points to the directory that needs to be accompanied by 'src/out'.
 
        For the configuration of all the above environment variables (for environment variable configuration under Windows, please set it in 'Edit System Environment Variables'), you can refer to the following example (please replace user and specific code path with the actual path):
 
@@ -64,17 +52,14 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
        export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 
        # The flutter_flutter directory pulled from Gitee
-       export PATH=$PATH:$FLUTTER_HOME/bin
+       export PATH=/home/<user>/ohos/flutter_flutter/bin:$PATH
 
-       # Unzip the bin subdirectory after commandline/commandline-tools-xxxx.zip in the development kit package
-       export PATH=$PATH:/home/<user>/ohos/command-line-tools/bin
-
-       # HarmonyOS SDK, unzip the directory after sdk/X86SDK.zip or M1SDK.zip in the DevEco Studio installation package
-       export HOS_SDK_HOME=/home/<user>/ohos/sdk
-
-       #nodejs
-       export NODE_HOME=/home/<user>/env/node-v14.19.1-linux-x64
-       export PATH=$NODE_HOME/bin:$PATH
+       # HarmonyOS SDK
+       export TOOL_HOME=/Applications/DevEco-Studio-5.0.3.300.app/Contents # For mac
+       export DEVECO_SDK_HOME=$TOOL_HOME/sdk # command-line-tools/sdk
+       export PATH=$TOOL_HOME/tools/ohpm/bin:$PATH # command-line-tools/ohpm/bin
+       export PATH=$TOOL_HOME/tools/hvigor/bin:$PATH # command-line-tools/hvigor/bin
+       export PATH=$TOOL_HOME/tools/node/bin:$PATH # command-line-tools/tool/node/bin
        ```
 
 ## Build steps
@@ -124,28 +109,30 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
 
 ## Common Problem
 
-1. Recommended version of OpenHarmony SDK: `4.0.10.3`, which can be downloaded around August 20 when it is built daily. If there are problems related to the SDK version during the compilation process, you can try to replace this version of the SDK.
+1. After switching to FLUTTER_STORAGE_BASE_URL, you need to delete the \<flutter\>/bin/cache directory and execute Flutter clean in the project before running it again.
 
-2. If an error message appears: `The SDK license agreement is not accepted`, please execute the following command and compile again:
+2. Recommended version of OpenHarmony SDK: `4.0.10.3`, which can be downloaded around August 20 when it is built daily. If there are problems related to the SDK version during the compilation process, you can try to replace this version of the SDK.
+
+3. If an error message appears: `The SDK license agreement is not accepted`, please execute the following command and compile again:
 
     ```
     ./ohsdkmgr install ets:9 js:9 native:9 previewer:9 toolchains:9 --sdk-directory='/home/xc/code/sdk/ohos-sdk/' --accept-license
     ```
 
-3. After switching between debug and release compilation modes, an error may be reported during operation. You can try deleting the oh_modules cache file and recompiling.
+4. After switching between debug and release compilation modes, an error may be reported during operation. You can try deleting the oh_modules cache file and recompiling.
 
-4. If `flutter docker -v` prompts that ohpm cannot be found, but the environment variables are detected correctly, please ensure that you have executed the `ohpm/bin/init` command to install ohpm and check again.
+5. If `flutter docker -v` prompts that ohpm cannot be found, but the environment variables are detected correctly, please ensure that you have executed the `ohpm/bin/init` command to install ohpm and check again.
 
-5. If you encounter the error Unsupported class file major version 61 when compiling the signature tool, it means that the current JDK version does not support it. Please lower the Java SDK version and try again.
+6. If you encounter the error Unsupported class file major version 61 when compiling the signature tool, it means that the current JDK version does not support it. Please lower the Java SDK version and try again.
 
-6. If you are using the Beta version of DevEco Studio and encounter the error "must have required property 'compatibleSdkVersion', location: demo/ohos/build-profile.json5:17:11" when compiling the project, please refer to "DevEco Studio" Modify the hvigor/hvigor-config.json5 file in the '6 Creating Projects and Running Hello World' [Configuration Plug-in] chapter in "Environment Configuration Guide.docx".
+7. If you are using the Beta version of DevEco Studio and encounter the error "must have required property 'compatibleSdkVersion', location: demo/ohos/build-profile.json5:17:11" when compiling the project, please refer to "DevEco Studio" Modify the hvigor/hvigor-config.json5 file in the '6 Creating Projects and Running Hello World' [Configuration Plug-in] chapter in "Environment Configuration Guide.docx".
 
-7. If you are prompted with an installation error: `fail to verify pkcs7 file`, please execute the command
+8. If you are prompted with an installation error: `fail to verify pkcs7 file`, please execute the command
 
     ```
     hdc shell param set persist.bms.ohCert.verify true
     ```
-8. Linux virtual machine cannot directly discover OpenHarmony devices through hdc
+9. Linux virtual machine cannot directly discover OpenHarmony devices through hdc
 
     Solution: In the Windows host, open the hdc server. The specific instructions are as follows:
     ```
@@ -160,7 +147,7 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
 
     After the configuration is completed, the flutter sdk can complete the device connection through the hdc server. You can also refer to [official guidance](https://docs.openharmony.cn/pages/v4.0/zh-cn/device-dev/subsystems/subsys-toolchain -hdc-guide.md/#hdc-client%E5%A6%82%E4%BD%95%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AEhdc-server) .
 
-9. An error occurred when building the Hap task: Error: The hvigor depends on the npmrc file. Configure the npmrc file first.
+10. An error occurred when building the Hap task: Error: The hvigor depends on the npmrc file. Configure the npmrc file first.
 
 
     Please create the file `.npmrc` in the user directory `~`. For this configuration, please refer to [DevEco Studio official documentation](https://developer.harmonyos.com/cn/docs/documentation/doc-guides-V3/environment_config -0000001052902427-V3), the edited content is as follows:
@@ -169,3 +156,11 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
     registry=https://repo.huaweicloud.com/repository/npm/
     @ohos:registry=https://repo.harmonyos.com/npm/
     ```
+11. An error occurs when running a debug version of the Flutter application on a HarmonyOS device (release and profile versions are normal)
+    1. Error message: `Error while initializing the Dart VM: Wrong full snapshot version, expected '8af474944053df1f0a3be6e6165fa7cf' found 'adb4292f3ec25074ca70abcd2d5c7251'`
+    2. Solution: Perform the following actions in sequence
+        1. Set environment variables `export FLUTTER_STORAGE_BASE_URL=https://flutter-ohos.obs.cn-south-1.myhuaweicloud.com`
+        1. Delete the cache in the<Flutter>/bin/cache directory
+        2. Execute `fluent clean` to clear the project compilation cache
+        3. Execute `flutter run -d $DEVICE --debug`
+    3. Additional information: If a similar error occurs while running Android or iOS, you can also try restoring the environment variable FLUTTER_STORAGE_BASE_URL , clearing the cache, and then running again.
