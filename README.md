@@ -17,62 +17,46 @@ Flutter SDK 仓库
    *下列环境变量配置，类Unix系统（Linux、Mac），下可直接参照配置，Windows下环境变量配置请在‘编辑系统环境变量’中设置*
 
   1. 配置HarmonyOS SDK和环境变量
-   * API11 开发者预览版解压后目录结构如下：
-      ```
-      /SDK
-      ├── HarmonyOS-NEXT-DP0
-      │   └── base
-      │   └── hms
-      ├── HarmonyOS-NEXT-DP1
-      │   └── base
-      │   └── hms
-      ...
-      ```
-   * 解压开发套件包之后，配置环境变量,如：
+   * API12, deveco-studio-5.0.0.300 或 command-line-tools-5.0.0.300
+   * 配置环境变量 (SDK, node, ohpm, hvigor)
 
+      ```sh
+      export TOOL_HOME=/Applications/DevEco-Studio-5.0.3.300.app/Contents # mac环境
+      export DEVECO_SDK_HOME=$TOOL_HOME/sdk # command-line-tools/sdk
+      export PATH=$TOOL_HOME/tools/ohpm/bin:$PATH # command-line-tools/ohpm/bin
+      export PATH=$TOOL_HOME/tools/hvigor/bin:$PATH # command-line-tools/hvigor/bin
+      export PATH=$TOOL_HOME/tools/node/bin:$PATH # command-line-tools/tool/node/bin
       ```
-      # HarmonyOS SDK，解压开发套件包中 sdk/xxSDK.zip 之后的目录
-      export HOS_SDK_HOME=/home/<user>/ohos/sdk
-
-      # 解压开发套件包中 commandline/commandline-tools-xxxx.zip 之后 bin 子目录
-      export PATH=$PATH:/home/<user>/ohos/command-line-tools/bin
-      ```
-   * 配置sdkmgr的路径(commandline/command-line-tools/sdkmanager/conf/config.properties)，使用本地路径，并运行sdkmgr list验证，config.properties的路径配置：
-     ```
-     sdk-directory=/home/<user>/ohos/sdk
-     ```
 
   2. 通过代码工具下载当前仓库代码`git clone https://gitee.com/openharmony-sig/flutter_flutter.git`，指定dev或master分支，并配置环境
 
-     ```
+     ```sh
      export PATH=<flutter_flutter path>/bin:$PATH
-
-     # Flutter pub国内镜像
      export PUB_HOSTED_URL=https://pub.flutter-io.cn
      export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
      ```
     
-   3. 应用构建依赖[Flutter Engine](https://github.com/flutter/engine)构建产物：`ohos_debug_unopt_arm64` 与 `ohos_release_arm64`，请在Flutter Tools指令运行参数中添加：`--local-engine=src/out/<engine产物目录\>` 可在该路径下载[编译产物](https://docs.qq.com/sheet/DUnljRVBYUWZKZEtF?tab=BB08J2)，engine路径指向需带上`src/out`目录
+   3. `--local-engine` 成为可选参数，可以不传。
+      - 使用示例：`--local-engine=src/out/<engine产物目录\>`
+      - 可在该路径下载[编译产物](https://docs.qq.com/sheet/DUnljRVBYUWZKZEtF?tab=BB08J2)
+      - engine路径指向需带上 `src/out` 目录
 
       上述所有环境变量的配置（Windows下环境变量配置请在‘编辑系统环境变量’中设置），可参考下面的示例（其中user和具体代码路径请替换成实际路径）：
 
-      ```
+      ```sh
       # 国内镜像
       export PUB_HOSTED_URL=https://pub.flutter-io.cn
       export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 
       # 拉取下来的flutter_flutter/bin目录
-      export PATH=$PATH:/home/<user>/ohos/flutter_flutter/bin
+      export PATH=/home/<user>/ohos/flutter_flutter/bin:$PATH
 
-      # 步骤1中command-line-tools的bin 子目录
-      export PATH=$PATH:/home/<user>/ohos/command-line-tools/bin
-
-      # HarmonyOS SDK，步骤1中解压开发套件包中 sdk/xxSDK.zip 之后的目录
-      export HOS_SDK_HOME=/home/<user>/ohos/sdk
-
-      # nodejs
-      export NODE_HOME=/home/<user>/env/node-v14.19.1-linux-x64
-      export PATH=$NODE_HOME/bin:$PATH
+      # HamonyOS SDK
+      export TOOL_HOME=/Applications/DevEco-Studio-5.0.3.300.app/Contents # mac环境
+      export DEVECO_SDK_HOME=$TOOL_HOME/sdk # command-line-tools/sdk
+      export PATH=$TOOL_HOME/tools/ohpm/bin:$PATH # command-line-tools/ohpm/bin
+      export PATH=$TOOL_HOME/tools/hvigor/bin:$PATH # command-line-tools/hvigor/bin
+      export PATH=$TOOL_HOME/tools/node/bin:$PATH # command-line-tools/tool/node/bin
       ```
 
 
@@ -87,16 +71,16 @@ Flutter SDK 仓库
    flutter create --platforms ohos <projectName>
 
    # 进入工程根目录编译
-   # 示例：flutter build hap [--target-platform ohos-arm64] --local-engine=<DIR>/src/out/ohos_release_arm64 --release
-   flutter build hap --local-engine=/home/user/engine_make/src/out/ohos_release_arm64 --release
+   # 示例：flutter build hap [--target-platform ohos-arm64] [--local-engine=<DIR>/src/out/ohos_release_arm64] --release
+   flutter build hap --release
    ```
 
 3. 通过`flutter devices`指令发现ohos设备之后，使用 `hdc -t <deviceId> install <hap file path>`进行安装。
 
 4. 也可直接使用下列指令运行：
 ```
-   # 示例：flutter run --local-engine=<DIR>/src/out/ohos_debug_unopt_arm64 -d <device-id>
-   flutter run --debug --local-engine=/home/user/engine_make/src/out/ohos_debug_unopt_arm64 -d <device-id>
+   # 示例：flutter run [--local-engine=<DIR>/src/out/ohos_debug_unopt_arm64] -d <device-id>
+   flutter run --debug -d <device-id>
 ```
 
 
@@ -112,9 +96,9 @@ Flutter SDK 仓库
 | devices | 已连接设备查找 | flutter devices                                                   |
 | install | 应用安装 | flutter install -t \<deviceId\> \<hap文件路径\>                                                   |
 | assemble | 资源打包 | flutter assemble                                                  |
-| build | 测试应用构建 | flutter build hap --target-platform ohos-arm64 --debug --local-engine=\<兼容ohos的debug engine产物路径\>         |
-| build | 正式应用构建 | flutter build hap --target-platform ohos-arm64 --release --local-engine=\<兼容ohos的release engine产物路径\>         |
-| run | 应用运行 | flutter run --local-engine=\<兼容ohos的engine产物路径\>                  |
+| build  | 测试应用构建 | flutter build hap --debug [--target-platform ohos-arm64] [--local-engine=\<兼容ohos的debug engine产物路径\>]       |
+| build  | 正式应用构建 | flutter build hap --release [--target-platform ohos-arm64] [--local-engine=\<兼容ohos的release engine产物路径\>]   |
+| run    | 应用运行 | flutter run [--local-engine=\<兼容ohos的engine产物路径\>]                |
 | attach | 调试模式 | flutter attach                                                    |
 | screenshot | 截屏 | flutter screenshot                                                 |
 
@@ -123,20 +107,22 @@ Flutter SDK 仓库
 
 ## 常见问题
 
-1. 若出现报错：`The SDK license agreement is not accepted`，参考执行以下命令后再次编译：
+1. 切换FLUTTER_STORAGE_BASE_URL后需删除\<flutter\>/bin/cache 目录，并在项目中执行flutter clean后再运行
+
+2. 若出现报错：`The SDK license agreement is not accepted`，参考执行以下命令后再次编译：
 
    ```
    ./ohsdkmgr install ets:9 js:9 native:9 previewer:9 toolchains:9 --sdk-directory='/home/xc/code/sdk/ohos-sdk/' --accept-license
    ```
 
-2. 如果你使用的是DevEco Studio的Beta版本，编译工程时遇到“must have required property 'compatibleSdkVersion', location: demo/ohos/build-profile.json5:17:11"错误，请参考《DevEco Studio环境配置指导.docx》中的‘6 创建工程和运行Hello World’【配置插件】章节修改 hvigor/hvigor-config.json5文件。
+3. 如果你使用的是DevEco Studio的Beta版本，编译工程时遇到“must have required property 'compatibleSdkVersion', location: demo/ohos/build-profile.json5:17:11"错误，请参考《DevEco Studio环境配置指导.docx》中的‘6 创建工程和运行Hello World’【配置插件】章节修改 hvigor/hvigor-config.json5文件。
 
-3. 若提示安装报错：`fail to verify pkcs7 file` 请执行指令
+4. 若提示安装报错：`fail to verify pkcs7 file` 请执行指令
 
    ```
    hdc shell param set persist.bms.ohCert.verify true
    ```
-4. linux虚拟机通过hdc无法直接发现OpenHarmony设备
+5. linux虚拟机通过hdc无法直接发现OpenHarmony设备
 
    解决方案：在windows宿主机中，开启hdc server，具体指令如下：
    ```
@@ -151,7 +137,7 @@ Flutter SDK 仓库
 
    配置完成后flutter sdk可以通过hdc server完成设备连接，也可参考[官方指导](https://docs.openharmony.cn/pages/v4.0/zh-cn/device-dev/subsystems/subsys-toolchain-hdc-guide.md/#hdc-client%E5%A6%82%E4%BD%95%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AEhdc-server)。
 
-5. 构建Hap任务时报错：Error: The hvigor depends on the npmrc file. Configure the npmrc file first.
+6. 构建Hap任务时报错：Error: The hvigor depends on the npmrc file. Configure the npmrc file first.
 
 
    请在用户目录`~`下创建文件`.npmrc`，该配置也可参考[DevEco Studio官方文档](https://developer.harmonyos.com/cn/docs/documentation/doc-guides-V3/environment_config-0000001052902427-V3)，编辑内容如下：
@@ -161,7 +147,7 @@ Flutter SDK 仓库
    @ohos:registry=https://repo.harmonyos.com/npm/
    ```
 
-6. 查日志时，存在日志丢失现象。
+7. 查日志时，存在日志丢失现象。
     解决方案：关闭全局日志，只打开自己领域的日志
 
     ```
@@ -174,10 +160,16 @@ Flutter SDK 仓库
     打印A00000/XComFlutterOHOS_Native的日志，需要设置hdc shell hilog -b D -D A00000
     注：上面的设置在机器重启后会失效，如果要继续使用，需要重新设置。
     ```
-7. 若Api11 Beta1版本的机器上无法启动debug签名的应用，可以通过将签名换成正式签名，或在手机端打开开发者模式解决（步骤：设置->通用->开发者模式）
+8. 若Api11 Beta1版本的机器上无法启动debug签名的应用，可以通过将签名换成正式签名，或在手机端打开开发者模式解决（步骤：设置->通用->开发者模式）
 
-8. 如果报`Invalid CEN header (invalid zip64 extra data field size)`异常，请更换Jdk版本，参见[JDK-8313765](https://bugs.openjdk.org/browse/JDK-8313765)
+9. 如果报`Invalid CEN header (invalid zip64 extra data field size)`异常，请更换Jdk版本，参见[JDK-8313765](https://bugs.openjdk.org/browse/JDK-8313765)
 
-
-
+10. 运行debug版本的flutter应用用到鸿蒙设备后报错（release和profile版本正常）
+    1. 报错信息: `Error while initializing the Dart VM: Wrong full snapshot version, expected '8af474944053df1f0a3be6e6165fa7cf' found 'adb4292f3ec25074ca70abcd2d5c7251'`
+    2. 解决方案: 依次执行以下操作
+        1. 设置环境变量 `export FLUTTER_STORAGE_BASE_URL=https://flutter-ohos.obs.cn-south-1.myhuaweicloud.com`
+        2. 删除 <flutter>/bin/cache 目录下的缓存
+        3. 执行 `flutter clean`，清除项目编译缓存
+        4. 运行 `flutter run -d $DEVICE --debug`
+    3. 补充信息: 运行android或ios出现类似错误，也可以尝试还原环境变量 FLUTTER_STORAGE_BASE_URL ，清除缓存后重新运行。 
 

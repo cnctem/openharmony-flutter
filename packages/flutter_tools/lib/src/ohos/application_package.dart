@@ -112,10 +112,20 @@ class OhosBuildData {
       } else {
         appInfo = AppInfo('', 0, '');
       }
-      moduleInfo = ModuleInfo.getModuleInfo(ohosProject);
-      apiVersion = getApiVersion(ohosProject.getBuildProfileFile());
     } on Exception catch (err) {
-      throwToolExit('parse ohos project build data exception! File: ${ohosProject.getAppJsonFile().absolute}, Error: $err');
+      throwToolExit('Parse ohos app.json5 error: $err');
+    }
+
+    try {
+      moduleInfo = ModuleInfo.getModuleInfo(ohosProject);
+    } on Exception catch(err) {
+      throwToolExit('Parse ohos module.json5 error: $err');
+    }
+
+    try {
+      apiVersion = getApiVersion(ohosProject.getBuildProfileFile());
+    } on Exception catch(err) {
+      throwToolExit('Parse ohos build-profile.json5 error: $err');
     }
     return OhosBuildData(appInfo, moduleInfo, apiVersion);
   }
@@ -127,8 +137,8 @@ int getApiVersion(File buildProfile) {
   }
   final String buildProfileConfig = buildProfile.readAsStringSync();
   final dynamic obj = JSON5.parse(buildProfileConfig);
-  dynamic sdkObj = obj['app']['compileSdkVersion'];
-  sdkObj ??= obj['app']['products'][0]['compileSdkVersion'];
+  dynamic sdkObj = obj['app']['compatibleSdkVersion'];
+  sdkObj ??= obj['app']['products'][0]['compatibleSdkVersion'];
   if (sdkObj is int) {
     return sdkObj;
   } else if (sdkObj is String && sdkObj != null) { // 4.1.0(11)
@@ -175,6 +185,11 @@ class ModuleInfo {
       entryModule?.name ??
       (moduleList.isNotEmpty ? moduleList.first.name : OHOS_ENTRY_DEFAULT);
 
+  /// 获取主要的module路径，如果存在entry，返回entry类型的module，否则返回第一个module
+  String get mainModuleSrcPath =>
+      entryModule?.srcPath ??
+      (moduleList.isNotEmpty ? moduleList.first.srcPath : OHOS_ENTRY_DEFAULT);
+
   static ModuleInfo getModuleInfo(OhosProject ohosProject) {
     return ModuleInfo(OhosModule.fromOhosProject(ohosProject));
   }
@@ -210,7 +225,13 @@ class OhosModule {
 
   static List<OhosModule> fromOhosProject(OhosProject ohosProject) {
     final File buildProfileFile = ohosProject.ohosRoot.childFile('build-profile.json5');
+    if (!buildProfileFile.existsSync()) {
+      return <OhosModule>[];
+    }
     final Map<String, dynamic> buildProfile = JSON5.parse(buildProfileFile.readAsStringSync()) as Map<String, dynamic>;
+    if (!buildProfile.containsKey('modules')) {
+      throwToolExit("Ohos buildProfileFile not contains modules. ${buildProfileFile}");
+    }
     final List<dynamic> modules = buildProfile['modules'] as List<dynamic>;
     return modules.map((dynamic e) {
       final Map<String, dynamic> module = e as Map<String, dynamic>;
@@ -233,7 +254,6 @@ class OhosModule {
       final String name = module['name'] as String;
       final String type = module['type'] as String;
       final bool isEntry = type == OhosModuleType.entry.name;
-
       return OhosModule(
           name: name,
           srcPath: srcPath,
