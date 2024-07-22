@@ -18,7 +18,8 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
     *The following environment variable configuration is for Unix-like systems (Linux, Mac). You can directly refer to the configuration below. For environment variable configuration under Windows, please set it in ‘Edit System Environment Variables’*
 
    1. Download OpenHarmony SDK and configure environment variables
-    * API12, deveco-studio-5.0.0.300 or command-line-tools-5.0.0.300
+    * API12, deveco-studio-5.0.3.300 or command-line-tools-5.0.3.300
+    * Configure Java17
     * Configure environment variables (SDK, node, ohpm, hvigor)
 
        ```sh
@@ -164,3 +165,6 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
         2. Execute `fluent clean` to clear the project compilation cache
         3. Execute `flutter run -d $DEVICE --debug`
     3. Additional information: If a similar error occurs while running Android or iOS, you can also try restoring the environment variable FLUTTER_STORAGE_BASE_URL , clearing the cache, and then running again.
+
+12. After the ROM update in Beta 2 version, anonymous memory requests are no longer supported. Due to this change, the debug mode of Flutter application will crash. Please use release or profile mode first.
+    1. Reference Documents: [Explanation of Change in Anonymous Memory Execution Permission Control Policy](https://developer.huawei.com/consumer/cn/doc/harmonyos-roadmap-V5/changelogs-for-all-apps-b031-V5#%E5%8C%BF%E5%90%8D%E5%86%85%E5%AD%98%E6%89%A7%E8%A1%8C%E6%9D%83%E9%99%90%E7%AE%A1%E6%8E%A7%E7%AD%96%E7%95%A5%E5%8F%98%E6%9B%B4%E8%AF%B4%E6%98%8E)
