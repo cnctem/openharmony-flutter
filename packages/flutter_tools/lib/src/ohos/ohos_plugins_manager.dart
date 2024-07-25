@@ -32,7 +32,8 @@ Future<void> checkOhosPluginsDependencies(FlutterProject flutterProject) async {
       .toList();
   final File packageFile = flutterProject.ohos.flutterModulePackageFile;
   if (!packageFile.existsSync()) {
-    throwToolExit('check if oh-package.json5 file:($packageFile) exist ?');
+    globals.logger.printTrace('check if oh-package.json5 file:($packageFile) exist ?');
+    return;
   }
 
   final String packageConfig = packageFile.readAsStringSync();
@@ -106,7 +107,8 @@ Future<void> addFlutterModuleAndPluginsSrcOverrides(FlutterProject flutterProjec
   }
   final File packageFile = flutterProject.ohos.ohosRoot.childFile('oh-package.json5');
   if (!packageFile.existsSync()) {
-    throwToolExit('check if oh-package.json5 file:($packageFile) exist ?');
+    globals.logger.printTrace('check if oh-package.json5 file:($packageFile) exist ?');
+    return;
   }
   final String packageConfig = packageFile.readAsStringSync();
   final Map<String, dynamic> config = JSON5.parse(packageConfig) as Map<String, dynamic>;
@@ -135,7 +137,8 @@ Future<void> removePluginsModules(FlutterProject flutterProject) async {
   );
   final File buildProfileFile = flutterProject.ohos.getBuildProfileFile();
   if (!buildProfileFile.existsSync()) {
-    throwToolExit('check if oh-package.json5 file:($buildProfileFile) exist ?');
+    globals.logger.printTrace('check if build-profile.json5 file:($buildProfileFile) exist ?');
+    return;
   }
   final String packageConfig = buildProfileFile.readAsStringSync();
   final Map<String, dynamic> buildProfile = JSON5.parse(packageConfig) as Map<String, dynamic>;
@@ -164,7 +167,8 @@ Future<void> addFlutterModuleAndPluginsOverrides(FlutterProject flutterProject) 
   }
   final File packageFile = flutterProject.ohos.ohosRoot.childFile('oh-package.json5');
   if (!packageFile.existsSync()) {
-    throwToolExit('check if oh-package.json5 file:($packageFile) exist ?');
+    globals.logger.printTrace('check if oh-package.json5 file:($packageFile) exist ?');
+    return;
   }
   final String packageConfig = packageFile.readAsStringSync();
   final Map<String, dynamic> config = JSON5.parse(packageConfig) as Map<String, dynamic>;
