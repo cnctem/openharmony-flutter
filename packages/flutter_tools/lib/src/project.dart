@@ -929,7 +929,8 @@ class OhosProject extends FlutterProjectPlatform {
         };
         final List<dynamic> modules = buildProfile['modules'] as List<dynamic>;
         modules.add(module);
-        final String buildProfileNew = const JsonEncoder.withIndent('  ').convert(buildProfile);
+        final String buildProfileNew =
+            const JsonEncoder.withIndent('  ').convert(buildProfile);
         buildProfileFile.writeAsStringSync(buildProfileNew, flush: true);
       }
 
@@ -998,13 +999,29 @@ class OhosProject extends FlutterProjectPlatform {
       .childDirectory('main')
       .childFile('module.json5');
 
-  // entry/build/default/outputs/default/entry-default-signed.hap
-  File getSignedHapFile() => mainModuleDirectory
-      .childDirectory('build')
-      .childDirectory('default')
-      .childDirectory('outputs')
-      .childDirectory('default')
-      .childFile('$mainModuleName-default-signed.hap');
+  // macos: entry/build/{flavor}/outputs/{flavor}/entry-{flavor}-signed.hap
+  // windows: entry/build/default/outputs/{flavor}/entry-{flavor}-signed.hap
+  File getSignedHapFile(String flavor) {
+    File file = globals.fs.file(globals.fs.path.join(
+      mainModuleDirectory.path,
+      'build',
+      flavor,
+      'outputs',
+      flavor,
+      '$mainModuleName-$flavor-signed.hap',
+    ));
+    if (!file.existsSync()) {
+      file = globals.fs.file(globals.fs.path.join(
+        mainModuleDirectory.path,
+        'build',
+        'default',
+        'outputs',
+        flavor,
+        '$mainModuleName-$flavor-signed.hap',
+      ));
+    }
+    return file;
+  }
 
   File get flutterModulePackageFile =>
       flutterModuleDirectory.childFile('oh-package.json5');
@@ -1013,10 +1030,6 @@ class OhosProject extends FlutterProjectPlatform {
 
   File get ephemeralLocalPropertiesFile =>
       ephemeralDirectory.childFile('local.properties');
-
-  bool hasSignedHapBuild() {
-    return getSignedHapFile().existsSync();
-  }
 
   Future<void> ensureReadyForPlatformSpecificTooling(
       {DeprecationBehavior deprecationBehavior =
