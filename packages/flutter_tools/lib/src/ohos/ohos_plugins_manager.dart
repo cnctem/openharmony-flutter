@@ -80,9 +80,15 @@ Future<void> addPluginsModules(FlutterProject flutterProject) async {
     if (modulesMap.containsKey(plugin.name)) {
       continue;
     }
+    final String srcPath = globals.fs.path.join(plugin.path, OhosPlugin.kConfigKey);
+    final String dstPath = globals.fs.path.join(flutterProject.ohos.mainModuleDirectory.path, 'build', 'modules', plugin.name);
+    globals.printStatus('copy directory from $srcPath to $dstPath');
+    copyDirectory(globals.localFileSystem.directory(srcPath), globals.localFileSystem.directory(dstPath));
+    String relativePath = globals.fs.path.relative(dstPath, from: flutterProject.ohos.mainModuleDirectory.parent.path);
+    relativePath = globals.fs.path.join('.', relativePath);
     modules.add(<String, dynamic>{
       'name': plugin.name,
-      'srcPath': globals.fs.path.join(plugin.path, OhosPlugin.kConfigKey),
+      'srcPath': relativePath,
       'targets': <Map<String, dynamic>>[
         <String, dynamic>{
           'name': 'default',
