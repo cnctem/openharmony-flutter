@@ -29,10 +29,7 @@ import '../build_info.dart';
 import '../build_system/build_system.dart';
 import '../build_system/targets/ohos.dart';
 import '../cache.dart';
-import '../flutter_plugins.dart';
 import '../globals.dart' as globals;
-import '../platform_plugins.dart';
-import '../plugins.dart';
 import '../project.dart';
 import '../reporting/reporting.dart';
 import 'application_package.dart';
@@ -66,7 +63,7 @@ void checkPlatformEnvironment(String environment, Logger? logger) {
 }
 
 void copyFlutterAssets(String orgPath, String desPath, Logger? logger) {
-  logger?.printStatus('copy directory from $orgPath to $desPath');
+  logger?.printStatus('copy from "$orgPath" to "$desPath"');
   final LocalFileSystem localFileSystem = globals.localFileSystem;
   copyDirectory(
       localFileSystem.directory(orgPath), localFileSystem.directory(desPath));
@@ -292,7 +289,7 @@ void cleanAndCopyFlutterAsset(
     Logger? logger,
     String ohosRootPath,
     String output) {
-  logger?.printStatus('copy flutter assets to project start');
+  logger?.printTrace('copy flutter assets to project start');
   // clean flutter assets
   final String desFlutterAssetsPath =
       getProjectAssetsPath(ohosRootPath, ohosProject);
@@ -320,7 +317,7 @@ void cleanAndCopyFlutterAsset(
       appSo.deleteSync();
     }
   }
-  logger?.printStatus('copy flutter assets to project end');
+  logger?.printTrace('copy flutter assets to project end');
 }
 
 /// 清理和拷贝flutter运行时
@@ -330,7 +327,7 @@ void cleanAndCopyFlutterRuntime(
     Logger? logger,
     String ohosRootPath,
     OhosBuildData ohosBuildData) {
-  logger?.printStatus('copy flutter runtime to project start');
+  logger?.printTrace('copy flutter runtime to project start');
   // copy ohos font-family support
   if (ohosBuildInfo.buildInfo.isDebug) {
     final String flutterSdk = globals.fsUtils.escapePath(Cache.flutterRoot!);
@@ -359,8 +356,8 @@ void cleanAndCopyFlutterRuntime(
   ensureParentExists(desHarPath);
   final File originHarFile = globals.localFileSystem.file(localEngineHarPath);
   originHarFile.copySync(desHarPath);
-  logger?.printStatus('copy from: $localEngineHarPath to $desHarPath');
-  logger?.printStatus('copy flutter runtime to project end');
+  logger?.printStatus('copy from "$localEngineHarPath" to "$desHarPath"');
+  logger?.printTrace('copy flutter runtime to project end');
 }
 
 void ensureParentExists(String path) {
