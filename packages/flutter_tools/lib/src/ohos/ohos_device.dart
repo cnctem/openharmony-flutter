@@ -147,6 +147,7 @@ class OhosDevice extends Device {
         .map((File file) => <String>['file', 'send', file.path, targetPath])
         .toList();
     final List<List<String>> cmds = <List<String>>[
+      <String>['shell', 'rm', '-rf', targetPath],
       <String>['shell', 'mkdir', targetPath],
       ...hspCmds,
       <String>['file', 'send', hap.applicationPackage.path, targetPath],
@@ -158,7 +159,8 @@ class OhosDevice extends Device {
     for (final List<String> cmd in cmds) {
       result = _processUtils.runSync(cmd, throwOnError: true);
       if (result.exitCode != 0 || result.stdout.contains('error')) {
-        throwToolExit('Oops! _installApp failed! please check log.');
+        _logger.printError('_installApp: cmd=$cmd\n  code=${result.exitCode}, stdout=${result.stdout}, stderr=${result.stderr}');
+        return false;
       }
     }
     return result != null && result.exitCode == 0;
