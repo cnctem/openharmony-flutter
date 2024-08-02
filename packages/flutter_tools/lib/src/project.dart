@@ -1002,22 +1002,35 @@ class OhosProject extends FlutterProjectPlatform {
   // macos: entry/build/{flavor}/outputs/{flavor}/entry-{flavor}-signed.hap
   // windows: entry/build/default/outputs/{flavor}/entry-{flavor}-signed.hap
   File getSignedHapFile(String flavor) {
+    return OhosProject.getSignedFile(
+      modulePath: mainModuleDirectory.path,
+      moduleName: mainModuleName,
+      flavor: flavor,
+    );
+  }
+
+  static File getSignedFile({
+    required String modulePath,
+    String moduleName = 'entry',
+    String flavor = 'default',
+    String suffix = 'hap',
+  }) {
     File file = globals.fs.file(globals.fs.path.join(
-      mainModuleDirectory.path,
+      modulePath,
       'build',
       flavor,
       'outputs',
       flavor,
-      '$mainModuleName-$flavor-signed.hap',
+      '$moduleName-$flavor-signed.$suffix',
     ));
     if (!file.existsSync()) {
       file = globals.fs.file(globals.fs.path.join(
-        mainModuleDirectory.path,
+        modulePath,
         'build',
         'default',
         'outputs',
         flavor,
-        '$mainModuleName-$flavor-signed.hap',
+        '$moduleName-$flavor-signed.$suffix',
       ));
     }
     return file;

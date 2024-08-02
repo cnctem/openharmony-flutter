@@ -208,6 +208,32 @@ Future<int> assembleHar(
       logger: logger);
 }
 
+Future<int> assembleHsp(
+    {required ProcessUtils processUtils,
+    required String workPath,
+    required String hvigorwPath,
+    required String moduleName,
+    required String flavor,
+    Logger? logger}) async {
+  final List<String> command = <String>[
+    hvigorwPath,
+    // 'clean',
+    '--mode',
+    'module',
+    '-p',
+    'module=$moduleName',
+    '-p',
+    'product=$flavor',
+    'assembleHsp',
+    '--no-daemon',
+  ];
+  return hvigorwTask(command,
+      processUtils: processUtils,
+      workPath: workPath,
+      hvigorwPath: hvigorwPath,
+      logger: logger);
+}
+
 /// flutter构建
 Future<String> flutterAssemble(FlutterProject flutterProject,
     OhosBuildInfo ohosBuildInfo, String targetFile) async {
@@ -427,6 +453,7 @@ class OhosHvigorBuilder implements OhosBuilder {
 
     /// 生成所有 plugin 的 har
     await assembleHars(_processUtils, project, ohosBuildInfo, _logger);
+    await assembleHsps(_processUtils, project, ohosBuildInfo, _logger);
 
     await removePluginsModules(project);
     await addFlutterModuleAndPluginsOverrides(project);
@@ -507,6 +534,8 @@ class OhosHvigorBuilder implements OhosBuilder {
 
     /// 生成 module 和所有 plugin 的 har
     await assembleHars(_processUtils, project, ohosBuildInfo, _logger);
+    await assembleHsps(_processUtils, project, ohosBuildInfo, _logger);
+
     await removePluginsModules(project);
     await addFlutterModuleAndPluginsOverrides(project);
     printHowToConsumeHar(logger: _logger);
@@ -584,6 +613,7 @@ class OhosHvigorBuilder implements OhosBuilder {
 
     if (_ohosProject.isRunWithModuleHar) {
       await assembleHars(_processUtils, flutterProject, ohosBuildInfo, _logger);
+      await assembleHsps(_processUtils, flutterProject, ohosBuildInfo, _logger);
 
       /// har文件拷贝后，需要重新install
       // ohosProject.deleteOhModulesCache();
@@ -592,6 +622,20 @@ class OhosHvigorBuilder implements OhosBuilder {
           workingDirectory: _ohosProject.mainModuleDirectory.path,
           logger: _logger);
     }
+  }
+
+  String _moduleNameWithFlavor(List<OhosModule> modules, String? flavor) {
+    return modules
+        .map((OhosModule module) => OhosModule.fromModulePath(
+              modulePath: module.srcPath,
+              flavor: getFlavor(
+                globals.fs.file(globals.fs.path
+                    .join(module.srcPath, 'build-profile.json5')),
+                flavor,
+              ),
+            ))
+        .map((OhosModule module) => '${module.name}@${module.flavor}')
+        .join(',');
   }
 
   /// 生成所有 plugin 的 har
@@ -609,17 +653,7 @@ class OhosHvigorBuilder implements OhosBuilder {
 
     // compile hars. parallel compilation.
     final String hvigorwPath = getHvigorwPath(ohosProjectPath, checkMod: true);
-    final String moduleName = modules
-        .map((OhosModule module) => OhosModule.fromModulePath(
-              modulePath: module.srcPath,
-              flavor: getFlavor(
-                globals.fs.file(globals.fs.path
-                    .join(module.srcPath, 'ohos', 'build-profile.json5')),
-                ohosBuildInfo.buildInfo.flavor,
-              ),
-            ))
-        .map((OhosModule module) => '${module.name}@${module.flavor}')
-        .join(',');
+    final String moduleName = _moduleNameWithFlavor(modules, ohosBuildInfo.buildInfo.flavor);
     final int errorCode = await assembleHar(
         processUtils: processUtils,
         workPath: ohosProjectPath,
@@ -627,7 +661,7 @@ class OhosHvigorBuilder implements OhosBuilder {
         hvigorwPath: hvigorwPath,
         logger: logger);
     if (errorCode != 0) {
-      throwToolExit('assembleHar error! please check log.');
+      throwToolExit('Oops! assembleHars failed! please check log.');
     }
 
     // copy hars
@@ -646,6 +680,33 @@ class OhosHvigorBuilder implements OhosBuilder {
           globals.fs.path.join(ohosProjectPath, 'har', '${module.name}.har');
       ensureParentExists(desPath);
       originHar.copySync(desPath);
+    }
+  }
+
+  Future<void> assembleHsps(
+    ProcessUtils processUtils,
+    FlutterProject project,
+    OhosBuildInfo ohosBuildInfo,
+    Logger? logger,
+  ) async {
+    final String ohosProjectPath = project.ohos.ohosRoot.path;
+    final List<OhosModule> modules = _ohosBuildData.moduleInfo.moduleList
+        .where((OhosModule element) => element.type == OhosModuleType.shared)
+        .toList();
+    if (modules.isEmpty) {
+      return;
+    }
+    final String hvigorwPath = getHvigorwPath(ohosProjectPath, checkMod: true);
+    final String moduleName = _moduleNameWithFlavor(modules, ohosBuildInfo.buildInfo.flavor);
+    final int errorCode = await assembleHsp(
+        processUtils: processUtils,
+        workPath: ohosProjectPath,
+        moduleName: moduleName,
+        hvigorwPath: hvigorwPath,
+        flavor: getFlavor(project.ohos.getBuildProfileFile(), ohosBuildInfo.buildInfo.flavor),
+        logger: logger);
+    if (errorCode != 0) {
+      throwToolExit('Oops! assembleHsps failed! please check log.');
     }
   }
 }

@@ -75,6 +75,9 @@ class OhosHap extends ApplicationPackage implements PrebuiltApplicationPackage {
         }
       }
     }
+    for (final OhosModule element in ohosBuildData.moduleInfo.moduleList) {
+      element.flavor = flavor;
+    }
     return OhosHap(
         id: bundleName,
         applicationPackage: ohosProject.getSignedHapFile(flavor),
@@ -246,7 +249,7 @@ class OhosModule {
   final String? mainElement;
   final OhosModuleType type;
   final String srcPath;
-  final String flavor;
+  String flavor;
 
   static List<OhosModule> fromOhosProject(OhosProject ohosProject) {
     final File buildProfileFile = ohosProject.ohosRoot.childFile('build-profile.json5');
