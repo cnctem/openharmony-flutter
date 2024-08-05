@@ -957,6 +957,7 @@ class CachedLocalEngineArtifacts implements LocalEngineArtifacts {
       case Artifact.icuData:
       case Artifact.flutterXcframework:
       case Artifact.flutterMacOSFramework:
+      case Artifact.flutterEngineHar:
         return _fileSystem.path.join(engineOutPath, artifactFileName);
       case Artifact.platformKernelDill:
         if (platform == TargetPlatform.fuchsia_x64 || platform == TargetPlatform.fuchsia_arm64) {
@@ -999,7 +1000,6 @@ class CachedLocalEngineArtifacts implements LocalEngineArtifacts {
       case Artifact.linuxHeaders:
       case Artifact.windowsDesktopPath:
       case Artifact.windowsCppClientWrapper:
-      case Artifact.flutterEngineHar:
         return _fileSystem.path.join(_hostEngineOutPath, artifactFileName);
       case Artifact.frontendServerSnapshotForEngineDartSdk:
         return _fileSystem.path.join(
