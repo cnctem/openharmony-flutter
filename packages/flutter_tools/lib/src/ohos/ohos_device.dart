@@ -142,7 +142,7 @@ class OhosDevice extends Device {
               modulePath: module.srcPath,
               moduleName: module.name,
               flavor: module.flavor,
-              suffix: 'hsp',
+              type: OhosFileType.hsp,
             ))
         .map((File file) => <String>['file', 'send', file.path, targetPath])
         .toList();

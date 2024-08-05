@@ -25,6 +25,8 @@ import '../base/logger.dart';
 import '../base/os.dart';
 import '../base/platform.dart' as base_platform;
 import '../base/process.dart';
+import '../base/terminal.dart';
+import '../base/utils.dart';
 import '../build_info.dart';
 import '../build_system/build_system.dart';
 import '../build_system/targets/ohos.dart';
@@ -443,6 +445,10 @@ class OhosHvigorBuilder implements OhosBuilder {
       throwToolExit(
           "this ohos project don't have a entry module, can't build to a hap file.");
     }
+    final Status status = _logger.startProgress(
+      'Running Hvigor task assembleHap...',
+    );
+
     updateProjectVersion(project, ohosBuildInfo.buildInfo);
     await addPluginsModules(project);
     await addFlutterModuleAndPluginsSrcOverrides(project);
@@ -472,6 +478,7 @@ class OhosHvigorBuilder implements OhosBuilder {
         flavor: getFlavor(
             _ohosProject.getBuildProfileFile(), ohosBuildInfo.buildInfo.flavor),
         logger: _logger);
+    status.stop();
     if (errorCode != 0) {
       throwToolExit('assembleHap error! please check log.');
     }
@@ -484,6 +491,21 @@ class OhosHvigorBuilder implements OhosBuilder {
     if (signingConfigs is List && signingConfigs.isEmpty) {
       _logger.printError(
           '请通过DevEco Studio打开ohos工程后配置调试签名(File -> Project Structure -> Signing Configs 勾选Automatically generate signature)');
+    } else {
+      final BuildInfo buildInfo = ohosBuildInfo.buildInfo;
+      final File bundleFile = OhosProject.getSignedFile(
+        modulePath: _ohosProject.mainModuleDirectory.path,
+        moduleName: _ohosProject.mainModuleName,
+        flavor: getFlavor(_ohosProject.getBuildProfileFile(), buildInfo.flavor),
+        throwOnMissing: true,
+      );
+      final String appSize = (buildInfo.mode == BuildMode.debug)
+          ? '' // Don't display the size when building a debug variant.
+          : ' (${getSizeAsMB(bundleFile.lengthSync())})';
+      _logger.printStatus(
+        '${_logger.terminal.successMark} Built ${_fileSystem.path.relative(bundleFile.path)}$appSize.',
+        color: TerminalColor.green,
+      );
     }
   }
 
@@ -525,6 +547,10 @@ class OhosHvigorBuilder implements OhosBuilder {
       throwToolExit('current project is not module or has not pub get');
     }
 
+    final Status status = _logger.startProgress(
+      'Running Hvigor task assembleHar...',
+    );
+
     await addPluginsModules(project);
     await addFlutterModuleAndPluginsSrcOverrides(project);
 
@@ -538,6 +564,7 @@ class OhosHvigorBuilder implements OhosBuilder {
 
     await removePluginsModules(project);
     await addFlutterModuleAndPluginsOverrides(project);
+    status.stop();
     printHowToConsumeHar(logger: _logger);
   }
 
@@ -578,6 +605,9 @@ class OhosHvigorBuilder implements OhosBuilder {
     required OhosBuildInfo ohosBuildInfo,
     required String target,
   }) async {
+    final Status status = _logger.startProgress(
+      'Running Hvigor task assembleApp...',
+    );
     updateProjectVersion(project, ohosBuildInfo.buildInfo);
     await buildApplicationPipeLine(project, ohosBuildInfo, target: target);
 
@@ -591,9 +621,25 @@ class OhosHvigorBuilder implements OhosBuilder {
             _ohosProject.getBuildProfileFile(), ohosBuildInfo.buildInfo.flavor),
         hvigorwPath: hvigorwPath,
         logger: _logger);
+    status.stop();
     if (errorCode1 != 0) {
       throwToolExit('assembleApp error! please check log.');
     }
+    final BuildInfo buildInfo = ohosBuildInfo.buildInfo;
+    final File bundleFile = OhosProject.getSignedFile(
+      modulePath: _ohosProject.mainModuleDirectory.path,
+      moduleName: _ohosProject.mainModuleName,
+      flavor: getFlavor(_ohosProject.getBuildProfileFile(), buildInfo.flavor),
+      type: OhosFileType.app,
+      throwOnMissing: true,
+    );
+    final String appSize = (buildInfo.mode == BuildMode.debug)
+        ? '' // Don't display the size when building a debug variant.
+        : ' (${getSizeAsMB(bundleFile.lengthSync())})';
+    _logger.printStatus(
+      '${_logger.terminal.successMark} Built ${_fileSystem.path.relative(bundleFile.path)}$appSize.',
+      color: TerminalColor.green,
+    );
   }
 
   Future<void> buildApplicationPipeLine(
@@ -653,7 +699,8 @@ class OhosHvigorBuilder implements OhosBuilder {
 
     // compile hars. parallel compilation.
     final String hvigorwPath = getHvigorwPath(ohosProjectPath, checkMod: true);
-    final String moduleName = _moduleNameWithFlavor(modules, ohosBuildInfo.buildInfo.flavor);
+    final String moduleName =
+        _moduleNameWithFlavor(modules, ohosBuildInfo.buildInfo.flavor);
     final int errorCode = await assembleHar(
         processUtils: processUtils,
         workPath: ohosProjectPath,
@@ -697,13 +744,15 @@ class OhosHvigorBuilder implements OhosBuilder {
       return;
     }
     final String hvigorwPath = getHvigorwPath(ohosProjectPath, checkMod: true);
-    final String moduleName = _moduleNameWithFlavor(modules, ohosBuildInfo.buildInfo.flavor);
+    final String moduleName =
+        _moduleNameWithFlavor(modules, ohosBuildInfo.buildInfo.flavor);
     final int errorCode = await assembleHsp(
         processUtils: processUtils,
         workPath: ohosProjectPath,
         moduleName: moduleName,
         hvigorwPath: hvigorwPath,
-        flavor: getFlavor(project.ohos.getBuildProfileFile(), ohosBuildInfo.buildInfo.flavor),
+        flavor: getFlavor(
+            project.ohos.getBuildProfileFile(), ohosBuildInfo.buildInfo.flavor),
         logger: logger);
     if (errorCode != 0) {
       throwToolExit('Oops! assembleHsps failed! please check log.');
