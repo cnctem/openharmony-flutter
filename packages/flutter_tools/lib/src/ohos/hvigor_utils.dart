@@ -164,7 +164,7 @@ void updateProjectVersion(FlutterProject project, BuildInfo? buildInfo) {
       if (buildNumber != null) {
         map['versionCode'] = int.parse(buildNumber);
       }
-      if (buildNumber != null) {
+      if (buildName != null) {
         map['versionName'] = buildName;
       }
       final String configNew =
