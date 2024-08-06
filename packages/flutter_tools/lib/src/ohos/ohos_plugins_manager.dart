@@ -32,7 +32,8 @@ Future<void> checkOhosPluginsDependencies(FlutterProject flutterProject) async {
       .toList();
   final File packageFile = flutterProject.ohos.flutterModulePackageFile;
   if (!packageFile.existsSync()) {
-    throwToolExit('check if oh-package.json5 file:($packageFile) exist ?');
+    globals.logger.printTrace('check if oh-package.json5 file:($packageFile) exist ?');
+    return;
   }
 
   final String packageConfig = packageFile.readAsStringSync();
@@ -47,8 +48,7 @@ Future<void> checkOhosPluginsDependencies(FlutterProject flutterProject) async {
       }
     }
     final String absolutePath = globals.fs.path.join(flutterProject.ohos.ohosRoot.path, 'har/${plugin.name}.har');
-    final String relativePath = globals.fs.path.relative(absolutePath, from: globals.fs.path.dirname(packageFile.path));
-    dependencies[plugin.name] = 'file:${relativePath}';
+    dependencies[plugin.name] = 'file:$absolutePath';
   }
   for (final String key in removeList) {
     globals.printStatus(
@@ -106,7 +106,8 @@ Future<void> addFlutterModuleAndPluginsSrcOverrides(FlutterProject flutterProjec
   }
   final File packageFile = flutterProject.ohos.ohosRoot.childFile('oh-package.json5');
   if (!packageFile.existsSync()) {
-    throwToolExit('check if oh-package.json5 file:($packageFile) exist ?');
+    globals.logger.printTrace('check if oh-package.json5 file:($packageFile) exist ?');
+    return;
   }
   final String packageConfig = packageFile.readAsStringSync();
   final Map<String, dynamic> config = JSON5.parse(packageConfig) as Map<String, dynamic>;
@@ -135,7 +136,8 @@ Future<void> removePluginsModules(FlutterProject flutterProject) async {
   );
   final File buildProfileFile = flutterProject.ohos.getBuildProfileFile();
   if (!buildProfileFile.existsSync()) {
-    throwToolExit('check if oh-package.json5 file:($buildProfileFile) exist ?');
+    globals.logger.printTrace('check if build-profile.json5 file:($buildProfileFile) exist ?');
+    return;
   }
   final String packageConfig = buildProfileFile.readAsStringSync();
   final Map<String, dynamic> buildProfile = JSON5.parse(packageConfig) as Map<String, dynamic>;
@@ -164,14 +166,16 @@ Future<void> addFlutterModuleAndPluginsOverrides(FlutterProject flutterProject) 
   }
   final File packageFile = flutterProject.ohos.ohosRoot.childFile('oh-package.json5');
   if (!packageFile.existsSync()) {
-    throwToolExit('check if oh-package.json5 file:($packageFile) exist ?');
+    globals.logger.printTrace('check if oh-package.json5 file:($packageFile) exist ?');
+    return;
   }
   final String packageConfig = packageFile.readAsStringSync();
   final Map<String, dynamic> config = JSON5.parse(packageConfig) as Map<String, dynamic>;
   final Map<String, dynamic> overrides = config['overrides'] as Map<String, dynamic>? ?? <String, dynamic>{};
 
   for (final Plugin plugin in plugins) {
-    overrides[plugin.name] = 'file:./har/${plugin.name}.har';
+    final String absolutePath = globals.fs.path.join(flutterProject.ohos.ohosRoot.path, 'har/${plugin.name}.har');
+    overrides[plugin.name] = 'file:$absolutePath';
   }
   final String configNew = const JsonEncoder.withIndent('  ').convert(config);
   packageFile.writeAsStringSync(configNew, flush: true);
