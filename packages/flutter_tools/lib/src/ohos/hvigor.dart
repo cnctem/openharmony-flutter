@@ -148,6 +148,7 @@ Future<int> assembleHap(
     required String ohosRootPath,
     required String hvigorwPath,
     required String flavor,
+    required String buildMode,
     Logger? logger}) async {
   final List<String> command = <String>[
     hvigorwPath,
@@ -155,6 +156,8 @@ Future<int> assembleHap(
     'assembleHap',
     '-p',
     'product=$flavor',
+    '-p',
+    'buildMode=$buildMode',
     '--no-daemon',
   ];
   return hvigorwTask(command,
@@ -169,6 +172,7 @@ Future<int> assembleApp(
     required String ohosRootPath,
     required String hvigorwPath,
     required String flavor,
+    required String buildMode,
     Logger? logger}) async {
   final List<String> command = <String>[
     hvigorwPath,
@@ -176,6 +180,8 @@ Future<int> assembleApp(
     'assembleApp',
     '-p',
     'product=$flavor',
+    '-p',
+    'buildMode=$buildMode',
     '--no-daemon',
   ];
   return hvigorwTask(command,
@@ -190,6 +196,8 @@ Future<int> assembleHar(
     required String workPath,
     required String hvigorwPath,
     required String moduleName,
+    required String buildMode,
+    String product = 'default',
     Logger? logger}) async {
   final List<String> command = <String>[
     hvigorwPath,
@@ -199,7 +207,7 @@ Future<int> assembleHar(
     '-p',
     'module=$moduleName',
     '-p',
-    'product=default',
+    'product=$product',
     'assembleHar',
     '--no-daemon',
   ];
@@ -216,6 +224,7 @@ Future<int> assembleHsp(
     required String hvigorwPath,
     required String moduleName,
     required String flavor,
+    required String buildMode,
     Logger? logger}) async {
   final List<String> command = <String>[
     hvigorwPath,
@@ -226,6 +235,8 @@ Future<int> assembleHsp(
     'module=$moduleName',
     '-p',
     'product=$flavor',
+    '-p',
+    'buildMode=$buildMode',
     'assembleHsp',
     '--no-daemon',
   ];
@@ -477,6 +488,7 @@ class OhosHvigorBuilder implements OhosBuilder {
         hvigorwPath: hvigorwPath,
         flavor: getFlavor(
             _ohosProject.getBuildProfileFile(), ohosBuildInfo.buildInfo.flavor),
+        buildMode: ohosBuildInfo.buildInfo.modeName,
         logger: _logger);
     status.stop();
     if (errorCode != 0) {
@@ -620,6 +632,7 @@ class OhosHvigorBuilder implements OhosBuilder {
         flavor: getFlavor(
             _ohosProject.getBuildProfileFile(), ohosBuildInfo.buildInfo.flavor),
         hvigorwPath: hvigorwPath,
+        buildMode: ohosBuildInfo.buildInfo.modeName,
         logger: _logger);
     status.stop();
     if (errorCode1 != 0) {
@@ -706,6 +719,7 @@ class OhosHvigorBuilder implements OhosBuilder {
         workPath: ohosProjectPath,
         moduleName: moduleName,
         hvigorwPath: hvigorwPath,
+        buildMode: ohosBuildInfo.buildInfo.modeName,
         logger: logger);
     if (errorCode != 0) {
       throwToolExit('Oops! assembleHars failed! please check log.');
@@ -753,6 +767,7 @@ class OhosHvigorBuilder implements OhosBuilder {
         hvigorwPath: hvigorwPath,
         flavor: getFlavor(
             project.ohos.getBuildProfileFile(), ohosBuildInfo.buildInfo.flavor),
+        buildMode: ohosBuildInfo.buildInfo.modeName,
         logger: logger);
     if (errorCode != 0) {
       throwToolExit('Oops! assembleHsps failed! please check log.');
