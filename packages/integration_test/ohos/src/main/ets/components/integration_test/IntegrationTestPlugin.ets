@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+import { common } from '@kit.AbilityKit';
 import {
   AbilityAware,
   AbilityPluginBinding,
@@ -25,14 +25,13 @@ import {
   MethodChannel,
   MethodResult,
 } from '@ohos/flutter_ohos';
-import UIAbility from '@ohos.app.ability.UIAbility';
 
 const TAG = "IntegrationTestPlugin"
 
 export default class IntegrationTestPlugin implements MethodCallHandler, FlutterPlugin, AbilityAware {
   private static CHANNEL: string = "plugins.flutter.io/integration_test";
   private methodChannel: MethodChannel | null = null;
-  private flutterAbility: UIAbility | null = null;
+  private context: common.UIAbilityContext | null = null;
   private static testResultsSetter: Set<Map<String, String>>;
 
   getUniqueClassName(): string {
@@ -89,11 +88,11 @@ export default class IntegrationTestPlugin implements MethodCallHandler, Flutter
 
   onAttachedToAbility(binding: AbilityPluginBinding) {
     Log.w(TAG, 'flutter IntegrationTestPlugin onAttachedToAbility');
-    this.flutterAbility = binding.getAbility();
+    this.context = binding.getAbilityContext();
   }
 
   onDetachedFromAbility() {
     Log.w(TAG, 'flutter IntegrationTestPlugin onDetachedFromAbility');
-    this.flutterAbility = null;
+    this.context = null;
   }
 }
