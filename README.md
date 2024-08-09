@@ -180,5 +180,29 @@ Flutter SDK 仓库
         4. 运行 `flutter run -d $DEVICE --debug`
     3. 补充信息: 运行android或ios出现类似错误，也可以尝试还原环境变量 FLUTTER_STORAGE_BASE_URL ，清除缓存后重新运行。 
 
-11. Beta2版本的ROM更新后，不再支持申请匿名内存。
-    1. 参考文档：[匿名内存执行权限管控策略变更说明](https://developer.huawei.com/consumer/cn/doc/harmonyos-roadmap-V5/changelogs-for-all-apps-b031-V5#%E5%8C%BF%E5%90%8D%E5%86%85%E5%AD%98%E6%89%A7%E8%A1%8C%E6%9D%83%E9%99%90%E7%AE%A1%E6%8E%A7%E7%AD%96%E7%95%A5%E5%8F%98%E6%9B%B4%E8%AF%B4%E6%98%8E)
+11. Beta2版本的ROM更新后，不再支持申请有执行权限的匿名内存，导致debug运行闪退。
+    1. 解决方案：更新 flutter_flutter 到 a44b8a6d (2024-07-25) 之后的版本。
+    2. 关键日志：
+
+   ```
+   #20 at attachToNative (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterNapi.ets:78:32)
+   #21 at attachToNapi (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:144:5)
+   #22 at init (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:133:7)
+   ```
+
+12. DevEco-Studio(5.0.3.600 Beta3)，windows版本编译flutter应用报错
+    1.  解决方案：更新 flutter_flutter 到 c6fbac2b (2024-08-09) 之后的版本。
+    2.  关键日志：
+
+   ```
+   hvigor ERROR: Schema validate failed.
+      Detail: Please check the following fields.
+      {
+         instancePath: 'modules[2].srcPath',
+         keyword: 'pattern',
+         params: { pattern: '^(\\./|\\.\\./)[\\s\\S]+$' },
+         message: 'must match pattern "^(\\./|\\.\\./)[\\s\\S]+$"',
+      } 
+   ```
+
+[更多FAQ](https://gitee.com/openharmony-sig/flutter_samples/blob/master/ohos/docs/08_FAQ/README.md)
