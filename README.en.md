@@ -176,19 +176,4 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
    #22 at init (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:133:7)
    ```
 
-13. DevEco-Studio(5.0.3.600 Beta3)，windows版本编译flutter应用报错
-    1. Solution: Update flutter_flutter to a version after c6fbac2b (2024-08-09).
-    2. Key logs:
-
-   ```
-   hvigor ERROR: Schema validate failed.
-      Detail: Please check the following fields.
-      {
-         instancePath: 'modules[2].srcPath',
-         keyword: 'pattern',
-         params: { pattern: '^(\\./|\\.\\./)[\\s\\S]+$' },
-         message: 'must match pattern "^(\\./|\\.\\./)[\\s\\S]+$"',
-      } 
-   ```
-
 [More FAQ](https://gitee.com/openharmony-sig/flutter_samples/blob/master/ohos/docs/08_FAQ/README.md)
