@@ -6,6 +6,9 @@ Flutter SDK 仓库
 ## 仓库说明
 本仓库是基于Flutter SDK对于OpenHarmony平台的兼容拓展，可支持IDE或者终端使用Flutter Tools指令编译和构建OpenHarmony应用程序。
 
+## 开发文档
+文档入口：https://gitee.com/openharmony-sig/flutter_samples/tree/master/ohos/docs
+
 ## 环境依赖
 
 * 开发系统
@@ -37,7 +40,7 @@ Flutter SDK 仓库
      export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
      ```
     
-   3. `--local-engine` 成为可选参数，可以不传。
+   3. `--local-engine` 成为可选参数，可以不传，默认从云端获取。
       - 使用示例：`--local-engine=src/out/<engine产物目录\>`
       - 可在该路径下载[编译产物](https://docs.qq.com/sheet/DUnljRVBYUWZKZEtF?tab=BB08J2)
       - engine路径指向需带上 `src/out` 目录
@@ -189,5 +192,7 @@ Flutter SDK 仓库
    #21 at attachToNapi (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:144:5)
    #22 at init (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:133:7)
    ```
+
+12. 构建Hap命令直接执行`flutter build hap`即可，不再需要`--local-engine`参数，直接从云端获取编译产物。
 
 [更多FAQ](https://gitee.com/openharmony-sig/flutter_samples/blob/master/ohos/docs/08_FAQ/README.md)
