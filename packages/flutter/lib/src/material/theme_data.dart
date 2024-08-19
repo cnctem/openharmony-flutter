@@ -474,7 +474,7 @@ class ThemeData with Diagnosticable {
     pageTransitionsTheme ??= const PageTransitionsTheme();
     scrollbarTheme ??= const ScrollbarThemeData();
     visualDensity ??= VisualDensity.adaptivePlatformDensity;
-    useMaterial3 ??= false;
+    useMaterial3 = (platform == TargetPlatform.ohos) ? false : (useMaterial3 ?? false);
     final bool useInkSparkle = platform == TargetPlatform.android && !kIsWeb;
     splashFactory ??= useMaterial3
       ? useInkSparkle ? InkSparkle.splashFactory : InkRipple.splashFactory
@@ -2037,7 +2037,7 @@ class ThemeData with Diagnosticable {
       platform: platform ?? this.platform,
       scrollbarTheme: scrollbarTheme ?? this.scrollbarTheme,
       splashFactory: splashFactory ?? this.splashFactory,
-      useMaterial3: useMaterial3 ?? this.useMaterial3,
+      useMaterial3: ((platform ?? this.platform ) == TargetPlatform.ohos) ? false : (useMaterial3 ?? this.useMaterial3),
       visualDensity: visualDensity ?? this.visualDensity,
       // COLOR
       canvasColor: canvasColor ?? this.canvasColor,
@@ -2237,7 +2237,7 @@ class ThemeData with Diagnosticable {
       platform: t < 0.5 ? a.platform : b.platform,
       scrollbarTheme: ScrollbarThemeData.lerp(a.scrollbarTheme, b.scrollbarTheme, t),
       splashFactory: t < 0.5 ? a.splashFactory : b.splashFactory,
-      useMaterial3: t < 0.5 ? a.useMaterial3 : b.useMaterial3,
+      useMaterial3: ((t < 0.5 ? a.platform : b.platform) == TargetPlatform.ohos) ? false : (t < 0.5 ? a.useMaterial3 : b.useMaterial3),
       visualDensity: VisualDensity.lerp(a.visualDensity, b.visualDensity, t),
       // COLOR
       canvasColor: Color.lerp(a.canvasColor, b.canvasColor, t)!,
