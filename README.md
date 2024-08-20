@@ -6,9 +6,6 @@ Flutter SDK 仓库
 ## 仓库说明
 本仓库是基于Flutter SDK对于OpenHarmony平台的兼容拓展，可支持IDE或者终端使用Flutter Tools指令编译和构建OpenHarmony应用程序。
 
-## 开发文档
-文档入口：https://gitee.com/openharmony-sig/flutter_samples/tree/master/ohos/docs
-
 ## 环境依赖
 
 * 开发系统
@@ -27,6 +24,7 @@ Flutter SDK 仓库
       ```sh
       export TOOL_HOME=/Applications/DevEco-Studio-5.0.3.300.app/Contents # mac环境
       export DEVECO_SDK_HOME=$TOOL_HOME/sdk # command-line-tools/sdk
+      epxort HDC_HOME=$DEVECO_SDK_HOME/HarmonyOS-NEXT-DB1/openharmony/toolchains # windows 中需要配置改变量，否则拉取代码可能会卡死不动
       export PATH=$TOOL_HOME/tools/ohpm/bin:$PATH # command-line-tools/ohpm/bin
       export PATH=$TOOL_HOME/tools/hvigor/bin:$PATH # command-line-tools/hvigor/bin
       export PATH=$TOOL_HOME/tools/node/bin:$PATH # command-line-tools/tool/node/bin
@@ -40,7 +38,7 @@ Flutter SDK 仓库
      export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
      ```
     
-   3. `--local-engine` 成为可选参数，可以不传，默认从云端获取。
+   3. `--local-engine` 成为可选参数，可以不传。
       - 使用示例：`--local-engine=src/out/<engine产物目录\>`
       - 可在该路径下载[编译产物](https://docs.qq.com/sheet/DUnljRVBYUWZKZEtF?tab=BB08J2)
       - engine路径指向需带上 `src/out` 目录
@@ -58,6 +56,7 @@ Flutter SDK 仓库
       # HamonyOS SDK
       export TOOL_HOME=/Applications/DevEco-Studio-5.0.3.300.app/Contents # mac环境
       export DEVECO_SDK_HOME=$TOOL_HOME/sdk # command-line-tools/sdk
+      epxort HDC_HOME=$DEVECO_SDK_HOME/HarmonyOS-NEXT-DB1/openharmony/toolchains # windows 中需要配置改变量，否则拉取代码可能会卡死不动
       export PATH=$TOOL_HOME/tools/ohpm/bin:$PATH # command-line-tools/ohpm/bin
       export PATH=$TOOL_HOME/tools/hvigor/bin:$PATH # command-line-tools/hvigor/bin
       export PATH=$TOOL_HOME/tools/node/bin:$PATH # command-line-tools/tool/node/bin
@@ -183,16 +182,8 @@ Flutter SDK 仓库
         4. 运行 `flutter run -d $DEVICE --debug`
     3. 补充信息: 运行android或ios出现类似错误，也可以尝试还原环境变量 FLUTTER_STORAGE_BASE_URL ，清除缓存后重新运行。 
 
-11. Beta2版本的ROM更新后，不再支持申请有执行权限的匿名内存，导致debug运行闪退。
-    1. 解决方案：更新 flutter_flutter 到 a44b8a6d (2024-07-25) 之后的版本。
-    2. 关键日志：
+11. Beta2版本的ROM更新后，不再支持申请匿名内存。
+    1. 参考文档：[匿名内存执行权限管控策略变更说明](https://developer.huawei.com/consumer/cn/doc/harmonyos-roadmap-V5/changelogs-for-all-apps-b031-V5#%E5%8C%BF%E5%90%8D%E5%86%85%E5%AD%98%E6%89%A7%E8%A1%8C%E6%9D%83%E9%99%90%E7%AE%A1%E6%8E%A7%E7%AD%96%E7%95%A5%E5%8F%98%E6%9B%B4%E8%AF%B4%E6%98%8E)
 
-   ```
-   #20 at attachToNative (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterNapi.ets:78:32)
-   #21 at attachToNapi (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:144:5)
-   #22 at init (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:133:7)
-   ```
-
-12. 构建Hap命令直接执行`flutter build hap`即可，不再需要`--local-engine`参数，直接从云端获取编译产物。
-
-[更多FAQ](https://gitee.com/openharmony-sig/flutter_samples/blob/master/ohos/docs/08_FAQ/README.md)
+12. 拉去代码出现文件太长问题
+    执行 `git config --global core.longpaths true` 后，再尝试拉取。
