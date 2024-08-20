@@ -24,7 +24,7 @@ Flutter SDK 仓库
       ```sh
       export TOOL_HOME=/Applications/DevEco-Studio-5.0.3.300.app/Contents # mac环境
       export DEVECO_SDK_HOME=$TOOL_HOME/sdk # command-line-tools/sdk
-      epxort HDC_HOME=$DEVECO_SDK_HOME/HarmonyOS-NEXT-DB1/openharmony/toolchains # windows 中需要配置改变量，否则拉取代码可能会卡死不动
+      epxort HDC_HOME=$DEVECO_SDK_HOME/HarmonyOS-NEXT-DB1/openharmony/toolchains # windows 中需要配置该变量，否则拉取代码可能会卡死不动
       export PATH=$TOOL_HOME/tools/ohpm/bin:$PATH # command-line-tools/ohpm/bin
       export PATH=$TOOL_HOME/tools/hvigor/bin:$PATH # command-line-tools/hvigor/bin
       export PATH=$TOOL_HOME/tools/node/bin:$PATH # command-line-tools/tool/node/bin
@@ -56,7 +56,7 @@ Flutter SDK 仓库
       # HamonyOS SDK
       export TOOL_HOME=/Applications/DevEco-Studio-5.0.3.300.app/Contents # mac环境
       export DEVECO_SDK_HOME=$TOOL_HOME/sdk # command-line-tools/sdk
-      epxort HDC_HOME=$DEVECO_SDK_HOME/HarmonyOS-NEXT-DB1/openharmony/toolchains # windows 中需要配置改变量，否则拉取代码可能会卡死不动
+      epxort HDC_HOME=$DEVECO_SDK_HOME/HarmonyOS-NEXT-DB1/openharmony/toolchains # windows 中需要配置该变量，否则拉取代码可能会卡死不动
       export PATH=$TOOL_HOME/tools/ohpm/bin:$PATH # command-line-tools/ohpm/bin
       export PATH=$TOOL_HOME/tools/hvigor/bin:$PATH # command-line-tools/hvigor/bin
       export PATH=$TOOL_HOME/tools/node/bin:$PATH # command-line-tools/tool/node/bin
