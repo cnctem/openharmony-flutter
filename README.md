@@ -186,4 +186,4 @@ Flutter SDK 仓库
     1. 参考文档：[匿名内存执行权限管控策略变更说明](https://developer.huawei.com/consumer/cn/doc/harmonyos-roadmap-V5/changelogs-for-all-apps-b031-V5#%E5%8C%BF%E5%90%8D%E5%86%85%E5%AD%98%E6%89%A7%E8%A1%8C%E6%9D%83%E9%99%90%E7%AE%A1%E6%8E%A7%E7%AD%96%E7%95%A5%E5%8F%98%E6%9B%B4%E8%AF%B4%E6%98%8E)
 
 12. 拉去代码出现文件太长问题
-    执行 `git config --global core.longpaths true` 后，再尝试拉取。
+    执行 `git config --global core.longpaths true` 后，再尝试拉取。建议不管有没有遇到该问题，都配置这个选项。
