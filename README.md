@@ -209,4 +209,4 @@
 13. 拉取代码出现文件名太长问题
 执行 `git config --global core.longpaths true` 后，再尝试拉取。建议不管有没有遇到该问题，都配置这个选项。
 
-> [更多 FAQ](https://gitee.com/openharmony-sig/flutter_samples/blob/master/ohos/docs/08_FAQ/README.md)
+14. [更多 FAQ](https://gitee.com/openharmony-sig/flutter_samples/blob/master/ohos/docs/08_FAQ/README.md)。
