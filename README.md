@@ -195,7 +195,7 @@ Flutter SDK 仓库
 
 12. 构建Hap命令直接执行`flutter build hap`即可，不再需要`--local-engine`参数，直接从云端获取编译产物。
 
-13. 配置环境完成后执行 flutter 命令 出现崩溃。
+13. 配置环境完成后执行 flutter 命令 出现闪退。
     1. 解决方案：更新 flutter_flutter 到 a44b8a6d (2024-07-25) 之后的版本。
     ```
     export PATH=<git path>/cmd:$PATH
@@ -242,7 +242,7 @@ Flutter SDK 仓库
     # hvigor  ERROR: Cannot find belonging project path for module at D:\.
     # hvigor  ERROR:  BUILD FAILED in 2s 556ms.
     #Running Hvigor task assembleHap...
-    #Oops; flutter has exited unexpectedly: "ProcessException: The eommand failed
+    #Oops; flutter has exited unexpectedly: "ProcessException: The command failed
     #  <Command: hvigorw --mode module -p module=video_player_ohos@default -p product=default assmbleHar --no-daemon"
     #A crash report has been written to D:\work\videoplayerdemo\video_cannot_stop_at_background\flutter_03.log.
     ```
