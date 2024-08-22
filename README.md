@@ -35,6 +35,7 @@ Flutter SDK 仓库
   2. 通过代码工具下载当前仓库代码`git clone https://gitee.com/openharmony-sig/flutter_flutter.git`，指定dev或master分支，并配置环境
 
      ```sh
+     export PUB_CACHE=D:/PUB
      export PATH=<flutter_flutter path>/bin:$PATH
      export PUB_HOSTED_URL=https://pub.flutter-io.cn
      export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
@@ -48,6 +49,9 @@ Flutter SDK 仓库
       上述所有环境变量的配置（Windows下环境变量配置请在‘编辑系统环境变量’中设置），可参考下面的示例（其中user和具体代码路径请替换成实际路径）：
 
       ```sh
+      #依赖缓存
+      export PUB_CACHE=D:/PUB(自定义路径)
+
       # 国内镜像
       export PUB_HOSTED_URL=https://pub.flutter-io.cn
       export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
