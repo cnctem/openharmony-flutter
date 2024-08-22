@@ -17,7 +17,7 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
 
 * Environment configuration
 
-    **Please give priority to downloading the supporting development tools from [OpenHarmony SDK](https://developer.huawei.com/consumer/cn/develop) Download the matching development tool,Suites that are not downloaded through this channel are not supported**
+    **Please download the supporting development tool from [OpenHarmony SDK](https://developer.huawei.com/consumer/cn/develop)**
     *The following environment variable configuration is for Unix-like systems (Linux, Mac). You can directly refer to the configuration below. For environment variable configuration under Windows, please set it in ‘Edit System Environment Variables’*
 
    1. Configure the HarmonyOS SDK and environment variables
@@ -62,7 +62,7 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
         export PATH=/home/<user>/ohos/flutter_flutter/bin:$PATH
 
         # HarmonyOS SDK
-        export TOOL_HOME=/Applications/DevEco-Studio-5.0.app/Contents # For mac
+        export TOOL_HOME=/Applications/DevEco-Studio.app/Contents # For mac
         export DEVECO_SDK_HOME=$TOOL_HOME/sdk # command-line-tools/sdk
         export PATH=$TOOL_HOME/tools/ohpm/bin:$PATH # command-line-tools/ohpm/bin
         export PATH=$TOOL_HOME/tools/hvigor/bin:$PATH # command-line-tools/hvigor/bin

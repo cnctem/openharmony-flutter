@@ -16,7 +16,7 @@ Flutter SDK 仓库
   Flutter Tools指令目前已支持在Linux、Mac和Windows下使用。
 
 * 环境配置
-   **请优先从[鸿蒙SDK](https://developer.huawei.com/consumer/cn/develop)下载配套开发工具，暂不支持非该渠道下载的套件**
+   **请从[鸿蒙SDK](https://developer.huawei.com/consumer/cn/develop)下载配套开发工具**
    *下列环境变量配置，类Unix系统（Linux、Mac），下可直接参照配置，Windows下环境变量配置请在‘编辑系统环境变量’中设置*
 
   1. 配置HarmonyOS SDK和环境变量
@@ -60,7 +60,7 @@ Flutter SDK 仓库
        export PATH=/home/<user>/ohos/flutter_flutter/bin:$PATH
 
        # HamonyOS SDK
-       export TOOL_HOME=/Applications/DevEco-Studio-5.0.app/Contents # mac环境
+       export TOOL_HOME=/Applications/DevEco-Studio.app/Contents # mac环境
        export DEVECO_SDK_HOME=$TOOL_HOME/sdk # command-line-tools/sdk
        export PATH=$TOOL_HOME/tools/ohpm/bin:$PATH # command-line-tools/ohpm/bin
        export PATH=$TOOL_HOME/tools/hvigor/bin:$PATH # command-line-tools/hvigor/bin
