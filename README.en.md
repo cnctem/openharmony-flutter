@@ -250,5 +250,12 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
        #  <Command: hvigorw --mode module -p module=video_player_ohos@default -p product=default assmbleHar --no-daemon"
        #A crash report has been written to D:\work\videoplayerdemo\video_cannot_stop_at_background\flutter_03.log.
       ```
+17. Executing `flutter clean` in .ohos's project reported an error, and then executing `flutter pub get` also reported an error。
+    1. Solution：Delete the .ohos folder and execute `flutter pub get` again
+    2. Error message：
+      ```
+       Oops; flutter has exited unexpectedly: "PathNotFoundException: Cannot open file, path = 'D:\code\.ohos\build-profile.json5' (OS Error: 系统找不到指定的文件。，error = 2)".
+       A crash report has been written to D:\code\flutter_01.log.
+      ``` 
 
 [More FAQ](https://gitee.com/openharmony-sig/flutter_samples/blob/master/ohos/docs/08_FAQ/README.md)
