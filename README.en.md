@@ -255,7 +255,7 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
     1. Solution：Delete the .ohos folder and execute `flutter pub get` again
     2. Error message：
       ```
-       Oops; flutter has exited unexpectedly: "PathNotFoundException: Cannot open file, path = 'D:\code\.ohos\build-profile.json5' (OS Error: 系统找不到指定的文件。，error = 2)".
+       Oops; flutter has exited unexpectedly: "PathNotFoundException: Cannot open file, path = 'D:\code\.ohos\build-profile.json5' (OS Error:  The system cannot find the specified file。，error = 2)".
        A crash report has been written to D:\code\flutter_01.log.
       ``` 
 
