@@ -199,36 +199,18 @@ Future<int> assembleHar(
     required String buildMode,
     String product = 'default',
     Logger? logger}) async {
-  final List<String> command = <String>[];
-  if (buildMode.compareTo('debug') == 0 || buildMode.compareTo('release') == 0) {
-    command.addAll(<String>[
-      hvigorwPath,
-      '--mode',
-      'module',
-      '-p',
-      'module=$moduleName',
-      '-p',
-      'product=$product',
-      '-p',
-      'buildMode=$buildMode',
-      'assembleHar',
-      '--no-daemon',
-    ]);
-  } else {
-    command.addAll(<String>[
-      hvigorwPath,
-      '--mode',
-      'module',
-      '-p',
-      'module=$moduleName',
-      '-p',
-      'product=$product',
-      '-p',
-      'buildMode=debug',
-      'assembleHar',
-      '--no-daemon',
-    ]);
-  }
+  final List<String> command = <String>[
+    hvigorwPath,
+    // 'clean',
+    '--mode',
+    'module',
+    '-p',
+    'module=$moduleName',
+    '-p',
+    'product=$product',
+    'assembleHar',
+    '--no-daemon',
+  ];
   return hvigorwTask(command,
       processUtils: processUtils,
       workPath: workPath,

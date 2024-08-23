@@ -15,6 +15,10 @@ Flutter SDK 仓库
 
   Flutter Tools指令目前已支持在Linux、Mac和Windows下使用。
 
+* 开发限制
+
+  Windows环境下flutter工程和依赖的插件工程需要在同一个磁盘。
+
 * 环境配置
    **请从[鸿蒙SDK](https://developer.huawei.com/consumer/cn/develop)下载配套开发工具**
    *下列环境变量配置，类Unix系统（Linux、Mac），下可直接参照配置，Windows下环境变量配置请在‘编辑系统环境变量’中设置*
