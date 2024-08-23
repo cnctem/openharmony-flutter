@@ -165,7 +165,7 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
     Solution：Disable global logs and enable only logs in your domain
 
     ```
-     Step one：Disable log printing for all fields（Some special logs cannot be closed）
+     Step one：Disable log printing for all fields(Some special logs cannot be closed)
      hdc shell hilog -b X
      Step two：Open logs for your domain only
      hdc shell hilog <level> -D <domain> 
