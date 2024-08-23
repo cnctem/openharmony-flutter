@@ -15,6 +15,10 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
 
    Flutter Tools commands are currently supported on Linux, Mac and Windows.
 
+* development limitations
+
+  The Flutter project and dependent plugin projects in the Windows environment need to be on the same disk.
+
 * Environment configuration
 
     **Please download the supporting development tool from [OpenHarmony SDK](https://developer.huawei.com/consumer/cn/develop)**
