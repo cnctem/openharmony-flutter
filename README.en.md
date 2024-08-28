@@ -121,6 +121,9 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
 | run | application run | flutter run [--local-engine=\<engine product path compatible with ohos\>]                  |
 | attach | debug mode | flutter attach                                                    |
 | screenshot | screenshot | flutter screenshot                                                 |
+| pub | download dependency | flutter pub get                                                 |
+| clean | clear dependency | flutter clean                                                 |
+| cache| clear global cache data | flutter pub cache clean                                                 |
 
 Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sheet/DVVJDWWt1V09zUFN2)
 
@@ -210,7 +213,7 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
     ```
 
 14. If `flutter pub cache clean` is executed normally, `flutter clean` will report an error. If update command is executed according to the error message, it has no effect。
-    1. Solution：To avoid this problem, comment out the configuration in the build.json5 file。
+    1. Solution：To avoid this problem, comment out the configuration in the build.json5 file： "modules":[{ //The first object of the array is reserved }, { //The rest of the objects need comments }]
     2. Error message:
     ```
      #Parse ohos module. json5 error: Exception: Can not found module.json5 at
