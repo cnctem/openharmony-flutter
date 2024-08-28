@@ -37,15 +37,15 @@ Flutter SDK 仓库
        export PATH=$TOOL_HOME/tools/node/bin:$PATH # command-line-tools/tool/node/bin
       ```
 
-  2. 通过代码工具下载当前仓库代码`git clone https://gitee.com/openharmony-sig/flutter_flutter.git`，指定dev或master分支，并配置环境
+  2. 通过代码工具下载当前仓库代码`git clone https://gitee.com/openharmony-sig/flutter_flutter.git`，指定dev或master分支（推荐dev分支），并配置环境
 
-     ```sh
-      # 以下为类Unix系统（Linux、Mac）的环境变量配置（具体代码路径请替换成实际路径）
-      export PUB_CACHE=D:/PUB
-      export PATH=<flutter_flutter path>/bin:$PATH
-      export PUB_HOSTED_URL=https://pub.flutter-io.cn
-      export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
-     ```
+      ```sh
+       # 以下为类Unix系统（Linux、Mac）的环境变量配置（具体代码路径请替换成实际路径）
+       export PUB_CACHE=D:/PUB
+       export PATH=<flutter_flutter path>/bin:$PATH
+       export PUB_HOSTED_URL=https://pub.flutter-io.cn
+       export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
+      ```
     
    3. `--local-engine` 成为可选参数，可以不传，默认从云端获取。
       - 使用示例：`--local-engine=src/out/<engine产物目录\>`
