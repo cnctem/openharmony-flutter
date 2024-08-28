@@ -29,6 +29,7 @@ Flutter SDK 仓库
      - 配置环境变量 (SDK, node, ohpm, hvigor)
 
       ```sh
+       # 以下为类Unix系统（Linux、Mac）的环境变量配置（具体代码路径请替换成实际路径）
        export TOOL_HOME=/Applications/DevEco-Studio.app/Contents # mac环境
        export DEVECO_SDK_HOME=$TOOL_HOME/sdk # command-line-tools/sdk
        export PATH=$TOOL_HOME/tools/ohpm/bin:$PATH # command-line-tools/ohpm/bin
@@ -39,6 +40,7 @@ Flutter SDK 仓库
   2. 通过代码工具下载当前仓库代码`git clone https://gitee.com/openharmony-sig/flutter_flutter.git`，指定dev或master分支，并配置环境
 
      ```sh
+      # 以下为类Unix系统（Linux、Mac）的环境变量配置（具体代码路径请替换成实际路径）
       export PUB_CACHE=D:/PUB
       export PATH=<flutter_flutter path>/bin:$PATH
       export PUB_HOSTED_URL=https://pub.flutter-io.cn
@@ -50,9 +52,9 @@ Flutter SDK 仓库
       - 可在该路径下载[编译产物](https://docs.qq.com/sheet/DUnljRVBYUWZKZEtF?tab=BB08J2)
       - engine路径指向需带上 `src/out` 目录
 
-      上述所有环境变量的配置（Windows下环境变量配置请在‘编辑系统环境变量’中设置），可参考下面的示例（其中user和具体代码路径请替换成实际路径）：
-
       ```sh
+       # 以下为类Unix系统（Linux、Mac）的环境变量配置（具体代码路径请替换成实际路径）
+
        #依赖缓存
        export PUB_CACHE=D:/PUB(自定义路径)
 
