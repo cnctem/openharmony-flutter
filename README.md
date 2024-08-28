@@ -248,14 +248,14 @@ Flutter SDK 仓库
         }
        ```
     2. 报错信息:
-      ```
-       # hvigor  ERROR: Cannot find belonging project path for module at D:\.
-       # hvigor  ERROR:  BUILD FAILED in 2s 556ms.
-       #Running Hvigor task assembleHap...
-       #Oops; flutter has exited unexpectedly: "ProcessException: The command failed
-       #  <Command: hvigorw --mode module -p module=video_player_ohos@default -p product=default assmbleHar --no-daemon"
-       #A crash report has been written to D:\work\videoplayerdemo\video_cannot_stop_at_background\flutter_03.log.
-      ```
+       ```
+        # hvigor  ERROR: Cannot find belonging project path for module at D:\.
+        # hvigor  ERROR:  BUILD FAILED in 2s 556ms.
+        #Running Hvigor task assembleHap...
+        #Oops; flutter has exited unexpectedly: "ProcessException: The command failed
+        #  <Command: hvigorw --mode module -p module=video_player_ohos@default -p product=default assmbleHar --no-daemon"
+        #A crash report has been written to D:\work\videoplayerdemo\video_cannot_stop_at_background\flutter_03.log.
+       ```
 
 17. 在.ohos的项目执行`flutter clean` 报错，然后再执行`flutter pub get`也报错。
     1. 解决方案：删除.ohos文件夹，重新flutter pub get 即可
