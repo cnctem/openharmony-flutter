@@ -197,45 +197,45 @@ Flutter SDK 仓库
     1. 解决方案：更新 flutter_flutter 到 a44b8a6d (2024-07-25) 之后的版本。
     2. 关键日志：
 
-    ```
-     #20 at attachToNative (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterNapi.ets:78:32)
-     #21 at attachToNapi (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:144:5)
-     #22 at init (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:133:7)
-    ```
+     ```
+      #20 at attachToNative (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterNapi.ets:78:32)
+      #21 at attachToNapi (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:144:5)
+      #22 at init (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:133:7)
+     ```
 
 12. 构建Hap命令直接执行`flutter build hap`即可，不再需要`--local-engine`参数，直接从云端获取编译产物。
 
 13. 配置环境完成后执行 flutter 命令 出现闪退。
     1. 解决方案：windows环境中添加git环境变量配置。
-    ```
-     export PATH=<git path>/cmd:$PATH
-    ```
+     ```
+      export PATH=<git path>/cmd:$PATH
+     ```
 
 14. 执行`flutter pub cache clean` 正常 执行`flutter clean` 报错，按照报错信息执行 update 命令也没有效果。
     1. 解决方案：通过注释掉 build.json5 文件中的配置规避。
     2. 报错信息:
-    ```
-     #Parse ohos module. json5 error: Exception: Can not found module.json5 at
-     #D:\pub_cache\git\flutter_packages-b00939bb44d018f0710d1b080d91dcf4c34ed06\packages\video_player\video_player_ohos\ohossrc\main\module.json5.
-     #You need to update the Flutter plugin project structure.
-     #See
-     #https://gitee.com/openharmony-sig/flutter_samples/tree/master/ohos/docs/09_specifications/update_flutter_plugin_structure.md
-    ```
+     ```
+      #Parse ohos module. json5 error: Exception: Can not found module.json5 at
+      #D:\pub_cache\git\flutter_packages-b00939bb44d018f0710d1b080d91dcf4c34ed06\packages\video_player\video_player_ohos\ohossrc\main\module.json5.
+      #You need to update the Flutter plugin project structure.
+      #See
+      #https://gitee.com/openharmony-sig/flutter_samples/tree/master/ohos/docs/09_specifications/update_flutter_plugin_structure.md
+     ```
 
 15. 执行`flutter build hap` 时遇到路径校验报错。
     1. 解决方案：
       ·打开 deveco 安装路径 D:\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\res\schemas 下的 ohos-project-build-profile-schema.json文件。
       ·在该文件中找到包含："pattern": "^(\\./|\\.\\./)[\\s\\S]+$"的行,并删除此行。
     2. 报错信息:
-    ```
-     #hvigor  ERROR: Schema validate failed.
-     #        Detail: Please check the following fields.
-     #instancePath: 'modules[1].scrPath',
-     #keyword: 'pattern'
-     #params: { pattern:'^(\\./|\\.\\./)[\\s\\S]+$' },
-     #message: 'must match pattern "^(\\./|\\.\\./)[\\s\\S]+$"',
-     #location: 'D:/work/videoplayerdemo/video_cannot_stop_at_background/ohos/build-profile.json:42:146'
-    ```
+     ```
+      #hvigor  ERROR: Schema validate failed.
+      #        Detail: Please check the following fields.
+      #instancePath: 'modules[1].scrPath',
+      #keyword: 'pattern'
+      #params: { pattern:'^(\\./|\\.\\./)[\\s\\S]+$' },
+      #message: 'must match pattern "^(\\./|\\.\\./)[\\s\\S]+$"',
+      #location: 'D:/work/videoplayerdemo/video_cannot_stop_at_background/ohos/build-profile.json:42:146'
+     ```
 
 16. 执行`flutter build hap` 报错。
     1. 解决方案：打开 deveco 安装路径 D:\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\model\module 下的 core-module-model-impl.js,
