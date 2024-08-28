@@ -20,15 +20,16 @@ Flutter SDK 仓库
   Windows环境下flutter工程和依赖的插件工程需要在同一个磁盘。
 
 * 环境配置
-   **请从[鸿蒙SDK](https://developer.huawei.com/consumer/cn/develop)下载配套开发工具**
-   *下列环境变量配置，类Unix系统（Linux、Mac），下可直接参照配置，Windows下环境变量配置请在‘编辑系统环境变量’中设置*
+
+  请从[鸿蒙SDK](https://developer.huawei.com/consumer/cn/develop)下载配套开发工具。类Unix系统（Linux、Mac）可直接参照以下配置，Windows环境变量配置请在‘编辑系统环境变量’中设置。
 
   1. 配置HarmonyOS SDK和环境变量
-   * API12, deveco-studio-5.0 或 command-line-tools-5.0
-   * 配置 Java17
-   * 配置环境变量 (SDK, node, ohpm, hvigor)
+     - API12, deveco-studio-5.0 或 command-line-tools-5.0
+     - 配置 Java17
+     - 配置环境变量 (SDK, node, ohpm, hvigor)
 
       ```sh
+       # 以下为类Unix系统（Linux、Mac）的环境变量配置（具体代码路径请替换成实际路径）
        export TOOL_HOME=/Applications/DevEco-Studio.app/Contents # mac环境
        export DEVECO_SDK_HOME=$TOOL_HOME/sdk # command-line-tools/sdk
        export PATH=$TOOL_HOME/tools/ohpm/bin:$PATH # command-line-tools/ohpm/bin
@@ -36,23 +37,24 @@ Flutter SDK 仓库
        export PATH=$TOOL_HOME/tools/node/bin:$PATH # command-line-tools/tool/node/bin
       ```
 
-  2. 通过代码工具下载当前仓库代码`git clone https://gitee.com/openharmony-sig/flutter_flutter.git`，指定dev或master分支，并配置环境
+  2. 通过代码工具下载当前仓库代码`git clone https://gitee.com/openharmony-sig/flutter_flutter.git`，指定dev或master分支（推荐dev分支），并配置环境
 
-     ```sh
-      export PUB_CACHE=D:/PUB
-      export PATH=<flutter_flutter path>/bin:$PATH
-      export PUB_HOSTED_URL=https://pub.flutter-io.cn
-      export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
-     ```
+      ```sh
+       # 以下为类Unix系统（Linux、Mac）的环境变量配置（具体代码路径请替换成实际路径）
+       export PUB_CACHE=D:/PUB
+       export PATH=<flutter_flutter path>/bin:$PATH
+       export PUB_HOSTED_URL=https://pub.flutter-io.cn
+       export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
+      ```
     
    3. `--local-engine` 成为可选参数，可以不传，默认从云端获取。
       - 使用示例：`--local-engine=src/out/<engine产物目录\>`
       - 可在该路径下载[编译产物](https://docs.qq.com/sheet/DUnljRVBYUWZKZEtF?tab=BB08J2)
       - engine路径指向需带上 `src/out` 目录
 
-      上述所有环境变量的配置（Windows下环境变量配置请在‘编辑系统环境变量’中设置），可参考下面的示例（其中user和具体代码路径请替换成实际路径）：
-
       ```sh
+       # 以下为类Unix系统（Linux、Mac）的环境变量配置（具体代码路径请替换成实际路径）
+
        #依赖缓存
        export PUB_CACHE=D:/PUB(自定义路径)
 
@@ -133,7 +135,7 @@ Flutter SDK 仓库
     ./ohsdkmgr install ets:9 js:9 native:9 previewer:9 toolchains:9 --sdk-directory='/home/xc/code/sdk/ohos-sdk/' --accept-license
    ```
 
-3. 如果你使用的是DevEco Studio的Beta版本，编译工程时遇到“must have required property 'compatibleSdkVersion', location: demo/ohos/build-profile.json5:17:11"错误，请参考《DevEco Studio环境配置指导.docx》中的‘6 创建工程和运行Hello World’【配置插件】章节修改 hvigor/hvigor-config.json5文件。
+3. 如果你使用的是DevEco Studio的Beta版本，编译工程时遇到“must have required property 'compatibleSdkVersion', location: demo/ohos/build-profile.json5:17:11"错误，请参考《DevEco Studio环境配置指导.docx》中的‘6 创建工程和运行Hello World’【配置插件】章节修改hvigor/hvigor-config.json5文件。
 
 4. 若提示安装报错：`fail to verify pkcs7 file` 请执行指令
 
@@ -195,45 +197,45 @@ Flutter SDK 仓库
     1. 解决方案：更新 flutter_flutter 到 a44b8a6d (2024-07-25) 之后的版本。
     2. 关键日志：
 
-   ```
-    #20 at attachToNative (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterNapi.ets:78:32)
-    #21 at attachToNapi (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:144:5)
-    #22 at init (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:133:7)
-   ```
+       ```
+        #20 at attachToNative (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterNapi.ets:78:32)
+        #21 at attachToNapi (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:144:5)
+        #22 at init (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:133:7)
+       ```
 
 12. 构建Hap命令直接执行`flutter build hap`即可，不再需要`--local-engine`参数，直接从云端获取编译产物。
 
 13. 配置环境完成后执行 flutter 命令 出现闪退。
     1. 解决方案：windows环境中添加git环境变量配置。
-    ```
-     export PATH=<git path>/cmd:$PATH
-    ```
+       ```
+        export PATH=<git path>/cmd:$PATH
+       ```
 
 14. 执行`flutter pub cache clean` 正常 执行`flutter clean` 报错，按照报错信息执行 update 命令也没有效果。
     1. 解决方案：通过注释掉 build.json5 文件中的配置规避。
     2. 报错信息:
-    ```
-     #Parse ohos module. json5 error: Exception: Can not found module.json5 at
-     #D:\pub_cache\git\flutter_packages-b00939bb44d018f0710d1b080d91dcf4c34ed06\packages\video_player\video_player_ohos\ohossrc\main\module.json5.
-     #You need to update the Flutter plugin project structure.
-     #See
-     #https://gitee.com/openharmony-sig/flutter_samples/tree/master/ohos/docs/09_specifications/update_flutter_plugin_structure.md
-    ```
+       ```
+        #Parse ohos module. json5 error: Exception: Can not found module.json5 at
+        #D:\pub_cache\git\flutter_packages-b00939bb44d018f0710d1b080d91dcf4c34ed06\packages\video_player\video_player_ohos\ohossrc\main\module.json5.
+        #You need to update the Flutter plugin project structure.
+        #See
+        #https://gitee.com/openharmony-sig/flutter_samples/tree/master/ohos/docs/09_specifications/update_flutter_plugin_structure.md
+       ```
 
 15. 执行`flutter build hap` 时遇到路径校验报错。
     1. 解决方案：
       ·打开 deveco 安装路径 D:\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\res\schemas 下的 ohos-project-build-profile-schema.json文件。
       ·在该文件中找到包含："pattern": "^(\\./|\\.\\./)[\\s\\S]+$"的行,并删除此行。
     2. 报错信息:
-    ```
-     #hvigor  ERROR: Schema validate failed.
-     #        Detail: Please check the following fields.
-     #instancePath: 'modules[1].scrPath',
-     #keyword: 'pattern'
-     #params: { pattern:'^(\\./|\\.\\./)[\\s\\S]+$' },
-     #message: 'must match pattern "^(\\./|\\.\\./)[\\s\\S]+$"',
-     #location: 'D:/work/videoplayerdemo/video_cannot_stop_at_background/ohos/build-profile.json:42:146'
-    ```
+       ```
+        #hvigor  ERROR: Schema validate failed.
+        #        Detail: Please check the following fields.
+        #instancePath: 'modules[1].scrPath',
+        #keyword: 'pattern'
+        #params: { pattern:'^(\\./|\\.\\./)[\\s\\S]+$' },
+        #message: 'must match pattern "^(\\./|\\.\\./)[\\s\\S]+$"',
+        #location: 'D:/work/videoplayerdemo/video_cannot_stop_at_background/ohos/build-profile.json:42:146'
+       ```
 
 16. 执行`flutter build hap` 报错。
     1. 解决方案：打开 deveco 安装路径 D:\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\model\module 下的 core-module-model-impl.js,
@@ -246,21 +248,21 @@ Flutter SDK 仓库
         }
        ```
     2. 报错信息:
-      ```
-       # hvigor  ERROR: Cannot find belonging project path for module at D:\.
-       # hvigor  ERROR:  BUILD FAILED in 2s 556ms.
-       #Running Hvigor task assembleHap...
-       #Oops; flutter has exited unexpectedly: "ProcessException: The command failed
-       #  <Command: hvigorw --mode module -p module=video_player_ohos@default -p product=default assmbleHar --no-daemon"
-       #A crash report has been written to D:\work\videoplayerdemo\video_cannot_stop_at_background\flutter_03.log.
-      ```
+       ```
+        # hvigor  ERROR: Cannot find belonging project path for module at D:\.
+        # hvigor  ERROR:  BUILD FAILED in 2s 556ms.
+        #Running Hvigor task assembleHap...
+        #Oops; flutter has exited unexpectedly: "ProcessException: The command failed
+        #  <Command: hvigorw --mode module -p module=video_player_ohos@default -p product=default assmbleHar --no-daemon"
+        #A crash report has been written to D:\work\videoplayerdemo\video_cannot_stop_at_background\flutter_03.log.
+       ```
 
 17. 在.ohos的项目执行`flutter clean` 报错，然后再执行`flutter pub get`也报错。
     1. 解决方案：删除.ohos文件夹，重新flutter pub get 即可
-    2.报错信息：
-      ```
-       Oops; flutter has exited unexpectedly: "PathNotFoundException: Cannot open file, path = 'D:\code\.ohos\build-profile.json5' (OS Error: 系统找不到指定的文件。，error = 2)".
-       A crash report has been written to D:\code\flutter_01.log.
-      ``` 
+    2. 报错信息：
+       ```
+        Oops; flutter has exited unexpectedly: "PathNotFoundException: Cannot open file, path = 'D:\code\.ohos\build-profile.json5' (OS Error: 系统找不到指定的文件。，error = 2)".
+        A crash report has been written to D:\code\flutter_01.log.
+       ``` 
 
 [更多FAQ](https://gitee.com/openharmony-sig/flutter_samples/blob/master/ohos/docs/08_FAQ/README.md)

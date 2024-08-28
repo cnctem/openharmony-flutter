@@ -21,15 +21,15 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
 
 * Environment configuration
 
-    **Please download the supporting development tool from [OpenHarmony SDK](https://developer.huawei.com/consumer/cn/develop)**
-    *The following environment variable configuration is for Unix-like systems (Linux, Mac). You can directly refer to the configuration below. For environment variable configuration under Windows, please set it in ‘Edit System Environment Variables’*
+    Please refer to [HarmonyOS SDK](https://developer.huawei.com/consumer/cn/develop) Download the accompanying development tools. Unix like systems (Linux, Mac) can directly refer to the following configuration. For Windows environment variable configuration, please set it in 'Edit System Environment Variables'.
 
    1. Configure the HarmonyOS SDK and environment variables
-    * API12, deveco-studio-5.0 or command-line-tools-5.0
-    * Configure Java17
-    * Configure environment variables (SDK, node, ohpm, hvigor)
+      - API12, deveco-studio-5.0 or command-line-tools-5.0
+      - Configure Java17
+      - Configure environment variables (SDK, node, ohpm, hvigor)
 
        ```sh
+        # The following is the environment variable configuration for Unix like systems (Linux, Mac) (please replace the specific code path with the actual path)
         export TOOL_HOME=/Applications/DevEco-Studio.app/Contents # For mac
         export DEVECO_SDK_HOME=$TOOL_HOME/sdk # command-line-tools/sdk
         export PATH=$TOOL_HOME/tools/ohpm/bin:$PATH # command-line-tools/ohpm/bin
@@ -37,12 +37,12 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
         export PATH=$TOOL_HOME/tools/node/bin:$PATH # command-line-tools/tool/node/bin
        ```
 
-   2. Download the current warehouse code `git clone https://gitee.com/openharmony-sig/flutter_flutter.git` Specify the dev or master branch and configure the environment
-
+   2. Download the current warehouse code `git clone https://gitee.com/openharmony-sig/flutter_flutter.git` Specify the dev or master branch(Recommended dev branch) and configure the environment
       ```sh
+       # The following is the environment variable configuration for Unix like systems (Linux, Mac) (please replace the specific code path with the actual path)
        export PATH=<flutter_flutter path>/bin:$PATH
        export PUB_CACHE=D:/PUB
-      # Domestic mirror
+       # Domestic mirror
        export PUB_HOSTED_URL=https://pub.flutter-io.cn
        export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
       ```
@@ -52,9 +52,9 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
        - You can download [compiled product](https://docs.qq.com/sheet/DUnljRVBYUWZKZEtF?tab=BB08J2) from this path.
        - The engine path points to the directory that needs to be accompanied by 'src/out'.
 
-       For the configuration of all the above environment variables (for environment variable configuration under Windows, please set it in 'Edit System Environment Variables'), you can refer to the following example (please replace user and specific code path with the actual path):
-
        ```sh
+        # The following is the environment variable configuration for Unix like systems (Linux, Mac) (please replace the specific code path with the actual path)
+
         # Dependent cache
         export PUB_CACHE=D:/PUB(Custom path)
 
@@ -78,7 +78,6 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
 1. Run `flutter doctor -v` to check whether the environment variable configuration is correct. **Futter** and **OpenHarmony** should both be ok. If the two prompts indicate that the environment is missing, just follow the prompts to fill in the corresponding environment.
 
 2. Create the project and compile the command. The compiled product is under \<projectName\>/ohos/entry/build/default/outputs/default/entry-default-signed.hap.
-
     ```
      # Create project
      flutter create --platforms ohos <projectName>
@@ -129,7 +128,6 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
 1. After switching to FLUTTER_STORAGE_BASE_URL, you need to delete the \<flutter\>/bin/cache directory and execute Flutter clean in the project before running it again.
 
 2. If an error message appears: `The SDK license agreement is not accepted`, please execute the following command and compile again:
-
     ```
      ./ohsdkmgr install ets:9 js:9 native:9 previewer:9 toolchains:9 --sdk-directory='/home/xc/code/sdk/ohos-sdk/' --accept-license
     ```
@@ -137,7 +135,6 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
 3. If you are using the Beta version of DevEco Studio and encounter the error "must have required property 'compatibleSdkVersion', location: demo/ohos/build-profile.json5:17:11" when compiling the project, Modify the hvigor/hvigor-config.json5 file by referring to section ‘6 Create the project and run Hello World’ [Configuration Plug-in] in《DevEco Studio Environment configuration guide.docx》.
 
 4. If you are prompted with an installation error: `fail to verify pkcs7 file`, please execute the command
-
     ```
      hdc shell param set persist.bms.ohCert.verify true
     ```
@@ -167,7 +164,6 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
     ```
 7. Symptom Logs are lost during log query。
     Solution：Disable global logs and enable only logs in your domain
-
     ```
      Step one：Disable log printing for all fields(Some special logs cannot be closed)
      hdc shell hilog -b X
@@ -194,46 +190,45 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
 11. After the ROM update of Beta 2 version, it no longer supports requesting anonymous memory with execution permission, resulting in debug crashing.
     1. Solution: Update flutter_flutter to a version after a44b8a6d (2024-07-25).
     2. Key logs:
-
-   ```
-    #20 at attachToNative (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterNapi.ets:78:32)
-    #21 at attachToNapi (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:144:5)
-    #22 at init (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:133:7)
-   ```
+       ```
+        #20 at attachToNative (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterNapi.ets:78:32)
+        #21 at attachToNapi (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:144:5)
+        #22 at init (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:133:7)
+       ```
 
 12. Build Hap command directly execute `flutter build hap`, no longer need `--local-engine` parameter, directly from the cloud to obtain the compilation product
 
 13. After the environment is configured, the system crashes when the flutter command is executed。
     1. Solution：Add git environment variable configuration in windows environment。
-    ```
-     export PATH=<git path>/cmd:$PATH
-    ```
+       ```
+       export PATH=<git path>/cmd:$PATH
+       ```
 
 14. If `flutter pub cache clean` is executed normally, `flutter clean` will report an error. If update command is executed according to the error message, it has no effect。
     1. Solution：To avoid this problem, comment out the configuration in the build.json5 file。
     2. Error message:
-    ```
-     #Parse ohos module. json5 error: Exception: Can not found module.json5 at
-     #D:\pub_cache\git\flutter_packages-b00939bb44d018f0710d1b080d91dcf4c34ed06\packages\video_player\video_player_ohos\ohossrc\main\module.json5.
-     #You need to update the Flutter plugin project structure.
-     #See
-     #https://gitee.com/openharmony-sig/flutter_samples/tree/master/ohos/docs/09_specifications/update_flutter_plugin_structure.md
-    ```
+       ```
+        #Parse ohos module. json5 error: Exception: Can not found module.json5 at
+        #D:\pub_cache\git\flutter_packages-b00939bb44d018f0710d1b080d91dcf4c34ed06\packages\video_player\video_player_ohos\ohossrc\main\module.json5.
+        #You need to update the Flutter plugin project structure.
+        #See
+        #https://gitee.com/openharmony-sig/flutter_samples/tree/master/ohos/docs/09_specifications/update_flutter_plugin_structure.md
+       ```
 
 15. An error message indicating path verification occurs when `flutter build hap` is executed。
     1. Solution：
       · Open the ohos-project-build-profile-schema.json file in deveco installation path D:\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\res\schemas。
       · Find the line containing: "pattern": "^(\\./|\\.\\./)[\\s\\S]+$" in the file and delete it。
     2. Error message:
-    ```
-     #hvigor  ERROR: Schema validate failed.
-     #        Detail: Please check the following fields.
-     #instancePath: 'modules[1].scrPath',
-     #keyword: 'pattern'
-     #params: { pattern:'^(\\./|\\.\\./)[\\s\\S]+$' },
-     #message: 'must match pattern "^(\\./|\\.\\./)[\\s\\S]+$"',
-     #location: 'D:/work/videoplayerdemo/video_cannot_stop_at_background/ohos/build-profile.json:42:146'
-    ```
+       ```
+        #hvigor  ERROR: Schema validate failed.
+        #        Detail: Please check the following fields.
+        #instancePath: 'modules[1].scrPath',
+        #keyword: 'pattern'
+        #params: { pattern:'^(\\./|\\.\\./)[\\s\\S]+$' },
+        #message: 'must match pattern "^(\\./|\\.\\./)[\\s\\S]+$"',
+        #location: 'D:/work/videoplayerdemo/video_cannot_stop_at_background/ohos/build-profile.json:42:146'
+       ```
 
 16. Execute `flutter build hap` report an error。
     1. Solution：Open the core-module-model-impl.js file in deveco installation path D:\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\model\module。,
@@ -246,21 +241,21 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
         }
        ```
     2. Error message:
-      ```
-       # hvigor  ERROR: Cannot find belonging project path for module at D:\.
-       # hvigor  ERROR:  BUILD FAILED in 2s 556ms.
-       #Running Hvigor task assembleHap...
-       #Oops; flutter has exited unexpectedly: "ProcessException: The command failed
-       #  <Command: hvigorw --mode module -p module=video_player_ohos@default -p product=default assmbleHar --no-daemon"
-       #A crash report has been written to D:\work\videoplayerdemo\video_cannot_stop_at_background\flutter_03.log.
-      ```
+       ```
+        # hvigor  ERROR: Cannot find belonging project path for module at D:\.
+        # hvigor  ERROR:  BUILD FAILED in 2s 556ms.
+        #Running Hvigor task assembleHap...
+        #Oops; flutter has exited unexpectedly: "ProcessException: The command failed
+        #  <Command: hvigorw --mode module -p module=video_player_ohos@default -p product=default assmbleHar --no-daemon"
+        #A crash report has been written to D:\work\videoplayerdemo\video_cannot_stop_at_background\flutter_03.log.
+       ```
 
 17. Executing `flutter clean` in .ohos's project reported an error, and then executing `flutter pub get` also reported an error。
     1. Solution：Delete the .ohos folder and execute `flutter pub get` again
     2. Error message：
-      ```
-       Oops; flutter has exited unexpectedly: "PathNotFoundException: Cannot open file, path = 'D:\code\.ohos\build-profile.json5' (OS Error:  The system cannot find the specified file。，error = 2)".
-       A crash report has been written to D:\code\flutter_01.log.
-      ``` 
+       ```
+        Oops; flutter has exited unexpectedly: "PathNotFoundException: Cannot open file, path = 'D:\code\.ohos\build-profile.json5' (OS Error:  The system cannot find the specified file。，error = 2)".
+        A crash report has been written to D:\code\flutter_01.log.
+       ``` 
 
 [More FAQ](https://gitee.com/openharmony-sig/flutter_samples/blob/master/ohos/docs/08_FAQ/README.md)
