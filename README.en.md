@@ -21,7 +21,7 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
 
 * Environment configuration
 
-    Please refer to [HarmonyOS SDK]（ https://developer.huawei.com/consumer/cn/develop ）Download the accompanying development tools. Unix like systems (Linux, Mac) can directly refer to the following configuration. For Windows environment variable configuration, please set it in 'Edit System Environment Variables'.
+    Please refer to [HarmonyOS SDK](https://developer.huawei.com/consumer/cn/develop)Download the accompanying development tools. Unix like systems (Linux, Mac) can directly refer to the following configuration. For Windows environment variable configuration, please set it in 'Edit System Environment Variables'.
 
    1. Configure the HarmonyOS SDK and environment variables
       - API12, deveco-studio-5.0 or command-line-tools-5.0
