@@ -208,18 +208,18 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
     1. Solution：Add git environment variable configuration in windows environment。
        ```
        export PATH=<git path>/cmd:$PATH
-      ```
+       ```
 
 14. If `flutter pub cache clean` is executed normally, `flutter clean` will report an error. If update command is executed according to the error message, it has no effect。
     1. Solution：To avoid this problem, comment out the configuration in the build.json5 file。
     2. Error message:
        ```
-       #Parse ohos module. json5 error: Exception: Can not found module.json5 at
-       #D:\pub_cache\git\flutter_packages-b00939bb44d018f0710d1b080d91dcf4c34ed06\packages\video_player\video_player_ohos\ohossrc\main\module.json5.
-       #You need to update the Flutter plugin project structure.
-       #See
-       #https://gitee.com/openharmony-sig/flutter_samples/tree/master/ohos/docs/09_specifications/update_flutter_plugin_structure.md
-      ```
+        #Parse ohos module. json5 error: Exception: Can not found module.json5 at
+        #D:\pub_cache\git\flutter_packages-b00939bb44d018f0710d1b080d91dcf4c34ed06\packages\video_player\video_player_ohos\ohossrc\main\module.json5.
+        #You need to update the Flutter plugin project structure.
+        #See
+        #https://gitee.com/openharmony-sig/flutter_samples/tree/master/ohos/docs/09_specifications/update_flutter_plugin_structure.md
+       ```
 
 15. An error message indicating path verification occurs when `flutter build hap` is executed。
     1. Solution：
@@ -227,14 +227,14 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
       · Find the line containing: "pattern": "^(\\./|\\.\\./)[\\s\\S]+$" in the file and delete it。
     2. Error message:
        ```
-       #hvigor  ERROR: Schema validate failed.
-       #        Detail: Please check the following fields.
-       #instancePath: 'modules[1].scrPath',
-       #keyword: 'pattern'
-       #params: { pattern:'^(\\./|\\.\\./)[\\s\\S]+$' },
-       #message: 'must match pattern "^(\\./|\\.\\./)[\\s\\S]+$"',
-       #location: 'D:/work/videoplayerdemo/video_cannot_stop_at_background/ohos/build-profile.json:42:146'
-      ```
+        #hvigor  ERROR: Schema validate failed.
+        #        Detail: Please check the following fields.
+        #instancePath: 'modules[1].scrPath',
+        #keyword: 'pattern'
+        #params: { pattern:'^(\\./|\\.\\./)[\\s\\S]+$' },
+        #message: 'must match pattern "^(\\./|\\.\\./)[\\s\\S]+$"',
+        #location: 'D:/work/videoplayerdemo/video_cannot_stop_at_background/ohos/build-profile.json:42:146'
+       ```
 
 16. Execute `flutter build hap` report an error。
     1. Solution：Open the core-module-model-impl.js file in deveco installation path D:\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\model\module。,
