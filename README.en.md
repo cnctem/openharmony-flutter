@@ -38,7 +38,6 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
        ```
 
    2. Download the current warehouse code `git clone https://gitee.com/openharmony-sig/flutter_flutter.git` Specify the dev or master branch(Recommended dev branch) and configure the environment
-
       ```sh
        # The following is the environment variable configuration for Unix like systems (Linux, Mac) (please replace the specific code path with the actual path)
        export PATH=<flutter_flutter path>/bin:$PATH
@@ -79,7 +78,6 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
 1. Run `flutter doctor -v` to check whether the environment variable configuration is correct. **Futter** and **OpenHarmony** should both be ok. If the two prompts indicate that the environment is missing, just follow the prompts to fill in the corresponding environment.
 
 2. Create the project and compile the command. The compiled product is under \<projectName\>/ohos/entry/build/default/outputs/default/entry-default-signed.hap.
-
     ```
      # Create project
      flutter create --platforms ohos <projectName>
@@ -130,7 +128,6 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
 1. After switching to FLUTTER_STORAGE_BASE_URL, you need to delete the \<flutter\>/bin/cache directory and execute Flutter clean in the project before running it again.
 
 2. If an error message appears: `The SDK license agreement is not accepted`, please execute the following command and compile again:
-
     ```
      ./ohsdkmgr install ets:9 js:9 native:9 previewer:9 toolchains:9 --sdk-directory='/home/xc/code/sdk/ohos-sdk/' --accept-license
     ```
@@ -138,7 +135,6 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
 3. If you are using the Beta version of DevEco Studio and encounter the error "must have required property 'compatibleSdkVersion', location: demo/ohos/build-profile.json5:17:11" when compiling the project, Modify the hvigor/hvigor-config.json5 file by referring to section ‘6 Create the project and run Hello World’ [Configuration Plug-in] in《DevEco Studio Environment configuration guide.docx》.
 
 4. If you are prompted with an installation error: `fail to verify pkcs7 file`, please execute the command
-
     ```
      hdc shell param set persist.bms.ohCert.verify true
     ```
@@ -168,7 +164,6 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
     ```
 7. Symptom Logs are lost during log query。
     Solution：Disable global logs and enable only logs in your domain
-
     ```
      Step one：Disable log printing for all fields(Some special logs cannot be closed)
      hdc shell hilog -b X
@@ -195,7 +190,6 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
 11. After the ROM update of Beta 2 version, it no longer supports requesting anonymous memory with execution permission, resulting in debug crashing.
     1. Solution: Update flutter_flutter to a version after a44b8a6d (2024-07-25).
     2. Key logs:
- 
        ```
         #20 at attachToNative (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterNapi.ets:78:32)
         #21 at attachToNapi (oh_modules/.ohpm/@ohos+flutter_ohos@g8zhdaqwu8gotysbmqcstpfpcpy=/oh_modules/@ohos/flutter_ohos/src/main/ets/embedding/engine/FlutterEngine.ets:144:5)
