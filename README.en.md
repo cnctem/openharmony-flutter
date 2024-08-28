@@ -21,15 +21,15 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
 
 * Environment configuration
 
-    **Please download the supporting development tool from [OpenHarmony SDK](https://developer.huawei.com/consumer/cn/develop)**
-    *The following environment variable configuration is for Unix-like systems (Linux, Mac). You can directly refer to the configuration below. For environment variable configuration under Windows, please set it in ‘Edit System Environment Variables’*
+    Please refer to [HarmonyOS SDK]（ https://developer.huawei.com/consumer/cn/develop ）Download the accompanying development tools. Unix like systems (Linux, Mac) can directly refer to the following configuration. For Windows environment variable configuration, please set it in 'Edit System Environment Variables'.
 
    1. Configure the HarmonyOS SDK and environment variables
-    * API12, deveco-studio-5.0 or command-line-tools-5.0
-    * Configure Java17
-    * Configure environment variables (SDK, node, ohpm, hvigor)
+      - API12, deveco-studio-5.0 or command-line-tools-5.0
+      - Configure Java17
+      - Configure environment variables (SDK, node, ohpm, hvigor)
 
        ```sh
+        # The following is the environment variable configuration for Unix like systems (Linux, Mac) (please replace the specific code path with the actual path)
         export TOOL_HOME=/Applications/DevEco-Studio.app/Contents # For mac
         export DEVECO_SDK_HOME=$TOOL_HOME/sdk # command-line-tools/sdk
         export PATH=$TOOL_HOME/tools/ohpm/bin:$PATH # command-line-tools/ohpm/bin
@@ -37,12 +37,13 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
         export PATH=$TOOL_HOME/tools/node/bin:$PATH # command-line-tools/tool/node/bin
        ```
 
-   2. Download the current warehouse code `git clone https://gitee.com/openharmony-sig/flutter_flutter.git` Specify the dev or master branch and configure the environment
+   2. Download the current warehouse code `git clone https://gitee.com/openharmony-sig/flutter_flutter.git` Specify the dev or master branch(Recommended dev branch) and configure the environment
 
       ```sh
+       # The following is the environment variable configuration for Unix like systems (Linux, Mac) (please replace the specific code path with the actual path)
        export PATH=<flutter_flutter path>/bin:$PATH
        export PUB_CACHE=D:/PUB
-      # Domestic mirror
+       # Domestic mirror
        export PUB_HOSTED_URL=https://pub.flutter-io.cn
        export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
       ```
@@ -52,9 +53,9 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
        - You can download [compiled product](https://docs.qq.com/sheet/DUnljRVBYUWZKZEtF?tab=BB08J2) from this path.
        - The engine path points to the directory that needs to be accompanied by 'src/out'.
 
-       For the configuration of all the above environment variables (for environment variable configuration under Windows, please set it in 'Edit System Environment Variables'), you can refer to the following example (please replace user and specific code path with the actual path):
-
        ```sh
+        # The following is the environment variable configuration for Unix like systems (Linux, Mac) (please replace the specific code path with the actual path)
+
         # Dependent cache
         export PUB_CACHE=D:/PUB(Custom path)
 
