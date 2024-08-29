@@ -213,7 +213,7 @@ Flutter SDK 仓库
     ```
 
 14. 执行`flutter pub cache clean` 正常 执行`flutter clean` 报错，按照报错信息执行 update 命令也没有效果。
-    1. 解决方案：通过注释掉 build.json5 文件中的配置规避： "modules":[{ //数组第一个对象保留 }, { //其余对象注释掉 }]
+    1. 解决方案：通过注释掉 build.json5 文件中的配置规避： "modules":[{ // 删除报错对应的整个对象 }]
     2. 报错信息:
     ```
      #Parse ohos module. json5 error: Exception: Can not found module.json5 at

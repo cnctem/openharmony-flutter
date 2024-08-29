@@ -213,7 +213,7 @@ Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sh
     ```
 
 14. If `flutter pub cache clean` is executed normally, `flutter clean` will report an error. If update command is executed according to the error message, it has no effect。
-    1. Solution：To avoid this problem, comment out the configuration in the build.json5 file： "modules":[{ //The first object of the array is reserved }, { //The rest of the objects need comments }]
+    1. Solution：To avoid this problem, comment out the configuration in the build.json5 file： "modules":[{ // Delete the entire object corresponding to the error }]
     2. Error message:
     ```
      #Parse ohos module. json5 error: Exception: Can not found module.json5 at
