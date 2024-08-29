@@ -122,8 +122,8 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
 | attach | debug mode | flutter attach                                                    |
 | screenshot | screenshot | flutter screenshot                                                 |
 | pub | download dependency | flutter pub get                                                 |
-| clean | clear dependency | flutter clean                                                 |
-| cache| clear global cache data | flutter pub cache clean                                                 |
+| clean | clear project artifacts | flutter clean                                                 |
+| cache | clear global cache data | flutter pub cache clean                                                 |
 
 Attachment: [Flutter third-party library adaptation plan](https://docs.qq.com/sheet/DVVJDWWt1V09zUFN2)
 

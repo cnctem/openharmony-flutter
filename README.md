@@ -119,9 +119,9 @@ Flutter SDK 仓库
 | run    | 应用运行 | flutter run [--local-engine=\<兼容ohos的engine产物路径\>]                |
 | attach | 调试模式 | flutter attach                                                    |
 | screenshot | 截屏 | flutter screenshot                                                 |
-| pub | 下载依赖 | flutter pub get                                                 |
-| clean | 清除依赖 | flutter clean                                                 |
-| cache| 清除全局缓存数据 | flutter pub cache clean                                                 |
+| pub | 获取依赖 | flutter pub get                                                 |
+| clean | 清除项目依赖 | flutter clean                                                 |
+| cache | 清除全局缓存数据 | flutter pub cache clean                                                  |
 
 附：[Flutter三方库适配计划](https://docs.qq.com/sheet/DVVJDWWt1V09zUFN2)
 
