@@ -101,6 +101,8 @@ Flutter SDK 仓库
     flutter build app --release
    ```
 
+## 版本说明
+ [3.7.12-ohos-1.0.0 Release](/release-notes/Flutter%203.7.12-ohos%201.0.0%20ReleaseNote.md)
 
 ## 已兼容OpenHarmony开发的指令列表
 | 指令名称 | 指令描述 | 使用说明                                                              |
