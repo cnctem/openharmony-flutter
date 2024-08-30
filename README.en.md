@@ -101,7 +101,8 @@ This repository is a compatible extension of Flutter SDK for the OpenHarmony pla
      # Example: flutter build app --release [--local-engine=<DIR>/src/out/ohos_release_arm64]  local-engine(is optional)
      flutter build app --release
     ```
-
+## ReleaseNotes
+ [3.7.12-ohos-1.0.0 Release](/release-notes/Flutter%203.7.12-ohos%201.0.0%20ReleaseNote.en.md)
 
 ## Compatible command list developed by OpenHarmony
 
