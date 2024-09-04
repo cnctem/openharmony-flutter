@@ -16,6 +16,7 @@
 import 'dart:convert';
 
 import 'package:json5/json5.dart';
+import 'package:path/src/context.dart';
 
 import '../base/common.dart';
 import '../base/file_system.dart';
@@ -27,6 +28,16 @@ import '../plugins.dart';
 import '../project.dart';
 
 const String kUseAbsolutePathOfHar = 'useAbsolutePathOfHar';
+const String kUseHarDependency = 'useHarDependency';
+
+bool useAbsolutePathOfHar(OhosProject ohos) {
+  return ohos.settings.values[kUseAbsolutePathOfHar] == 'true';
+}
+
+bool useHarDependency(OhosProject ohos) {
+  return !ohos.settings.values.containsKey(kUseHarDependency) ||
+      ohos.settings.values[kUseHarDependency] == 'true';
+}
 
 /// 检查 ohos plugin 依赖
 Future<void> checkOhosPluginsDependencies(FlutterProject flutterProject) async {
@@ -35,31 +46,39 @@ Future<void> checkOhosPluginsDependencies(FlutterProject flutterProject) async {
       .toList();
   final File packageFile = flutterProject.ohos.flutterModulePackageFile;
   if (!packageFile.existsSync()) {
-    globals.logger.printTrace('check if oh-package.json5 file:($packageFile) exist ?');
+    globals.logger
+        .printTrace('check if oh-package.json5 file:($packageFile) exist ?');
     return;
   }
 
-  final SettingsFile settings = flutterProject.ohos.settings;
-  final bool useAbsolutePathOfHar = settings.values[kUseAbsolutePathOfHar] == 'true';
-
   final String packageConfig = packageFile.readAsStringSync();
-  final Map<String, dynamic> config = JSON5.parse(packageConfig) as Map<String, dynamic>;
+  final Map<String, dynamic> config =
+      JSON5.parse(packageConfig) as Map<String, dynamic>;
   final Map<String, dynamic> dependencies =
       config['dependencies'] as Map<String, dynamic>;
   final List<String> removeList = <String>[];
+  final Context path = globals.fs.path;
   for (final Plugin plugin in plugins) {
     for (final String key in dependencies.keys) {
       if (key.startsWith('@ohos') && key.contains(plugin.name)) {
         removeList.add(key);
       }
     }
-    final String absolutePath = globals.fs.path.join(flutterProject.ohos.ohosRoot.path, 'har/${plugin.name}.har');
-    if (useAbsolutePathOfHar && flutterProject.isModule) {
-      dependencies[plugin.name] = 'file:$absolutePath';
+    final String usePluginPath;
+    if (useHarDependency(flutterProject.ohos)) {
+      final String absPath = path.join(
+          flutterProject.ohos.ohosRoot.path, 'har/${plugin.name}.har');
+      if (useAbsolutePathOfHar(flutterProject.ohos) &&
+          flutterProject.isModule) {
+        usePluginPath = absPath;
+      } else {
+        usePluginPath = _relative(absPath, packageFile.parent.path);
+      }
     } else {
-      final String relativePath = _relative(absolutePath, globals.fs.path.dirname(packageFile.path));
-      dependencies[plugin.name] = 'file:$relativePath';
+      final String absPath = path.join(plugin.path, 'ohos');
+      usePluginPath = _relative(absPath, packageFile.parent.path);
     }
+    dependencies[plugin.name] = 'file:$usePluginPath';
   }
   for (final String key in removeList) {
     globals.printStatus(
@@ -85,10 +104,12 @@ Future<void> addPluginsModules(FlutterProject flutterProject) async {
   final String packageConfig = buildProfileFile.readAsStringSync();
   final Map<String, dynamic> buildProfile = JSON5.parse(packageConfig) as Map<String, dynamic>;
   final List<Map<dynamic, dynamic>> modules = (buildProfile['modules'] as List<dynamic>).cast();
-  final Map<String, dynamic> modulesMap = Map<String, dynamic>.fromEntries(modules.map((e) => MapEntry(e['name'] as String, e)));
+  final Map<String, dynamic> modulesMap = Map<String, dynamic>.fromEntries(
+      modules.map((Map<dynamic, dynamic> e) =>
+          MapEntry<String, dynamic>(e['name'] as String, e)));
   for (final Plugin plugin in plugins) {
     if (modulesMap.containsKey(plugin.name)) {
-      continue;
+      modules.remove(modulesMap[plugin.name]);
     }
     modules.add(<String, dynamic>{
       'name': plugin.name,

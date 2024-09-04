@@ -507,18 +507,19 @@ class OhosHvigorBuilder implements OhosBuilder {
 
     final String hvigorwPath = getHvigorwPath(_ohosRootPath, checkMod: true);
 
-    /// 生成所有 plugin 的 har
-    await assembleHars(_processUtils, project, ohosBuildInfo, _logger);
+    if (useHarDependency(project.ohos)) {
+      /// 生成所有 plugin 的 har
+      await assembleHars(_processUtils, project, ohosBuildInfo, _logger);
+      await removePluginsModules(project);
+      await addFlutterModuleAndPluginsOverrides(project);
+      // ohosProject.deleteOhModulesCache();
+      await ohpmInstall(
+        processUtils: _processUtils,
+        workingDirectory: _ohosRootPath,
+        logger: _logger,
+      );
+    }
     await assembleHsps(_processUtils, project, ohosBuildInfo, _logger);
-
-    await removePluginsModules(project);
-    await addFlutterModuleAndPluginsOverrides(project);
-    // ohosProject.deleteOhModulesCache();
-    await ohpmInstall(
-      processUtils: _processUtils,
-      workingDirectory: _ohosRootPath,
-      logger: _logger,
-    );
 
     /// invoke hvigow task generate hap file.
     final int errorCode = await assembleHap(
@@ -709,10 +710,8 @@ class OhosHvigorBuilder implements OhosBuilder {
 
     await flutterBuildPre(flutterProject, ohosBuildInfo, target);
 
-    if (_ohosProject.isRunWithModuleHar) {
+    if (_ohosProject.isRunWithModuleHar && useHarDependency(flutterProject.ohos)) {
       await assembleHars(_processUtils, flutterProject, ohosBuildInfo, _logger);
-      await assembleHsps(_processUtils, flutterProject, ohosBuildInfo, _logger);
-
       /// har文件拷贝后，需要重新install
       // ohosProject.deleteOhModulesCache();
       await ohpmInstall(
@@ -720,6 +719,7 @@ class OhosHvigorBuilder implements OhosBuilder {
           workingDirectory: _ohosProject.mainModuleDirectory.path,
           logger: _logger);
     }
+    await assembleHsps(_processUtils, flutterProject, ohosBuildInfo, _logger);
   }
 
   String _moduleNameWithFlavor(List<OhosModule> modules, String? flavor) {
