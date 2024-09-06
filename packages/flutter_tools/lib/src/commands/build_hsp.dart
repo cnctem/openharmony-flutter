@@ -29,6 +29,8 @@ class BuildHspCommand extends BuildSubCommand {
     addBuildModeFlags(verboseHelp: verboseHelp);
     usesFlavorOption();
     usesPubOption();
+    usesBuildNumberOption();
+    usesBuildNameOption();
     addShrinkingFlag(verboseHelp: verboseHelp);
     addSplitDebugInfoOption();
     addDartObfuscationOption();
@@ -55,6 +57,15 @@ class BuildHspCommand extends BuildSubCommand {
 
   @override
   String get name => 'hsp';
+
+  @override
+  bool get reportNullSafety => false;
+
+  @override
+  Future<Set<DevelopmentArtifact>> get requiredArtifacts async => <DevelopmentArtifact>{
+    DevelopmentArtifact.ohosGenSnapshot,
+    DevelopmentArtifact.ohosInternalBuild,
+  };
 
   @override
   Future<FlutterCommandResult> runCommand() async {

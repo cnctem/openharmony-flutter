@@ -25,7 +25,7 @@ import '../base/user_messages.dart';
 import '../build_info.dart';
 import '../globals.dart' as globals;
 import '../project.dart';
-import 'ohos_plugins_manager.dart';
+import 'hvigor_utils.dart';
 import 'ohos_sdk.dart';
 
 const String OHOS_ENTRY_DEFAULT = 'entry';
@@ -62,10 +62,25 @@ class OhosHap extends ApplicationPackage implements PrebuiltApplicationPackage {
     /// parse the build data
     final OhosBuildData ohosBuildData =
         OhosBuildData.parseOhosBuildData(ohosProject, logger);
-    final String bundleName = ohosBuildData.appInfo!.bundleName;
+    final String flavor = getFlavor(ohosProject.getBuildProfileFile(), buildInfo?.flavor);
+    String bundleName = ohosBuildData.appInfo!.bundleName;
+    final List<dynamic>? products = ohosBuildData.products;
+    if (products != null) {
+      for (final dynamic item in products) {
+        final Map<String, dynamic> productItem = item as Map<String, dynamic>;
+        if (flavor == productItem['name'] && productItem['bundleName'] != null) {
+          bundleName = productItem['bundleName'] as String;
+          ohosBuildData.appInfo!.bundleName = bundleName;
+          break;
+        }
+      }
+    }
+    for (final OhosModule element in ohosBuildData.moduleInfo.moduleList) {
+      element.flavor = flavor;
+    }
     return OhosHap(
         id: bundleName,
-        applicationPackage: ohosProject.getSignedHapFile(),
+        applicationPackage: ohosProject.getSignedHapFile(flavor),
         ohosBuildData: ohosBuildData);
   }
 
@@ -84,11 +99,12 @@ class OhosHap extends ApplicationPackage implements PrebuiltApplicationPackage {
 
 /// OpenHarmony的构建信息
 class OhosBuildData {
-  OhosBuildData(this.appInfo, this.moduleInfo, this.apiVersion);
+  OhosBuildData(this.appInfo, this.moduleInfo, this.apiVersion, this.products);
 
   late AppInfo? appInfo;
   late ModuleInfo moduleInfo;
   late int apiVersion;
+  List<dynamic>? products;
 
   bool get hasEntryModule => false;
 
@@ -103,6 +119,7 @@ class OhosBuildData {
     late AppInfo appInfo;
     late ModuleInfo moduleInfo;
     late int apiVersion;
+    List<dynamic>? products;
     try {
       final File appJson = ohosProject.getAppJsonFile();
       if (appJson.existsSync()) {
@@ -110,25 +127,44 @@ class OhosBuildData {
         final dynamic obj = JSON5.parse(json);
         appInfo = AppInfo.getAppInfo(obj);
       } else {
-        appInfo = AppInfo('', 0, '');
+        appInfo = AppInfo('', 1, '');
       }
-      moduleInfo = ModuleInfo.getModuleInfo(ohosProject);
-      apiVersion = getApiVersion(ohosProject.getBuildProfileFile());
     } on Exception catch (err) {
-      throwToolExit('parse ohos project build data exception! File: ${ohosProject.getAppJsonFile().absolute}, Error: $err');
+      throwToolExit('Parse ohos app.json5 error: $err');
     }
-    return OhosBuildData(appInfo, moduleInfo, apiVersion);
+
+    try {
+      moduleInfo = ModuleInfo.getModuleInfo(ohosProject);
+    } on Exception catch(err) {
+      throwToolExit('Parse ohos module.json5 error: $err');
+    }
+
+    try {
+      final File buildProfileFile = ohosProject.getBuildProfileFile();
+      if (buildProfileFile.existsSync()) {
+        final String buildProfileConfig = buildProfileFile.readAsStringSync();
+        final dynamic obj = JSON5.parse(buildProfileConfig);
+        apiVersion = getApiVersion(obj);
+        // ignore: avoid_dynamic_calls
+        if (obj['app'] != null && obj['app']['products'] != null) {
+          // ignore: avoid_dynamic_calls
+          products = obj['app']['products'] as List<dynamic>;
+        }
+      } else {
+        apiVersion = OHOS_SDK_INT_DEFAULT;
+      }
+    } on Exception catch (err) {
+      throwToolExit('Parse ohos build-profile.json5 error: $err');
+    }
+    return OhosBuildData(appInfo, moduleInfo, apiVersion, products);
   }
 }
 
-int getApiVersion(File buildProfile) {
-  if (!buildProfile.existsSync()) {
-    return OHOS_SDK_INT_DEFAULT;
-  }
-  final String buildProfileConfig = buildProfile.readAsStringSync();
-  final dynamic obj = JSON5.parse(buildProfileConfig);
-  dynamic sdkObj = obj['app']['compileSdkVersion'];
-  sdkObj ??= obj['app']['products'][0]['compileSdkVersion'];
+int getApiVersion(dynamic obj) {
+  // ignore: avoid_dynamic_calls
+  dynamic sdkObj = obj['app']?['compatibleSdkVersion'];
+  // ignore: avoid_dynamic_calls
+  sdkObj ??= obj['app']?['products'][0]['compatibleSdkVersion'];
   if (sdkObj is int) {
     return sdkObj;
   } else if (sdkObj is String && sdkObj != null) { // 4.1.0(11)
@@ -175,6 +211,11 @@ class ModuleInfo {
       entryModule?.name ??
       (moduleList.isNotEmpty ? moduleList.first.name : OHOS_ENTRY_DEFAULT);
 
+  /// 获取主要的module路径，如果存在entry，返回entry类型的module，否则返回第一个module
+  String get mainModuleSrcPath =>
+      entryModule?.srcPath ??
+      (moduleList.isNotEmpty ? moduleList.first.srcPath : OHOS_ENTRY_DEFAULT);
+
   static ModuleInfo getModuleInfo(OhosProject ohosProject) {
     return ModuleInfo(OhosModule.fromOhosProject(ohosProject));
   }
@@ -200,6 +241,7 @@ class OhosModule {
     required this.isEntry,
     required this.mainElement,
     required this.type,
+    required this.flavor,
   });
 
   final String name;
@@ -207,39 +249,54 @@ class OhosModule {
   final String? mainElement;
   final OhosModuleType type;
   final String srcPath;
+  String flavor;
 
   static List<OhosModule> fromOhosProject(OhosProject ohosProject) {
     final File buildProfileFile = ohosProject.ohosRoot.childFile('build-profile.json5');
+    if (!buildProfileFile.existsSync()) {
+      return <OhosModule>[];
+    }
     final Map<String, dynamic> buildProfile = JSON5.parse(buildProfileFile.readAsStringSync()) as Map<String, dynamic>;
+    if (!buildProfile.containsKey('modules')) {
+      return <OhosModule>[];
+    }
     final List<dynamic> modules = buildProfile['modules'] as List<dynamic>;
     return modules.map((dynamic e) {
       final Map<String, dynamic> module = e as Map<String, dynamic>;
       final String srcPath = module['srcPath'] as String;
-      return OhosModule._fromModulePath(ohosProject, globals.fs.path.join(ohosProject.ohosRoot.path, srcPath));
+      return OhosModule.fromModulePath(
+          modulePath: globals.fs.path.join(ohosProject.ohosRoot.path, srcPath));
     }).toList();
   }
 
-  static OhosModule _fromModulePath(OhosProject ohosProject, String srcPath) {
-    final String moduleJsonPath = globals.fs.path.join(srcPath, 'src', 'main', 'module.json5');
+  static OhosModule fromModulePath({
+    required String modulePath,
+    String? flavor,
+  }) {
+    final String moduleJsonPath =
+        globals.fs.path.join(modulePath, 'src', 'main', 'module.json5');
     final File moduleJsonFile = globals.fs.file(moduleJsonPath);
     if (!moduleJsonFile.existsSync()) {
       throwToolExit('Can not found module.json5 at $moduleJsonPath . \n'
-        '  You need to update the Flutter plugin project structure. \n'
-        '  See https://gitee.com/openharmony-sig/flutter_samples/tree/master/ohos/docs/09_specifications/update_flutter_plugin_structure.md');
+          '  You need to update the Flutter plugin project structure. \n'
+          '  See https://gitee.com/openharmony-sig/flutter_samples/tree/master/ohos/docs/09_specifications/update_flutter_plugin_structure.md');
     }
     try {
-      final Map<String, dynamic> moduleJson = JSON5.parse(moduleJsonFile.readAsStringSync()) as Map<String, dynamic>;
-      final Map<String, dynamic> module = (moduleJson['module'] as Map<dynamic, dynamic>).cast();
+      final Map<String, dynamic> moduleJson = JSON5
+          .parse(moduleJsonFile.readAsStringSync()) as Map<String, dynamic>;
+      final Map<String, dynamic> module =
+          (moduleJson['module'] as Map<dynamic, dynamic>).cast();
       final String name = module['name'] as String;
       final String type = module['type'] as String;
       final bool isEntry = type == OhosModuleType.entry.name;
-
       return OhosModule(
-          name: name,
-          srcPath: srcPath,
-          isEntry: isEntry,
-          mainElement: isEntry ? module['mainElement'] as String : null,
-          type: OhosModuleType.fromName(type));
+        name: name,
+        srcPath: modulePath,
+        isEntry: isEntry,
+        mainElement: isEntry ? module['mainElement'] as String : null,
+        type: OhosModuleType.fromName(type),
+        flavor: flavor ?? FLAVOR_DEFAULT,
+      );
     } on Exception catch (e) {
       throwToolExit('parse module.json5 error , $moduleJsonPath . error: $e');
     }

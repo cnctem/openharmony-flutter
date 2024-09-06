@@ -1710,7 +1710,7 @@ DevelopmentArtifact? artifactFromTargetPlatform(TargetPlatform targetPlatform) {
     case TargetPlatform.ohos_arm:
     case TargetPlatform.ohos_arm64:
     case TargetPlatform.ohos_x64:
-      return DevelopmentArtifact.ohos;
+      return DevelopmentArtifact.ohosGenSnapshot;
     case TargetPlatform.darwin:
       if (featureFlags.isMacOSEnabled) {
         return DevelopmentArtifact.macOS;
