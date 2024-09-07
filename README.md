@@ -100,7 +100,7 @@ Flutter SDK 仓库
 
    ```
     # 进入工程根目录编译
-    # 示例：flutter build hap [--target-platform ohos-arm64] [--local-engine=<DIR>/src/out/ohos_release_arm64] --release
+    # 示例：flutter build hap [--target-platform ohos-arm64] --release
     flutter build hap --release
    ```
 
@@ -113,12 +113,12 @@ Flutter SDK 仓库
 
    方式二：进入项目目录，直接运行安装到鸿蒙手机中
    ```sh
-   flutter run --debug [--local-engine=/Users/lihui/Documents/flutter_engine/src/out/ohos_debug_unopt_arm64] -d <deviceId>
+   flutter run --debug -d <deviceId>
    ```
 
 5. 构建app包命令：
    ```
-    # 示例：flutter build app --release [--local-engine=<DIR>/src/out/ohos_release_arm64]  local-engine为可选项
+    # 示例：flutter build app --release
     flutter build app --release
    ```
 
@@ -137,9 +137,9 @@ Flutter SDK 仓库
 | devices | 已连接设备查找 | flutter devices                                                   |
 | install | 应用安装 | flutter install -t \<deviceId\> \<hap文件路径\>                                                   |
 | assemble | 资源打包 | flutter assemble                                                  |
-| build  | 测试应用构建 | flutter build hap --debug [--target-platform ohos-arm64] [--local-engine=\<兼容ohos的debug engine产物路径\>]       |
-| build  | 正式应用构建 | flutter build hap --release [--target-platform ohos-arm64] [--local-engine=\<兼容ohos的release engine产物路径\>]   |
-| run    | 应用运行 | flutter run [--local-engine=\<兼容ohos的engine产物路径\>]                |
+| build  | 测试应用构建 | flutter build hap --debug [--target-platform ohos-arm64]      |
+| build  | 正式应用构建 | flutter build hap --release [--target-platform ohos-arm64]   |
+| run    | 应用运行 | flutter run                |
 | attach | 调试模式 | flutter attach                                                    |
 | screenshot | 截屏 | flutter screenshot                                                 |
 | pub | 获取依赖 | flutter pub get                                                 |
