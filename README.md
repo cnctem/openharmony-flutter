@@ -232,7 +232,7 @@ Flutter SDK 仓库
     2. 报错信息:
     ```
      #hvigor  ERROR: Schema validate failed.
-     #        Detail: Please check the following fields.
+     #Detail: Please check the following fields.
      #instancePath: 'modules[1].scrPath',
      #keyword: 'pattern'
      #params: { pattern:'^(\\./|\\.\\./)[\\s\\S]+$' },
