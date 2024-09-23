@@ -22,6 +22,7 @@ import 'base/user_messages.dart';
 import 'build_info.dart';
 import 'convert.dart';
 import 'features.dart';
+import 'globals.dart';
 
 const String kFlutterRootEnvironmentVariableName = 'FLUTTER_ROOT'; // should point to //flutter/ (root of flutter/flutter repo)
 const String kFlutterEngineEnvironmentVariableName = 'FLUTTER_ENGINE'; // should point to //engine/src/ (root of flutter/engine repo)
@@ -893,6 +894,7 @@ abstract class EngineCachedArtifact extends CachedArtifact {
   List<String> getPackageDirs();
 
   String get storageBaseUrl => cache.storageBaseUrl;
+  String get ohosStorageBaseUrl => cache.ohosStorageBaseUrl;
 
   @override
   bool isUpToDateInner(FileSystem fileSystem) {
@@ -927,21 +929,30 @@ abstract class EngineCachedArtifact extends CachedArtifact {
     OperatingSystemUtils operatingSystemUtils,
   ) async {
     final String url = '$storageBaseUrl/flutter_infra_release/flutter/$version/';
-
+    final String ohosEngineVersion = cache.getVersionFor('engine.ohos')!;
+    // New platform Ohos is supported, so flutter needs to download
+    // sky_engine.zip, flutter_patched_sdk.zip and flutter_patched_sdk_product.zip from ohos URL
+    final String ohosUrl = '$ohosStorageBaseUrl/flutter_infra_release/flutter/$ohosEngineVersion/';
     final Directory pkgDir = cache.getCacheDir('pkg');
     for (final String pkgName in getPackageDirs()) {
-      await artifactUpdater.downloadZipArchive('Downloading package $pkgName...', Uri.parse('$url$pkgName.zip'), pkgDir);
+      if (pkgName == 'sky_engine') {
+        await artifactUpdater.downloadZipArchive('Downloading package $pkgName...', Uri.parse('$ohosUrl$pkgName.zip'), pkgDir);
+      } else {
+        await artifactUpdater.downloadZipArchive('Downloading package $pkgName...', Uri.parse('$url$pkgName.zip'), pkgDir);
+      }
     }
 
     for (final List<String> toolsDir in getBinaryDirs()) {
       final String cacheDir = toolsDir[0];
       final String urlPath = toolsDir[1];
       final Directory dir = fileSystem.directory(fileSystem.path.join(location.path, cacheDir));
-
       // Avoid printing things like 'Downloading linux-x64 tools...' multiple times.
       final String friendlyName = urlPath.replaceAll('/artifacts.zip', '').replaceAll('.zip', '');
-      await artifactUpdater.downloadZipArchive('Downloading $friendlyName tools...', Uri.parse(url + urlPath), dir);
-
+      if (urlPath.startsWith('flutter_patched_sdk')) {
+        await artifactUpdater.downloadZipArchive('Downloading $friendlyName tools...', Uri.parse(ohosUrl + urlPath), dir);
+      } else {
+        await artifactUpdater.downloadZipArchive('Downloading $friendlyName tools...', Uri.parse(url + urlPath), dir);
+      }
       _makeFilesExecutable(dir, operatingSystemUtils);
 
       final File frameworkZip = fileSystem.file(fileSystem.path.join(dir.path, 'FlutterMacOS.framework.zip'));
