@@ -828,7 +828,7 @@ String getNameForTargetPlatform(TargetPlatform platform, {DarwinArch? darwinArch
     case TargetPlatform.ohos_arm64:
       return 'ohos-arm64';
     case TargetPlatform.ohos_x64:
-      return 'ohos-x86';
+      return 'ohos-x64';
   }
 }
 
@@ -922,7 +922,7 @@ OhosArch getOhosArchForName(String platform) {
       return OhosArch.armeabi_v7a;
     case 'ohos-arm64':
       return OhosArch.arm64_v8a;
-    case 'ohos-x86':
+    case 'ohos-x64':
       return OhosArch.x86_64;
   }
   throw Exception('Unsupported Ohos arch name "$platform"');
@@ -946,7 +946,7 @@ String getPlatformNameForOhosArch(OhosArch arch) {
     case OhosArch.arm64_v8a:
       return 'ohos-arm64';
     case OhosArch.x86_64:
-      return 'ohos-x86';
+      return 'ohos-x64';
   }
 }
 
