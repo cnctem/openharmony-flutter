@@ -126,6 +126,7 @@ This repository is an extension of the Flutter SDK for compatibility with OpenHa
  - [3.7.12-ohos-1.0.2 Release](/release-notes/Flutter%203.7.12-ohos%201.0.2%20ReleaseNote.en.md)
  - [3.7.12-ohos-1.0.1 Release](/release-notes/Flutter%203.7.12-ohos%201.0.1%20ReleaseNote.en.md)
  - [3.7.12-ohos-1.0.0 Release](/release-notes/Flutter%203.7.12-ohos%201.0.0%20ReleaseNote.en.md)
+>>>>>>> 15d0088e91 (提交1.0.2版本说明)
 
 ## Instruction List Compatible with OpenHarmony
 | Instruction| Description| How to Use                                                             |
