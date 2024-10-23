@@ -332,7 +332,6 @@ void cleanAndCopyFlutterAsset(
   // clean flutter assets
   final String desFlutterAssetsPath =
       getProjectAssetsPath(ohosRootPath, ohosProject);
-  print('lign desFlutterAssetsPath: $desFlutterAssetsPath');
   final Directory desAssets = globals.fs.directory(desFlutterAssetsPath);
   if (desAssets.existsSync()) {
     desAssets.deleteSync(recursive: true);
@@ -344,12 +343,10 @@ void cleanAndCopyFlutterAsset(
 
   final String desAppSoPath =
       getAppSoPath(ohosRootPath, ohosBuildInfo.targetArchs.first, ohosProject);
-  print('lign desAppSoPath: $desAppSoPath');
   if (ohosBuildInfo.buildInfo.isRelease || ohosBuildInfo.buildInfo.isProfile) {
     // copy app.so
     final String appSoPath = globals.fs.path.join(output,
         getNameForOhosArch(ohosBuildInfo.targetArchs.first), APP_SO_ORIGIN);
-    print('lign appSoPath: $appSoPath');
     final File appSoFile = globals.localFileSystem.file(appSoPath);
     ensureParentExists(desAppSoPath);
     appSoFile.copySync(desAppSoPath);
