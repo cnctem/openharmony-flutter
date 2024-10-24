@@ -2,3 +2,12 @@ lib/generated_plugin_registrant.dart
 devtools_memory.json
 *.sksl.json
 vmservice.out
+
+ohos/**/*.har
+ohos/**/BuildProfile.ets
+ohos/**/oh-package-lock.json5
+
+ohos/**/resources/rawfile/flutter_assets/
+ohos/**/libapp.so
+ohos/**/libflutter.so
+ohos/**/libvmservice_snapshot.so
