@@ -107,6 +107,17 @@ unlinked_spec.ds
 **/macos/Flutter/ephemeral
 **/xcuserdata/
 
+# ohos 
+**/ohos/**/*.har
+**/ohos/**/BuildProfile.ets
+**/ohos/**/oh-package-lock.json5
+**/ohos/**/GeneratedPluginRegistrant.ets
+
+**/ohos/**/resources/rawfile/flutter_assets/
+**/ohos/**/libapp.so
+**/ohos/**/libflutter.so
+**/ohos/**/libvmservice_snapshot.so
+
 # Windows
 **/windows/flutter/generated_plugin_registrant.cc
 **/windows/flutter/generated_plugin_registrant.h
