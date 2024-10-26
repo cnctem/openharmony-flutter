@@ -4,6 +4,7 @@
 
 import 'dart:async';
 import 'dart:math' as math;
+import 'dart:ui';
 import 'dart:ui' as ui hide TextStyle;
 
 import 'package:characters/characters.dart' show CharacterRange, StringCharacters;
@@ -3379,6 +3380,9 @@ class EditableTextState extends State<EditableText> with AutomaticKeepAliveClien
     if (!_tickersEnabled) {
       return;
     }
+
+    _setCursorPotion();
+
     _cursorTimer?.cancel();
     _cursorBlinkOpacityController.value = 1.0;
     if (EditableText.debugDeterministicCursor) {
@@ -3389,6 +3393,23 @@ class EditableTextState extends State<EditableText> with AutomaticKeepAliveClien
     } else {
       _cursorTimer = Timer.periodic(_kCursorBlinkHalfPeriod, (Timer timer) { _onCursorTick(); });
     }
+  }
+
+  void _setCursorPotion() {
+    var box = _editableKey.currentContext!.findRenderObject() as RenderBox;
+    final Offset position = box.localToGlobal(Offset.zero);
+
+    final TextPosition currentTextPosition = TextPosition(offset: renderEditable.selection!.baseOffset);
+    Rect? startPosition = renderEditable.getLocalRectForCaret(currentTextPosition);
+
+    Offset? lastOffset = startPosition!.center + position;
+
+    final width = window.physicalSize.width;
+    final height = window.physicalSize.height;
+    
+    Rect? newRect = Rect.fromPoints(lastOffset * window.devicePixelRatio, Offset(width, height));
+
+    _textInputConnection!.setCursorPotion(newRect);
   }
 
   void _onCursorTick() {
