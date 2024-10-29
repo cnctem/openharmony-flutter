@@ -1296,6 +1296,7 @@ class TextInputConnection {
         _id = _nextId++;
 
   Size? _cachedSize;
+  Rect? _cachedPosition;
   Matrix4? _cachedTransform;
   Rect? _cachedRect;
   Rect? _cachedCaretRect;
@@ -1332,6 +1333,13 @@ class TextInputConnection {
   void show() {
     assert(attached);
     TextInput._instance._show();
+  }
+
+  void setCursorPotion(Rect rect) {    
+    if (rect != _cachedPosition) {
+      _cachedPosition = rect;
+      TextInput._instance._setCursorPotion(rect);
+    }
   }
 
   /// Requests the system autofill UI to appear.
@@ -1968,6 +1976,12 @@ class TextInput {
     }
   }
 
+  void _setCursorPotion(Rect position) {
+    for (final TextInputControl control in _inputControls) {
+      control.setCursorPotion(position);
+    }
+  }
+
   void _setEditableSizeAndTransform(Size editableBoxSize, Matrix4 transform) {
     for (final TextInputControl control in _inputControls) {
       control.setEditableSizeAndTransform(editableBoxSize, transform);
@@ -2157,6 +2171,10 @@ mixin TextInputControl {
   ///
   /// This method is called when the input control should hide.
   void hide() {}
+  /// Requests that the text input control is hidden.
+  ///
+  /// This method is called when the input control should hide.
+  void setCursorPotion(Rect position) {}
 
   /// Informs the text input control about input configuration changes.
   ///
@@ -2313,6 +2331,19 @@ class _PlatformTextInputControl with TextInputControl {
         'x': rect.left,
         'y': rect.top,
       },
+    );
+  }
+
+  @override
+  void setCursorPotion(Rect position) {
+    _channel.invokeMethod<void>(
+      'TextInput.setCursorPotion',
+      <Object>[{
+        'left': position.left,
+        'top': position.top,
+        'width': position.width,
+        'height': position.height,
+      }],
     );
   }
 
