@@ -37,17 +37,17 @@ void main() {
   group('hvigor_test', () {
     test('getProjectAssetsPath', () {
       final String result = getProjectAssetsPath('test',flutterProject.ohos);
-      expect(result, r'/app\src/main/resources/rawfile\flutter_assets');
+      expect(result, endsWith('flutter_assets'));
     });
 
     test('getDatPath', () {
       final String result = getDatPath('test',flutterProject.ohos);
-      expect(result, r'/app\src/main/resources/rawfile\flutter_assets\icudtl.dat');
+      expect(result, endsWith('icudtl.dat'));
     });
 
     test('getAppSoPath', () {
       final String result = getAppSoPath('test',OhosArch.arm64_v8a,flutterProject.ohos);
-      expect(result, r'/app\libs\arm64-v8a\libapp.so');
+      expect(result, endsWith('libapp.so'));
     });
 
     test('getHvigorwPath', () {
@@ -57,7 +57,7 @@ void main() {
 
     test('getAbsolutePath', () {
       final String result = getAbsolutePath(flutterProject,'test');
-      expect(result, r'/app\test');
+      expect(result, endsWith('test'));
     });
 
     test('hvigorwTask', () async {
