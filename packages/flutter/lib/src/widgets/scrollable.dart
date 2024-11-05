@@ -723,6 +723,7 @@ class ScrollableState extends State<Scrollable> with TickerProviderStateMixin, R
     // _drag might be null if the drag activity ended and called _disposeDrag.
     assert(_hold == null || _drag == null);
     _drag?.end(details);
+    SchedulerBinding.instance.setDVsyncSwitch(true);
     assert(_drag == null);
   }
 
