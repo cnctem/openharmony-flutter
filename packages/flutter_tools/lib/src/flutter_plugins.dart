@@ -543,18 +543,13 @@ const TAG = "GeneratedPluginRegistrant";
 export class GeneratedPluginRegistrant {
 
   static registerWith(flutterEngine: FlutterEngine) {
+    {{#methodChannelPlugins}}
     try {
-      {{#methodChannelPlugins}}
       flutterEngine.getPlugins()?.add(new {{class}}());
-      {{/methodChannelPlugins}}
     } catch (e) {
-      Log.e(
-        TAG,
-        "Tried to register plugins with FlutterEngine ("
-          + flutterEngine
-          + ") failed.");
-      Log.e(TAG, "Received exception while registering", e);
+      Log.e(TAG, "Error registering plugin {{name}}, {{package}}.{{class}}", e);
     }
+    {{/methodChannelPlugins}}
   }
 }
 ''';
