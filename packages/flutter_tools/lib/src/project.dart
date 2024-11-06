@@ -1082,7 +1082,7 @@ class OhosProject extends FlutterProjectPlatform {
             ephemeralDirectory);
       }
     }
-    hvigor.updateLocalProperties(project: parent);
+    hvigor.updateLocalProperties(project: parent, requireHarmonySdk: false);
   }
 
   Future<void> _regenerateLibrary() async {
