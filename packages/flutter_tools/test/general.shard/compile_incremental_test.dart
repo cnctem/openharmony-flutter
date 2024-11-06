@@ -16,6 +16,7 @@ import 'package:flutter_tools/src/convert.dart';
 import 'package:package_config/package_config.dart';
 
 import '../src/common.dart';
+import '../src/context.dart';
 import '../src/fake_process_manager.dart';
 import '../src/fakes.dart';
 
@@ -91,7 +92,7 @@ void main() {
     );
   });
 
-  testWithoutContext('incremental compile single dart compile', () async {
+  testUsingContext('incremental compile single dart compile', () async {
     fakeProcessManager.addCommand(FakeCommand(
       command: const <String>[...frontendServerCommand, '--verbosity=error'],
       stdout: 'result abc\nline1\nline2\nabc\nabc /path/to/main.dart.dill 0',
@@ -112,7 +113,7 @@ void main() {
     expect(fakeProcessManager, hasNoRemainingExpectations);
   });
 
-  testWithoutContext('incremental compile single dart compile with filesystem scheme', () async {
+  testUsingContext('incremental compile single dart compile with filesystem scheme', () async {
     fakeProcessManager.addCommand(FakeCommand(
       command: const <String>[
         ...frontendServerCommand,
@@ -140,7 +141,7 @@ void main() {
     expect(fakeProcessManager, hasNoRemainingExpectations);
   });
 
-  testWithoutContext('incremental compile single dart compile abnormally terminates', () async {
+  testUsingContext('incremental compile single dart compile abnormally terminates', () async {
     fakeProcessManager.addCommand(FakeCommand(
       command: const <String>[...frontendServerCommand, '--verbosity=error'],
       stdin: frontendServerStdIn,
@@ -156,7 +157,7 @@ void main() {
     )), throwsToolExit());
   });
 
-  testWithoutContext('incremental compile single dart compile abnormally terminates via exitCode', () async {
+  testUsingContext('incremental compile single dart compile abnormally terminates via exitCode', () async {
     fakeProcessManager.addCommand(FakeCommand(
       command: const <String>[...frontendServerCommand, '--verbosity=error'],
       stdin: frontendServerStdIn,
@@ -173,7 +174,7 @@ void main() {
     )), throwsToolExit(message: 'the Dart compiler exited unexpectedly.'));
   });
 
-  testWithoutContext('incremental compile and recompile', () async {
+  testUsingContext('incremental compile and recompile', () async {
     final Completer<void> completer = Completer<void>();
     fakeProcessManager.addCommand(FakeCommand(
       command: const <String>[...frontendServerCommand, '--verbosity=error'],
@@ -216,7 +217,7 @@ void main() {
     ));
   });
 
-  testWithoutContext('incremental compile and recompile with filesystem scheme', () async {
+  testUsingContext('incremental compile and recompile with filesystem scheme', () async {
     final Completer<void> completer = Completer<void>();
     fakeProcessManager.addCommand(FakeCommand(
       command: const <String>[
@@ -269,7 +270,7 @@ void main() {
     ));
   });
 
-  testWithoutContext('incremental compile and recompile non-entrypoint file with filesystem scheme', () async {
+  testUsingContext('incremental compile and recompile non-entrypoint file with filesystem scheme', () async {
     final Uri mainUri = Uri.parse('file:///foo/bar/fizz/main.dart');
     const String expectedMainUri = 'scheme:///main.dart';
     final List<Uri> updatedUris = <Uri>[
@@ -337,7 +338,7 @@ void main() {
     ));
   });
 
-  testWithoutContext('incremental compile can suppress errors', () async {
+  testUsingContext('incremental compile can suppress errors', () async {
     final Completer<void> completer = Completer<void>();
     fakeProcessManager.addCommand(FakeCommand(
       command: const <String>[...frontendServerCommand, '--verbosity=error'],
@@ -376,7 +377,7 @@ void main() {
     ));
   });
 
-  testWithoutContext('incremental compile and recompile twice', () async {
+  testUsingContext('incremental compile and recompile twice', () async {
     final Completer<void> completer = Completer<void>();
     fakeProcessManager.addCommand(FakeCommand(
       command: const <String>[...frontendServerCommand, '--verbosity=error'],
@@ -408,7 +409,7 @@ void main() {
     ));
   });
 
-  testWithoutContext('incremental compile with dartPluginRegistrant', () async {
+  testUsingContext('incremental compile with dartPluginRegistrant', () async {
     fakeProcessManager.addCommand(FakeCommand(
       command: const <String>[
         ...frontendServerCommand,
@@ -445,7 +446,7 @@ void main() {
     expect(fakeProcessManager, hasNoRemainingExpectations);
   });
 
-  testWithoutContext('compile does not pass libraries-spec when using a platform dill', () async {
+  testUsingContext('compile does not pass libraries-spec when using a platform dill', () async {
     fakeProcessManager.addCommand(FakeCommand(
       command: const <String>[
         ...frontendServerCommand,

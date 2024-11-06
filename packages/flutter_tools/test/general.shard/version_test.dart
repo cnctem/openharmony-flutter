@@ -54,7 +54,7 @@ void main() {
       });
 
       testUsingContext('prints nothing when Flutter installation looks fresh', () async {
-        const String flutterUpstreamUrl = 'https://github.com/flutter/flutter.git';
+        const String flutterUpstreamUrl = 'https://gitee.com/openharmony-sig/flutter_flutter.git';
         processManager.addCommands(<FakeCommand>[
           const FakeCommand(
             command: <String>['git', '-c', 'log.showSignature=false', 'log', '-n', '1', '--pretty=format:%H'],
