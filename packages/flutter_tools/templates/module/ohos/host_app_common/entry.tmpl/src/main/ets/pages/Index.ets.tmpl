@@ -14,7 +14,9 @@
 */
 
 import common from '@ohos.app.ability.common';
-import { FlutterPage } from '@ohos/flutter_ohos'
+import { FlutterPage } from '@ohos/flutter_ohos';
+import { window } from '@kit.ArkUI';
+import inputMethod from '@ohos.inputMethod';
 
 let storage = LocalStorage.getShared()
 const EVENT_BACK_PRESS = 'EVENT_BACK_PRESS'
@@ -24,6 +26,24 @@ const EVENT_BACK_PRESS = 'EVENT_BACK_PRESS'
 struct Index {
   private context = getContext(this) as common.UIAbilityContext
   @LocalStorageLink('viewId') viewId: string = "";
+  private keyboardHeight: number = 0;
+  private inputMethodController: inputMethod.InputMethodController = inputMethod.getController();
+
+  aboutToAppear(): void {
+    window.getLastWindow(getContext(this)).then(currentWindow => {
+      currentWindow.on('keyboardHeightChange', this.keyboardHeightChangeCallback);
+    })
+  }
+
+  private keyboardHeightChangeCallback = (data: number) => {
+    this.keyboardHeight = data;
+  }
+
+  aboutToDisappear(): void {
+    window.getLastWindow(getContext(this)).then(currentWindow => {
+      currentWindow.off('keyboardHeightChange', this.keyboardHeightChangeCallback);
+    })
+  }
 
   build() {
     Column() {
@@ -32,7 +52,11 @@ struct Index {
   }
 
   onBackPress(): boolean {
-    this.context.eventHub.emit(EVENT_BACK_PRESS)
+    if (this.keyboardHeight == 0) {
+      this.context.eventHub.emit(EVENT_BACK_PRESS)
+    } else {
+      this.inputMethodController.detach();
+    }
     return true
   }
 }
