@@ -13,6 +13,7 @@ import 'package:flutter_tools/src/compile.dart';
 import 'package:package_config/package_config.dart';
 
 import '../src/common.dart';
+import '../src/context.dart';
 import '../src/fake_process_manager.dart';
 
 void main() {
@@ -40,7 +41,7 @@ void main() {
     expect(output, equals(null));
   });
 
-  testWithoutContext('KernelCompiler passes correct configuration to frontend server process', () async {
+  testUsingContext('KernelCompiler passes correct configuration to frontend server process', () async {
     final BufferLogger logger = BufferLogger.test();
     final StdoutHandler stdoutHandler = StdoutHandler(logger: logger, fileSystem: MemoryFileSystem.test());
     final Completer<void> completer = Completer<void>();
@@ -86,7 +87,7 @@ void main() {
     expect((await output)?.outputFilename, '');
   });
 
-  testWithoutContext('KernelCompiler returns null if StdoutHandler returns null', () async {
+  testUsingContext('KernelCompiler returns null if StdoutHandler returns null', () async {
     final BufferLogger logger = BufferLogger.test();
     final StdoutHandler stdoutHandler = StdoutHandler(logger: logger, fileSystem: MemoryFileSystem.test());
     final Completer<void> completer = Completer<void>();
@@ -132,7 +133,7 @@ void main() {
     expect(await output, null);
   });
 
-  testWithoutContext('KernelCompiler returns null if frontend_server process exits with non-zero code', () async {
+  testUsingContext('KernelCompiler returns null if frontend_server process exits with non-zero code', () async {
     final BufferLogger logger = BufferLogger.test();
     final StdoutHandler stdoutHandler = StdoutHandler(logger: logger, fileSystem: MemoryFileSystem.test());
     final Completer<void> completer = Completer<void>();
@@ -178,7 +179,7 @@ void main() {
     expect(await output, null);
   });
 
-  testWithoutContext('KernelCompiler passes correct AOT config to frontend_server in aot/profile mode', () async {
+  testUsingContext('KernelCompiler passes correct AOT config to frontend_server in aot/profile mode', () async {
     final BufferLogger logger = BufferLogger.test();
     final StdoutHandler stdoutHandler = StdoutHandler(logger: logger, fileSystem: MemoryFileSystem.test());
     final Completer<void> completer = Completer<void>();
@@ -227,7 +228,7 @@ void main() {
     expect((await output)?.outputFilename, '');
   });
 
-  testWithoutContext('passes correct AOT config to kernel compiler in aot/release mode', () async {
+  testUsingContext('passes correct AOT config to kernel compiler in aot/release mode', () async {
     final BufferLogger logger = BufferLogger.test();
     final StdoutHandler stdoutHandler = StdoutHandler(logger: logger, fileSystem: MemoryFileSystem.test());
     final Completer<void> completer = Completer<void>();
@@ -276,7 +277,7 @@ void main() {
     expect((await output)?.outputFilename, '');
   });
 
-  testWithoutContext('KernelCompiler passes dartDefines to the frontend_server', () async {
+  testUsingContext('KernelCompiler passes dartDefines to the frontend_server', () async {
     final BufferLogger logger = BufferLogger.test();
     final StdoutHandler stdoutHandler = StdoutHandler(logger: logger, fileSystem: MemoryFileSystem.test());
     final Completer<void> completer = Completer<void>();
@@ -326,7 +327,7 @@ void main() {
     expect((await output)?.outputFilename, '');
   });
 
-  testWithoutContext('KernelCompiler maps a file to a multi-root scheme if provided', () async {
+  testUsingContext('KernelCompiler maps a file to a multi-root scheme if provided', () async {
     final BufferLogger logger = BufferLogger.test();
     final StdoutHandler stdoutHandler = StdoutHandler(logger: logger, fileSystem: MemoryFileSystem.test());
     final Completer<void> completer = Completer<void>();
@@ -376,7 +377,7 @@ void main() {
     expect((await output)?.outputFilename, '');
   });
 
-  testWithoutContext('KernelCompiler uses generated entrypoint', () async {
+  testUsingContext('KernelCompiler uses generated entrypoint', () async {
     final BufferLogger logger = BufferLogger.test();
     final StdoutHandler stdoutHandler = StdoutHandler(logger: logger, fileSystem: MemoryFileSystem.test());
     final Completer<void> completer = Completer<void>();

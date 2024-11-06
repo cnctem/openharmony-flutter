@@ -29,7 +29,7 @@ class EmulatorsCommand extends FlutterCommand {
         help: 'Used with the "--create" flag. Specifies a name for the emulator being created.');
     if (globals.platform.isWindows) {
       argParser.addFlag('launch-ohos-emulator',
-          help: 'Launch  boot the emulator instance (Ohos only).');
+          help: 'Launch boot the emulator instance (Ohos only).');
     }
   }
 
