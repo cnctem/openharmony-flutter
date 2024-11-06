@@ -590,7 +590,7 @@ Your $application code is in $relativeAppMain.
 
     final bool generateOhos = templateContext['ohos'] == true;
     if (generateOhos) {
-      hvigor.updateLocalProperties(project: project);
+      hvigor.updateLocalProperties(project: project, requireHarmonySdk: false);
     }
 
     final String? projectName = templateContext['projectName'] as String?;
