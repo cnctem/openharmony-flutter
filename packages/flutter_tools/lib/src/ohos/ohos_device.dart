@@ -338,6 +338,7 @@ class OhosDevice extends Device {
       builtPackage.ohosBuildData.moduleInfo.mainElement!,
       '-b',
       builtPackage.ohosBuildData.appInfo!.bundleName,
+      '-D',
     ];
     final String result = (await runHdcCheckedAsync(cmd)).stdout;
     // This invocation returns 0 even when it fails.
