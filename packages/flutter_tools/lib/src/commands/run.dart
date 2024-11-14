@@ -182,7 +182,7 @@ abstract class RunCommandBase extends FlutterCommand with DeviceBasedDevelopment
     addEnableImpellerFlag(verboseHelp: verboseHelp);
   }
 
-  bool get traceStartup => true;
+  bool get traceStartup => boolArgDeprecated('trace-startup');
   bool get enableDartProfiling => boolArgDeprecated('enable-dart-profiling');
   bool get cacheSkSL => boolArgDeprecated('cache-sksl');
   bool get dumpSkpOnShaderCompilation => boolArgDeprecated('dump-skp-on-shader-compilation');
