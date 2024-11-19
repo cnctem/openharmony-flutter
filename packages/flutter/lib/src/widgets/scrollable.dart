@@ -709,6 +709,7 @@ class ScrollableState extends State<Scrollable> with TickerProviderStateMixin, R
     // triggers a new activity to begin.
     assert(_drag == null);
     _drag = position.drag(details, _disposeDrag);
+    SchedulerBinding.instance.setDVsyncSwitch(false);
     assert(_drag != null);
     assert(_hold == null);
   }
