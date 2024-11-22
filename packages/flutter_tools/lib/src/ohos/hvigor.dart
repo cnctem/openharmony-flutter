@@ -327,7 +327,7 @@ Future<String> flutterAssemble(FlutterProject flutterProject,
           defines: <String, String>{
             ...ohosBuildInfo.buildInfo.toBuildSystemEnvironment(),
             kTargetFile: targetFile,
-            kTargetPlatform: getNameForTargetPlatform(TargetPlatform.ohos),
+            kTargetPlatform: getPlatformNameForOhosArch(ohosBuildInfo.targetArchs.first),
           },
           artifacts: globals.artifacts!,
           fileSystem: globals.fs,
