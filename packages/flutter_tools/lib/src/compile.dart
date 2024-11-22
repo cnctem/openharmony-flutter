@@ -285,7 +285,7 @@ class KernelCompiler {
         toMultiRootPath(dartPluginRegistrantFileUri, _fileSystemScheme, _fileSystemRoots, _fileSystem.path.separator == r'\');
     }
     String? engineDartBinary;
-    if (globals.os.hostPlatform == HostPlatform.darwin_arm64) {
+    if (globals.platform.isMacOS || globals.platform.isLinux) {
       final Artifacts? artifacts = globals.artifacts;
       if (artifacts is LocalEngineArtifacts) {
         final LocalEngineArtifacts localEngineArtifacts = artifacts;
