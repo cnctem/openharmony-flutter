@@ -1021,25 +1021,31 @@ const List<List<String>> _androidBinaryDirs = <List<String>>[
 const List<List<String>> _osxBinaryDirsForOhos = <List<String>>[
   <String>['ohos-arm64-profile/darwin-x64', 'ohos-arm64-profile/darwin-x64.zip'],
   <String>['ohos-arm64-release/darwin-x64', 'ohos-arm64-release/darwin-x64.zip'],
+  <String>['ohos-x64-profile/darwin-x64', 'ohos-x64-profile/darwin-x64.zip'],
+  <String>['ohos-x64-release/darwin-x64', 'ohos-x64-release/darwin-x64.zip'],
 ];
 
 const List<List<String>> _linuxBinaryDirsForOhos = <List<String>>[
   <String>['ohos-arm64-profile/linux-x64', 'ohos-arm64-profile/linux-x64.zip'],
   <String>['ohos-arm64-release/linux-x64', 'ohos-arm64-release/linux-x64.zip'],
+  <String>['ohos-x64-profile/linux-x64', 'ohos-x64-profile/linux-x64.zip'],
+  <String>['ohos-x64-release/linux-x64', 'ohos-x64-release/linux-x64.zip'],
 ];
 
 const List<List<String>> _windowsBinaryDirsForOhos = <List<String>>[
   <String>['ohos-arm64-profile/windows-x64', 'ohos-arm64-profile/windows-x64.zip'],
   <String>['ohos-arm64-release/windows-x64', 'ohos-arm64-release/windows-x64.zip'],
+  <String>['ohos-x64-profile/windows-x64', 'ohos-x64-profile/windows-x64.zip'],
+  <String>['ohos-x64-release/windows-x64', 'ohos-x64-release/windows-x64.zip'],
 ];
 
 const List<List<String>> _ohosBinaryDirs = <List<String>>[
   <String>['ohos-arm64', 'ohos-arm64/artifacts.zip'],
   <String>['ohos-arm64-profile', 'ohos-arm64-profile/artifacts.zip'],
   <String>['ohos-arm64-release', 'ohos-arm64-release/artifacts.zip'],
-  // <String>['ohos-x64', 'ohos-x64/artifacts.zip'],
-  // <String>['ohos-x64-profile', 'ohos-x64-profile/artifacts.zip'],
-  // <String>['ohos-x64-release', 'ohos-x64-release/artifacts.zip'],
+  <String>['ohos-x64', 'ohos-x64/artifacts.zip'],
+  <String>['ohos-x64-profile', 'ohos-x64-profile/artifacts.zip'],
+  <String>['ohos-x64-release', 'ohos-x64-release/artifacts.zip'],
 ];
 
 const List<List<String>> _dartSdks = <List<String>> [
