@@ -170,7 +170,7 @@ void main() {
         projectPath,
         arguments: <String>[
           '--target-platform',
-          'ohos-x86',
+          'ohos-x64',
           '--tree-shake-icons',
           '--flavor',
           'free',
