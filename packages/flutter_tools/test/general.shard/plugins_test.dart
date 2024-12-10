@@ -75,6 +75,7 @@ void main() {
     late FakeIosProject iosProject;
     late FakeMacOSProject macosProject;
     late FakeAndroidProject androidProject;
+    late FakeOhosProject ohosProject;
     late FakeWebProject webProject;
     late FakeWindowsProject windowsProject;
     late FakeLinuxProject linuxProject;
@@ -125,6 +126,12 @@ void main() {
         ..hostAppGradleRoot = androidDirectory
         ..exists = false
         ..embeddingVersion = AndroidEmbeddingVersion.v2;
+
+      ohosProject = FakeOhosProject();
+      flutterProject.ohos = ohosProject;
+      ohosProject
+        ..pluginConfigKey = 'ohos'
+        ..exists = false;
 
       webProject = FakeWebProject();
       flutterProject.web = webProject;
@@ -1717,6 +1724,9 @@ class FakeFlutterProject extends Fake implements FlutterProject {
   late AndroidProject android;
 
   @override
+  late OhosProject ohos;
+
+  @override
   late WebProject web;
 
   @override
@@ -1805,6 +1815,16 @@ class FakeAndroidProject extends Fake implements AndroidProject {
   AndroidEmbeddingVersionResult computeEmbeddingVersion() {
     return AndroidEmbeddingVersionResult(embeddingVersion, 'reasons for version');
   }
+}
+
+class FakeOhosProject extends Fake implements OhosProject {
+  @override
+  String pluginConfigKey = 'ohos';
+
+  bool exists = false;
+
+  @override
+  bool existsSync() => exists;
 }
 
 class FakeWebProject extends Fake implements WebProject {
