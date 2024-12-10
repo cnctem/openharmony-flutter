@@ -123,6 +123,7 @@ Flutter SDK 仓库
    ```
 
 ## 版本说明
+ - [3.7.12-ohos-1.0.3 Release](/release-notes/Flutter%203.7.12-ohos%201.0.3%20ReleaseNote.md)
  - [3.7.12-ohos-1.0.2 Release](/release-notes/Flutter%203.7.12-ohos%201.0.2%20ReleaseNote.md)
  - [3.7.12-ohos-1.0.1 Release](/release-notes/Flutter%203.7.12-ohos%201.0.1%20ReleaseNote.md)
  - [3.7.12-ohos-1.0.0 Release](/release-notes/Flutter%203.7.12-ohos%201.0.0%20ReleaseNote.md)
@@ -148,7 +149,7 @@ Flutter SDK 仓库
 | clean | 清除项目依赖 | flutter clean                                                 |
 | cache | 清除全局缓存数据 | flutter pub cache clean                                                  |
 
-附：[Flutter三方库适配计划](https://docs.qq.com/sheet/DVVJDWWt1V09zUFN2)
+附：[Flutter高频使用的三方库（部分鸿蒙化）列表](https://gitee.com/openharmony-sig/flutter_packages#openharmony%E5%B9%B3%E5%8F%B0%E5%B7%B2%E5%85%BC%E5%AE%B9%E5%BA%93)
 
 
 ## 常见问题

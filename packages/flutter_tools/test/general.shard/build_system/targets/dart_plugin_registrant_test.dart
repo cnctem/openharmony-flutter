@@ -262,6 +262,7 @@ void main() {
           '\n'
           '    } else if (Platform.isMacOS) {\n'
           '    } else if (Platform.isWindows) {\n'
+          "    } else if (Platform.operatingSystem == 'ohos') {\n"
           '    }\n'
           '  }\n'
           '}\n'
@@ -390,6 +391,7 @@ void main() {
           '\n'
           '    } else if (Platform.isMacOS) {\n'
           '    } else if (Platform.isWindows) {\n'
+          "    } else if (Platform.operatingSystem == 'ohos') {\n"
           '    }\n'
           '  }\n'
           '}\n'
