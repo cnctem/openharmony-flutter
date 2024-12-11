@@ -23,7 +23,7 @@ Flutter SDK 仓库
    **请从[鸿蒙SDK](https://developer.huawei.com/consumer/cn/develop)下载配套开发工具**
    *下列环境变量配置，类Unix系统（Linux、Mac），下可直接参照配置，Windows下环境变量配置请在‘编辑系统环境变量’中设置*
 
-  1. 配置HarmonyOS SDK和环境变量
+  1. 配置OpenHarmony SDK和环境变量
    * API12, deveco-studio-5.0 或 command-line-tools-5.0
    * 下载jdk17并配置环境变量
 
@@ -149,9 +149,9 @@ Flutter SDK 仓库
 | clean | 清除项目依赖 | flutter clean                                                 |
 | cache | 清除全局缓存数据 | flutter pub cache clean                                                  |
 
-附：[Flutter高频使用的三方库（部分鸿蒙化）列表](https://gitee.com/openharmony-sig/flutter_packages#openharmony%E5%B9%B3%E5%8F%B0%E5%B7%B2%E5%85%BC%E5%AE%B9%E5%BA%93)
-
-
+附：  
+[Flutter高频使用的三方库（部分鸿蒙化）列表](https://gitee.com/openharmony-sig/flutter_packages#openharmony%E5%B9%B3%E5%8F%B0%E5%B7%B2%E5%85%BC%E5%AE%B9%E5%BA%93)  
+[OpenHarmony设备运行指导](https://gitee.com/openharmony-sig/flutter_samples/blob/cc8b4ee806908b13ec1b0cf3c333a19244823e41/ohos/docs/03_environment/OpenHarmony%E8%AE%BE%E5%A4%87%E8%BF%90%E8%A1%8C%E6%8C%87%E5%AF%BC.md)
 ## 常见问题
 
 1. 模拟器调试只支持Mac(arm64)，还不支持Mac(x86) 和 Windows。
