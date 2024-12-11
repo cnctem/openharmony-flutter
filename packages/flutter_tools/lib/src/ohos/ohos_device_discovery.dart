@@ -11,6 +11,10 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
+*
+* Based on android_device_discovery.dart originally written by
+* Copyright (C) 2020  Jonah Williams <jonahwilliams@google.com>
+*
 */
 
 import 'package:process/process.dart';
