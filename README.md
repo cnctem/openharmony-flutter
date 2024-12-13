@@ -3,6 +3,7 @@ Flutter SDK 仓库
 
 原始仓来源：https://github.com/flutter/flutter
 
+
 ## 仓库说明
 本仓库是基于Flutter SDK对于OpenHarmony平台的兼容拓展，可支持IDE或者终端使用Flutter Tools指令编译和构建OpenHarmony应用程序。
 
