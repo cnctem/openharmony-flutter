@@ -56,7 +56,7 @@
                     desc="Developed By OpenValley Digital Co., Ltd."
                     filefilter="copyrightPolicyFilter"
                     group="defaultGroup"
-                    name="Hunan OpenValley Digital Industry Development Co., Ltd."
+                    name="Hunan OpenValley Digital Industry Development Co., Ltd.|Dan Field <dnfield@google.com>|Devon Carew <devoncarew@gmail.com>|Devon Carew <devoncarew@google.com>|Emmanuel Garcia <egarciad@google.com>|Ian Fischer <iansf@google.com>|Jakob Andersen <jakobr@google.com>|Jonah Williams <jonahwilliams@google.com>"
                     path=".*"
                     rule="may"
                     type="copyright"/>
