@@ -13,7 +13,7 @@
 * limitations under the License.
 *
 * Based on android_device_discovery.dart originally written by
-* Copyright (C) 2020  Jonah Williams <jonahwilliams@google.com>
+* © 2020  Jonah Williams <jonahwilliams@google.com>
 *
 */
 
