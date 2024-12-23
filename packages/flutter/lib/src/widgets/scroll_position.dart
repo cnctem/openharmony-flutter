@@ -916,6 +916,7 @@ abstract class ScrollPosition extends ViewportOffset with ScrollMetrics {
   ///
   /// This also saves the scroll offset using [saveScrollOffset].
   void didEndScroll() {
+    SchedulerBinding.instance.setDVsyncSwitch(false);
     activity!.dispatchScrollEndNotification(copyWith(), context.notificationContext!);
     saveOffset();
     if (keepScrollOffset) {

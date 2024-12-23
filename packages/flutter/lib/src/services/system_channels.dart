@@ -465,4 +465,9 @@ class SystemChannels {
   ///
   ///  * [DefaultPlatformMenuDelegate], which uses this channel.
   static const MethodChannel menu = OptionalMethodChannel('flutter/menu');
+
+  static const BasicMessageChannel<Object?> nativeVsync = BasicMessageChannel<Object?>(
+    'flutter/nativevsync',
+    StandardMessageCodec(),
+  );
 }
