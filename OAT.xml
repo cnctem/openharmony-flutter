@@ -53,6 +53,14 @@
                 desc=""
                 name="projectPolicy">
                 <policyitem
+                    desc=""
+                    filefilter="copyrightPolicyFilter"
+                    name="Huawei Device Co., Ltd."
+                    group="defaultGroup"
+                    path=".*"
+                    rule="may"
+                    type="copyright"/>
+                <policyitem
                     desc="Developed By OpenValley Digital Co., Ltd."
                     filefilter="copyrightPolicyFilter"
                     group="defaultGroup"
@@ -61,58 +69,58 @@
                     rule="may"
                     type="copyright"/>
                 <policyitem
-                    desc="Dan Field <dnfield@google.com>"
+                    desc="Dan Field &lt;dnfield@google.com&gt;"
                     filefilter="copyrightPolicyFilter"
                     group="defaultGroup"
-                    name="Dan Field <dnfield@google.com>"
+                    name="Dan Field &lt;dnfield@google.com&gt;"
                     path=".*"
                     rule="may"
                     type="copyright"/>
                 <policyitem
-                    desc="Devon Carew <devoncarew@gmail.com>"
+                    desc="Devon Carew &lt;devoncarew@gmail.com&gt;"
                     filefilter="copyrightPolicyFilter"
                     group="defaultGroup"
-                    name="Devon Carew <devoncarew@gmail.com>"
+                    name="Devon Carew &lt;devoncarew@gmail.com&gt;"
                     path=".*"
                     rule="may"
                     type="copyright"/>
                 <policyitem
-                    desc="Devon Carew <devoncarew@google.com>"
+                    desc="Devon Carew &lt;devoncarew@google.com&gt;"
                     filefilter="copyrightPolicyFilter"
                     group="defaultGroup"
-                    name="Devon Carew <devoncarew@google.com>"
+                    name="Devon Carew &lt;devoncarew@google.com&gt;"
                     path=".*"
                     rule="may"
                     type="copyright"/>
                 <policyitem
-                    desc="Emmanuel Garcia <egarciad@google.com>"
+                    desc="Emmanuel Garcia &lt;egarciad@google.com&gt;"
                     filefilter="copyrightPolicyFilter"
                     group="defaultGroup"
-                    name="Emmanuel Garcia <egarciad@google.com>"
+                    name="Emmanuel Garcia &lt;egarciad@google.com&gt;"
                     path=".*"
                     rule="may"
                     type="copyright"/>
                 <policyitem
-                    desc="Ian Fischer <iansf@google.com>"
+                    desc="Ian Fischer &lt;iansf@google.com&gt;"
                     filefilter="copyrightPolicyFilter"
                     group="defaultGroup"
-                    name="Ian Fischer <iansf@google.com>"
+                    name="Ian Fischer &lt;iansf@google.com&gt;"
                     path=".*"
                     rule="may"
                     type="copyright"/>
                 <policyitem
-                    desc="Jakob Andersen <jakobr@google.com>"
+                    desc="Jakob Andersen &lt;jakobr@google.com&gt;"
                     filefilter="copyrightPolicyFilter"
                     group="defaultGroup"
-                    name="Jakob Andersen <jakobr@google.com>"
+                    name="Jakob Andersen &lt;jakobr@google.com&gt;"
                     path=".*"
                     rule="may"
                     type="copyright"/>
                 <policyitem
-                    desc="Jonah Williams <jonahwilliams@google.com>"
+                    desc="Jonah Williams &lt;jonahwilliams@google.com&gt;"
                     filefilter="copyrightPolicyFilter"
                     group="defaultGroup"
-                    name="Jonah Williams <jonahwilliams@google.com>"
+                    name="Jonah Williams &lt;jonahwilliams@google.com&gt;"
                     path=".*"
                     rule="may"
                     type="copyright"/>                                                                                                                                        
