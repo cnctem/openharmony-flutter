@@ -68,7 +68,7 @@ if ($env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
 }
 $dartSdkUrl = "$dartSdkBaseUrl/flutter_infra_release/flutter/$engineVersion/$dartZipName"
 Write-Host "dart-sdk-url: $dartSdkUrl"
-if ((Test-Path $dartSdkPath) -or (Test-Path $dartSdkLicense)) {
+if (Test-Path $dartSdkPath) {
     # Move old SDK to a new location instead of deleting it in case it is still in use (e.g. by IntelliJ).
     $oldDartSdkSuffix = 1
     while (Test-Path "$cachePath\$oldDartSdkPrefix$oldDartSdkSuffix") { $oldDartSdkSuffix++ }
