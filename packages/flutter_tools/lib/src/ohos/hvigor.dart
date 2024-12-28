@@ -392,10 +392,13 @@ void cleanAndCopyFlutterAsset(
   } else {
     // delete libapp.so
     final String dir = globals.fs.path.join(ohosProject.flutterModuleDirectory.path, 'libs');
-    final List<FileSystemEntity> files = globals.fs.directory(dir).listSync(recursive: true);
-    for (final FileSystemEntity item in files) {
-      if (item.basename == APP_SO && item.existsSync()) {
-        item.deleteSync();
+    if (globals.fs.directory(dir).existsSync()) {
+      final List<FileSystemEntity> files = globals.fs.directory(dir)
+        .listSync(recursive: true);
+      for (final FileSystemEntity item in files) {
+        if (item.basename == APP_SO && item.existsSync()) {
+          item.deleteSync();
+        }
       }
     }
   }
