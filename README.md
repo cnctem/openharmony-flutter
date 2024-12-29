@@ -20,8 +20,8 @@ Flutter SDK 仓库
   Windows环境下flutter工程和依赖的插件工程需要在同一个磁盘。
 
 * 环境配置
-   **请从[鸿蒙SDK](https://developer.huawei.com/consumer/cn/develop)下载配套开发工具**
-   *下列环境变量配置，类Unix系统（Linux、Mac），下可直接参照配置，Windows下环境变量配置请在‘编辑系统环境变量’中设置*
+   **请从[OpenHarmony SDK](https://developer.huawei.com/consumer/cn/develop)下载配套开发工具**  
+   *下列环境变量配置，类Unix系统（Linux、Mac）下可直接参照配置，Windows下环境变量配置请在‘编辑系统环境变量’中设置*
 
   1. 配置OpenHarmony SDK和环境变量
    * API12, deveco-studio-5.0 或 command-line-tools-5.0
@@ -104,14 +104,14 @@ Flutter SDK 仓库
     flutter build hap --release
    ```
 
-4. 安装应用，通过```flutter devices```指令发现真机设备之后，然后安装到鸿蒙手机中。
+4. 安装应用，通过```flutter devices```指令发现真机设备之后，然后安装到OpenHarmony手机中。
 
-   方式一：进入编译产物目录，然后安装到鸿蒙手机中
+   方式一：进入编译产物目录，然后安装到OpenHarmony手机中
    ```sh
    hdc -t <deviceId> install <hap file path>
    ```
 
-   方式二：进入项目目录，直接运行安装到鸿蒙手机中
+   方式二：进入项目目录，直接运行安装到OpenHarmony手机中
    ```sh
    flutter run --debug -d <deviceId>
    ```
@@ -137,7 +137,7 @@ Flutter SDK 仓库
 | create | 创建module模板 | flutter create -t module \<module_name\> |
 | create | 创建plugin模板 | flutter create -t plugin --platforms ohos,android,ios \<plugin_name\> |
 | create | 创建plugin_ffi模板 | flutter create -t plugin_ffi --platforms ohos,android,ios \<plugin_name\> |
-| devices | 已连接设备查找 | flutter devices                                                   |
+| devices | 查找已连接设备 | flutter devices                                                   |
 | install | 应用安装 | flutter install -t \<deviceId\> \<hap文件路径\>                                                   |
 | assemble | 资源打包 | flutter assemble                                                  |
 | build  | 测试应用构建 | flutter build hap --debug [--target-platform ohos-arm64]      |
@@ -149,28 +149,26 @@ Flutter SDK 仓库
 | clean | 清除项目依赖 | flutter clean                                                 |
 | cache | 清除全局缓存数据 | flutter pub cache clean                                                  |
 
-附：  
-[Flutter高频使用的三方库（部分鸿蒙化）列表](https://gitee.com/openharmony-sig/flutter_packages#openharmony%E5%B9%B3%E5%8F%B0%E5%B7%B2%E5%85%BC%E5%AE%B9%E5%BA%93)  
-[OpenHarmony设备运行指导](https://gitee.com/openharmony-sig/flutter_samples/blob/cc8b4ee806908b13ec1b0cf3c333a19244823e41/ohos/docs/03_environment/OpenHarmony%E8%AE%BE%E5%A4%87%E8%BF%90%E8%A1%8C%E6%8C%87%E5%AF%BC.md)
+附：[Flutter高频使用的三方库（部分OpenHarmony化）列表](https://gitee.com/openharmony-sig/flutter_packages#openharmony%E5%B9%B3%E5%8F%B0%E5%B7%B2%E5%85%BC%E5%AE%B9%E5%BA%93)
+
 ## 常见问题
 
 1. 模拟器调试只支持Mac(arm64)，还不支持Mac(x86) 和 Windows。
 
-2. 切换FLUTTER_STORAGE_BASE_URL后需删除\<flutter\>/bin/cache 目录，并在项目中执行flutter clean后再运行
+2. 切换FLUTTER_STORAGE_BASE_URL后需删除\<flutter\>/bin/cache 目录，并在项目中执行flutter clean后再运行。
 
 3. 构建Hap任务时报错：Error: The hvigor depends on the npmrc file. Configure the npmrc file first.
 
 
-   请在用户目录`~`下创建文件`.npmrc`，该配置也可参考[DevEco Studio官方文档](https://developer.harmonyos.com/cn/docs/documentation/doc-guides-V3/environment_config-0000001052902427-V3)，编辑内容如下：
+   请在用户目录`~`下创建文件`.npmrc`，该配置也可参考[DevEco Studio官方文档](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/ide-environment-config-V5#section197296441787)，编辑内容如下：
 
    ```
     registry=https://repo.huaweicloud.com/repository/npm/
     @ohos:registry=https://repo.harmonyos.com/npm/
    ```
 
-4. 查日志时，存在日志丢失现象。
-    解决方案：关闭全局日志，只打开自己领域的日志
-
+4. 查日志时，存在日志丢失现象。  
+    解决方案：关闭全局日志，只打开自己领域的日志。
     ```
      步骤一：关闭所有领域的日志打印（部分特殊日志无法关闭）
      hdc shell hilog -b X
@@ -181,20 +179,21 @@ Flutter SDK 仓库
      打印A00000/XComFlutterOHOS_Native的日志，需要设置hdc shell hilog -b D -D A00000
      注：上面的设置在机器重启后会失效，如果要继续使用，需要重新设置。
     ```
-5. 若Api11 Beta1版本的机器上无法启动debug签名的应用，可以通过将签名换成正式签名，或在手机端打开开发者模式解决（步骤：设置->通用->开发者模式）
 
-6. 如果报`Invalid CEN header (invalid zip64 extra data field size)`异常，请更换Jdk版本，参见[JDK-8313765](https://bugs.openjdk.org/browse/JDK-8313765)
+5. 若Beta1版本的机器上无法启动debug签名的应用，可以通过将签名换成正式签名，或在手机端打开开发者模式解决（步骤：设置->通用->开发者模式）。
 
-7. 运行debug版本的flutter应用用到鸿蒙设备后报错（release和profile版本正常）
+6. 如果报`Invalid CEN header (invalid zip64 extra data field size)`异常，请更换Jdk版本。参见[JDK-8313765](https://bugs.openjdk.org/browse/JDK-8313765)
+
+7. 运行debug版本的flutter应用用到OpenHarmony设备后报错（release和profile版本正常）。
     1. 报错信息: `Error while initializing the Dart VM: Wrong full snapshot version, expected '8af474944053df1f0a3be6e6165fa7cf' found 'adb4292f3ec25074ca70abcd2d5c7251'`
-    2. 解决方案: 依次执行以下操作
+    2. 解决方案: 依次执行以下操作。
         1. 设置环境变量 `export FLUTTER_STORAGE_BASE_URL=https://flutter-ohos.obs.cn-south-1.myhuaweicloud.com`
         2. 删除 <flutter>/bin/cache 目录下的缓存
         3. 执行 `flutter clean`，清除项目编译缓存
         4. 运行 `flutter run -d $DEVICE --debug`
-    3. 补充信息: 运行android或ios出现类似错误，也可以尝试还原环境变量 FLUTTER_STORAGE_BASE_URL ，清除缓存后重新运行。 
+    3. 补充信息: 若运行android或ios也出现类似错误，可以尝试还原环境变量`FLUTTER_STORAGE_BASE_URL`，清除缓存后重新运行。 
 
-8. Beta2版本的ROM更新后，不再支持申请有执行权限的匿名内存，导致debug运行闪退。
+8. ROM更新后，不再支持申请有执行权限的匿名内存，导致debug运行闪退。
     1. 解决方案：更新 flutter_flutter 到 a44b8a6d (2024-07-25) 之后的版本。
     2. 关键日志：
 
@@ -206,14 +205,14 @@ Flutter SDK 仓库
 
 9. 构建Hap命令直接执行`flutter build hap`即可，不再需要`--local-engine`参数，直接从云端获取编译产物。
 
-10. 配置环境完成后执行 flutter 命令 出现闪退。
-    1. 解决方案：windows环境中添加git环境变量配置。
+10. 配置环境完成后执行 flutter 命令 出现闪退。  
+    解决方案：windows环境中添加git环境变量配置。
     ```
      export PATH=<git path>/cmd:$PATH
     ```
 
-11. 执行`flutter pub cache clean` 正常 执行`flutter clean` 报错，按照报错信息执行 update 命令也没有效果。
-    1. 解决方案：通过注释掉 build.json5 文件中的配置规避： "modules":[{ // 删除报错对应的整个对象 }]
+11. 执行`flutter pub cache clean` 正常，执行`flutter clean` 报错，按照报错信息执行 update 命令也没有效果。
+    1. 解决方案：通过注释掉 build.json5 文件中的配置规避： "modules":[{ // 删除报错对应的整个对象 }]。
     2. 报错信息:
     ```
      #Parse ohos module. json5 error: Exception: Can not found module.json5 at
@@ -224,9 +223,7 @@ Flutter SDK 仓库
     ```
 
 12. 执行`flutter build hap` 时遇到路径校验报错。
-    1. 解决方案：
-      ·打开 deveco 安装路径 D:\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\res\schemas 下的 ohos-project-build-profile-schema.json文件。
-      ·在该文件中找到包含："pattern": "^(\\./|\\.\\./)[\\s\\S]+$"的行,并删除此行。
+    1. 解决方案：打开 deveco 安装路径 D:\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\res\schemas 下的 ohos-project-build-profile-schema.json文件。在该文件中找到包含："pattern": "^(\\./|\\.\\./)[\\s\\S]+$"的行，并删除此行。
     2. 报错信息:
     ```
      #hvigor  ERROR: Schema validate failed.
@@ -239,15 +236,14 @@ Flutter SDK 仓库
     ```
 
 13. 执行`flutter build hap` 报错。
-    1. 解决方案：打开 deveco 安装路径 D:\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\model\module 下的 core-module-model-impl.js,
-       修改 findBelongProjectPath 方法（需要管理员权限，可另存为后替换）
-       ```
-        findBelongProjectPath(e) {
-          if (e === path_1.default.dirname(e)) {
-             return this.parentProject.getProjectDir()
-          }
-        }
-       ```
+    1. 解决方案：打开 deveco 安装路径 D:\DevEco Studio\tools\hvigor\hvigor-ohos-plugin\src\model\module 下的 core-module-model-impl.js，修改 findBelongProjectPath 方法（需要管理员权限，可另存为后替换）。
+      ```
+      findBelongProjectPath(e) {
+         if (e === path_1.default.dirname(e)) {
+            return this.parentProject.getProjectDir()
+         }
+      }
+      ```
     2. 报错信息:
       ```
        # hvigor  ERROR: Cannot find belonging project path for module at D:\.
@@ -259,8 +255,8 @@ Flutter SDK 仓库
       ```
 
 14. 在.ohos的项目执行`flutter clean` 报错，然后再执行`flutter pub get`也报错。
-    1. 解决方案：删除.ohos文件夹，重新flutter pub get 即可
-    2.报错信息：
+    1. 解决方案：删除.ohos文件夹，重新flutter pub get 即可。  
+    2. 报错信息：
       ```
        Oops; flutter has exited unexpectedly: "PathNotFoundException: Cannot open file, path = 'D:\code\.ohos\build-profile.json5' (OS Error: 系统找不到指定的文件。，error = 2)".
        A crash report has been written to D:\code\flutter_01.log.
