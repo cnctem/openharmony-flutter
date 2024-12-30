@@ -22,7 +22,6 @@ $engineStamp = "$cachePath\engine-dart-sdk.stamp"
 $engineVersionFile = "engine.ohos.version"
 
 $engineVersion = (Get-Content "$flutterRoot\bin\internal\$engineVersionFile")
-$engineRealm = (Get-Content "$flutterRoot\bin\internal\engine.realm")
 
 $oldDartSdkPrefix = "dart-sdk.old"
 
@@ -44,9 +43,6 @@ if ((Test-Path $engineStamp) -and ($engineVersion -eq (Get-Content $engineStamp)
 $dartSdkBaseUrl = $Env:FLUTTER_OHOS_STORAGE_BASE_URL
 if (-not $dartSdkBaseUrl) {
     $dartSdkBaseUrl = "https://flutter-ohos.obs.cn-south-1.myhuaweicloud.com"
-}
-if ($engineRealm) {
-    $dartSdkBaseUrl = "$dartSdkBaseUrl/$engineRealm"
 }
 if($Env:FLUTTER_OHOS_STORAGE_BASE_URL) {
     $dartSdkBaseUrl = $Env:FLUTTER_OHOS_STORAGE_BASE_URL
