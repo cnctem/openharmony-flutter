@@ -390,9 +390,16 @@ void cleanAndCopyFlutterAsset(
     ensureParentExists(desAppSoPath);
     appSoFile.copySync(desAppSoPath);
   } else {
-    final File appSo = globals.fs.file(desAppSoPath);
-    if (appSo.existsSync()) {
-      appSo.deleteSync();
+    // delete libapp.so
+    final String dir = globals.fs.path.join(ohosProject.flutterModuleDirectory.path, 'libs');
+    if (globals.fs.directory(dir).existsSync()) {
+      final List<FileSystemEntity> files = globals.fs.directory(dir)
+        .listSync(recursive: true);
+      for (final FileSystemEntity item in files) {
+        if (item.basename == APP_SO && item.existsSync()) {
+          item.deleteSync();
+        }
+      }
     }
   }
   logger?.printTrace('copy flutter assets to project end');
