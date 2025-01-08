@@ -128,13 +128,24 @@
             <policy name="projectPolicy" desc="">
                 <policyitem type="compatibility" name="GPL-2.0+" path=".*" desc="Process that runs independently, invoked by the X process."/>
                 <policyitem type="compatibility" name="Apache-2.0" path=".*" desc="不影响兼容性"/>
+                <policyitem type="license" name="BSDStyleLicense" path=".*" group="defaultGroup" filefilter="defaultPolicyFilter" desc="不影响兼容性" />
+                <policyitem type="license" name="BSDStyleLicense" path=".*" desc="不影响兼容性"/>
+                <policyitem type="compatibility" name="MIT" path=".*" desc="不影响兼容性" />
+                <policyitem type="license" name="MIT" path=".*" desc="不影响兼容性"/>
+                <policyitem type="compatibility" name="BSD-3-Clause" path=".*" desc="不影响兼容性" />
+                <policyitem type="license" name="BSD-3-Clause" path=".*" desc="不影响兼容性"/>
             </policy>
         </policylist>
 
         <filefilterlist>
             <filefilter name="defaultFilter" desc="Files not to check">
-                <filteritem type="filename" name="*.iml|*.json|*.txt|*.md|*.test.ets|*.tmpl|TestAbility.ets" desc="desc files"/>
-                <filteritem type="filename" name="*.png|*.ico|*.jpg|*.ttf|*.enc|*.json5" desc="app resource files"/>
+                <filteritem type="filename" name="*.iml|*.json|*.txt|*.md|*.test.ets|*.tmpl|TestAbility.ets|conductor" desc="desc files"/>
+                <filteritem type="filename" name="*.so|*.har|*.dat|*.exp|*.lib|*.gif|*.snapshot|*.dill|*.exe|*.jar|*.pdb|*.wasm" desc="desc files"/>
+                <filteritem type="filename" name="*.msgpack|*.woff2|*.hap|*.abc|*.bin|*.protoBin|*.dll|*.index|*.otf|*.Z" desc="desc files"/>
+                <filteritem type="filename" name="*.frag|*.linter|*.lock|*.xml|*.readme|*.dartignore|*.firebaserc|*.lutter-plugins|*.inc|*.proto|*.flutter-plugins-dependencies" desc="desc files"/>
+                <filteritem type="filename" name="LICENSE|README.OpenSource|AUTHORS|CHANGELOG|PATENTS|NOTICES|LICENSE_*|PATENT_GRANT|TESTOWNERS|version|licenses.dart" desc="desc files"/>
+                <filteritem type="filename" name="CODEOWNERS|JAVA" desc="desc files"/>
+                <filteritem type="filename" name="*.png|*.ico|*.jpg|*.ttf|*.enc|*.json5|*.tsbuildinfo|*.tgz" desc="app resource files"/>
                 <filteritem type="filepath" name="projectroot/[a-zA-Z0-9]{20,}.sh" desc="Temp files"/>
                 <filteritem type="filepath" name="packages/integration_test/ohos/AppScope/.*" desc="AppScope files"/>
                 <filteritem type="filepath" name="packages/flutter_tools/test/general.shard/ohos/.*" desc="AppScope files"/>
@@ -169,6 +180,30 @@
                 <filteritem type="filepath" name="dev/benchmarks/complex_layout/ohos/hvigorw.bat" desc="hvigor files"/>
                 <filteritem type="filepath" name="dev/benchmarks/complex_layout/ohos/entry/src/main/ets/plugins/GeneratedPluginRegistrant.ets" desc="libs files"/>
                 <filteritem type="filepath" name="dev/benchmarks/complex_layout/ohos/dta/icudtl.dat" desc="libs files"/>
+                <filteritem type="filepath" name="dev/cache/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name=".*/ios/.*" desc="ios files"/>
+                <filteritem type="filepath" name=".*/macos/.*" desc="macos files"/>
+                <filteritem type="filepath" name=".*/windows/.*" desc="windos files"/>
+                <filteritem type="filepath" name=".*/android/.*" desc="android files"/>
+                <filteritem type="filepath" name="benchmarks/complex_layout/lib/.*" desc="lib files"/>
+                <filteritem type="filepath" name="benchmarks/complex_layout/test/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name="benchmarks/complex_layout/test_driver/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name="benchmarks/complex_layout/test_memory/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name="integration_tests/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name="examples/platform_view/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name="benchmarks/platform_views_layout/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name="benchmarks/macrobenchmarks/macos/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name="benchmarks/macrobenchmarks/ios/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name="benchmarks/test_apps/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name="dev/manual_tests/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name=".*/build/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name="packages/flutter_tools/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name="dev/bots/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name=".*/linux/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name="dev/ci/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name="bin/internal/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name="dev/docs/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name="dev/tools/.*" desc="AppScope files"/>
             </filefilter>
             <filefilter name="defaultPolicyFilter" desc="Filters for compatibility，license header policies">
                 <filteritem type="filepath" name="dev/bots/test/analyze-test-input/root/packages/foo/foo.dart"
