@@ -133,10 +133,11 @@
 
         <filefilterlist>
             <filefilter name="defaultFilter" desc="Files not to check">
-                <filteritem type="filename" name="*.iml|*.json|*.txt|*.md" desc="desc files"/>
+                <filteritem type="filename" name="*.iml|*.json|*.txt|*.md|*.test.ets|*.tmpl|TestAbility.ets" desc="desc files"/>
                 <filteritem type="filename" name="*.png|*.ico|*.jpg|*.ttf|*.enc|*.json5" desc="app resource files"/>
                 <filteritem type="filepath" name="projectroot/[a-zA-Z0-9]{20,}.sh" desc="Temp files"/>
                 <filteritem type="filepath" name="packages/integration_test/ohos/AppScope/.*" desc="AppScope files"/>
+                <filteritem type="filepath" name="packages/flutter_tools/test/general.shard/ohos/.*" desc="AppScope files"/>
                 <filteritem type="filepath" name="packages/integration_test/ohos/hvigor/.*" desc="hvigor files"/>
                 <filteritem type="filepath" name="packages/integration_test/ohos/hvigorw*" desc="hvigor files"/>
                 <filteritem type="filepath" name="packages/integration_test/ohos/hvigorfile.ts" desc="hvigor files"/>
