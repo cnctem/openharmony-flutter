@@ -9,6 +9,7 @@ import 'dart:ui' show AppLifecycleState, DartPerformanceMode, FramePhase, FrameT
 
 import 'package:collection/collection.dart' show HeapPriorityQueue, PriorityQueue;
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 import 'debug.dart';
 import 'priority.dart';
@@ -1309,6 +1310,12 @@ mixin SchedulerBinding on BindingBase {
       _FrameCallbackEntry.debugCurrentCallbackStack = null;
       return true;
     }());
+  }
+
+  void setDVsyncSwitch(bool isEnable) {
+    if (defaultTargetPlatform == TargetPlatform.ohos) {
+      SystemChannels.nativeVsync.send(<String, dynamic>{"isEnable": isEnable});
+    }
   }
 }
 
