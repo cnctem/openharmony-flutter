@@ -1,0 +1,33 @@
+import { hvigor, HvigorNode, HvigorPlugin, hvigorCore } from '@ohos/hvigor';
+import * as fs from 'fs';
+import * as path from 'path';
+
+const hvigorConfig = hvigor.getHvigorConfig();
+const allNodeDescriptors = hvigor.getHvigorConfig().getAllNodeDescriptor();
+
+for (const item of  allNodeDescriptors) {
+  if (item.name === 'flutter_module') {
+    var pluginsFilePath = path.resolve(item.srcPath, '../../.flutter-plugins-dependencies');
+    if (fs.existsSync(pluginsFilePath)) {
+      const data = fs.readFileSync( pluginsFilePath, 'utf8');
+      const jsonData = JSON.parse(data);
+      if (jsonData && jsonData["plugins"] && jsonData["plugins"]["ohos"]){
+        var ohosPlugs = jsonData["plugins"]["ohos"];
+        for (const plugin of  ohosPlugs) {
+          var isFind = false;
+          for (const tItem of  allNodeDescriptors) {
+            if (tItem.name == plugin.name) {
+              isFind = true;
+            }
+          }
+          if (!isFind) {
+            hvigorConfig.includeNode(plugin.name, path.relative('./',  plugin.path+'ohos'));
+            console.log('主壳中增加module：'+ plugin.name + 'from path: '+ plugin.path+'ohos');
+          } else {
+            console.log('plugin：'+ plugin.name + '已经在主动制定过,将不在动态追加');
+          }
+        }
+      }
+    }
+  }
+}
