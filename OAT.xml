@@ -69,62 +69,6 @@
                     rule="may"
                     type="copyright"/>
                 <policyitem
-                    desc="Dan Field &lt;dnfield@google.com&gt;"
-                    filefilter="copyrightPolicyFilter"
-                    group="defaultGroup"
-                    name="Dan Field &lt;dnfield@google.com&gt;"
-                    path=".*"
-                    rule="may"
-                    type="copyright"/>
-                <policyitem
-                    desc="Devon Carew &lt;devoncarew@gmail.com&gt;"
-                    filefilter="copyrightPolicyFilter"
-                    group="defaultGroup"
-                    name="Devon Carew &lt;devoncarew@gmail.com&gt;"
-                    path=".*"
-                    rule="may"
-                    type="copyright"/>
-                <policyitem
-                    desc="Devon Carew &lt;devoncarew@google.com&gt;"
-                    filefilter="copyrightPolicyFilter"
-                    group="defaultGroup"
-                    name="Devon Carew &lt;devoncarew@google.com&gt;"
-                    path=".*"
-                    rule="may"
-                    type="copyright"/>
-                <policyitem
-                    desc="Emmanuel Garcia &lt;egarciad@google.com&gt;"
-                    filefilter="copyrightPolicyFilter"
-                    group="defaultGroup"
-                    name="Emmanuel Garcia &lt;egarciad@google.com&gt;"
-                    path=".*"
-                    rule="may"
-                    type="copyright"/>
-                <policyitem
-                    desc="Ian Fischer &lt;iansf@google.com&gt;"
-                    filefilter="copyrightPolicyFilter"
-                    group="defaultGroup"
-                    name="Ian Fischer &lt;iansf@google.com&gt;"
-                    path=".*"
-                    rule="may"
-                    type="copyright"/>
-                <policyitem
-                    desc="Jakob Andersen &lt;jakobr@google.com&gt;"
-                    filefilter="copyrightPolicyFilter"
-                    group="defaultGroup"
-                    name="Jakob Andersen &lt;jakobr@google.com&gt;"
-                    path=".*"
-                    rule="may"
-                    type="copyright"/>
-                <policyitem
-                    desc="Jonah Williams &lt;jonahwilliams@google.com&gt;"
-                    filefilter="copyrightPolicyFilter"
-                    group="defaultGroup"
-                    name="Jonah Williams &lt;jonahwilliams@google.com&gt;"
-                    path=".*"
-                    rule="may"
-                    type="copyright"/>                                                                                                                                        
-                <policyitem
                     desc="The Flutter Authors."
                     filefilter="copyrightPolicyFilter"
                     group="defaultGroup"
@@ -151,7 +95,7 @@
                 <filteritem type="filename" name="*.so|*.har|*.dat|*.exp|*.lib|*.gif|*.snapshot|*.dill|*.exe|*.jar|*.pdb|*.wasm" desc="desc files"/>
                 <filteritem type="filename" name="*.msgpack|*.woff2|*.hap|*.abc|*.bin|*.protoBin|*.dll|*.index|*.otf|*.Z" desc="desc files"/>
                 <filteritem type="filename" name="*.frag|*.linter|*.lock|*.xml|*.readme|*.dartignore|*.firebaserc|*.lutter-plugins|*.inc|*.proto|*.flutter-plugins-dependencies" desc="desc files"/>
-                <filteritem type="filename" name="LICENSE|README.OpenSource|AUTHORS|CHANGELOG|PATENTS|NOTICES|LICENSE_*|PATENT_GRANT|TESTOWNERS|version|licenses.dart" desc="desc files"/>
+                <filteritem type="filename" name="LICENSE|README.OpenSource|AUTHORS|CHANGELOG|PATENTS|NOTICES|LICENSE_*|PATENT_GRANT|TESTOWNERS|version|licenses.dart|OpenHarmonyTestRunner.ts" desc="desc files"/>
                 <filteritem type="filename" name="CODEOWNERS|JAVA" desc="desc files"/>
                 <filteritem type="filename" name="*.png|*.ico|*.jpg|*.ttf|*.enc|*.json5|*.tsbuildinfo|*.tgz" desc="app resource files"/>
                 <filteritem type="filepath" name="projectroot/[a-zA-Z0-9]{20,}.sh" desc="Temp files"/>
