@@ -111,6 +111,7 @@
                 <filteritem type="filepath" name="packages/integration_test/ohos/libs/.*" desc="libs files"/>
                 <filteritem type="filepath" name="packages/integration_test/ohos/ohos/libs/.*" desc="libs files"/>
                 <filteritem type="filepath" name="packages/integration_test/ohos/dependencies/.*" desc="dependencies files"/>
+                <filteritem type="filepath" name="packages/integration_test/ohos/Index.ets" desc="dependencies files"/>
                 <filteritem type="filepath" name="packages/integration_test/example/ohos/AppScope/.*" desc="AppScope files"/>
                 <filteritem type="filepath" name="packages/integration_test/example/ohos/hvigor/.*" desc="hvigor files"/>
                 <filteritem type="filepath" name="packages/integration_test/example/ohos/hvigorw*" desc="hvigor files"/>
