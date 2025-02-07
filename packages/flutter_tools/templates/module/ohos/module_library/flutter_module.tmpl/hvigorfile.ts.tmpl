@@ -1,8 +1,90 @@
 
 
 import { harTasks } from '@ohos/hvigor-ohos-plugin';
+import { harTasks, OhosHarContext, OhosPluginId, Target,OhosAppContext } from '@ohos/hvigor-ohos-plugin';
+import { execSync } from 'child_process';
+import { hvigor, HvigorNode, HvigorPlugin } from '@ohos/hvigor';
+import * as fs from 'fs';
+import * as path from 'path';
+
+function fileExists(filePath: string): boolean {
+    try {
+        const stats = fs.statSync(filePath);
+        return true;
+    } catch (error) {
+        return false
+    }
+}
+export function buildFlutterPlugin(): HvigorPlugin {
+    return {
+        pluginId: 'buildFlutterPlugin',
+        context() {
+            return {
+                data: 'customPlugin xxx'
+            };
+        },
+        async apply(currentNode: HvigorNode): Promise<void> {
+            hvigor.nodesEvaluated(async () => {
+                hapTask(currentNode);
+            });
+        }
+    };
+}
+function hapTask(currentNode: HvigorNode) {
+    let env = process.env;
+    //是否包含自动构建flutter
+    let ALBuildFlutter = process.env.ALBuildFlutter;
+    if (ALBuildFlutter==1) {//
+        console.log('命令包含构建Flutter,不在module内部构建Flutter')
+        return;
+    }
+    //判断是否是源码flutter module工程。
+    const harContext = currentNode.getContext(OhosPluginId.OHOS_HAR_PLUGIN) as OhosHarContext;
+    const parentDirectory = path.dirname(harContext.getModulePath()); // 获取父目录路径
+    const grandDirectory = path.dirname(parentDirectory); // 获取父目录路径
+    if (!fileExists(grandDirectory+'/pubspec.yaml')) {
+        console.log('不存在pubspec.yaml，不进行Flutter编译')
+        return;
+    }
+
+    let isBuild = false;
+    let cmdArray = hvigor.getCommandEntryTask();
+    if (cmdArray.length > 0) {
+        for (let i = 0; i < cmdArray.length; i++) {
+            if (cmdArray[i] == 'clean') {
+                var cleanCmd = `cd ${grandDirectory} && flutter clean`;
+                const output = execSync(cleanCmd, { maxBuffer: 1024 * 1024 * 1000 });
+                console.log('clean flutter的编译产物');
+            }
+            if (cmdArray[i].startsWith('assemble')) {
+                isBuild = true;
+            }
+        }
+    }
+
+    if (!isBuild) {
+        console.log('不存在编译命令，不进行编译');
+        return;
+    }
+    const parentNode = currentNode.getParentNode();
+    const AppContext = parentNode.getContext(OhosPluginId.OHOS_APP_PLUGIN) as OhosAppContext;
+
+    console.log(AppContext.getBuildMode());
+    let nodeHome = env.NODE_HOME;
+    if (nodeHome.endsWith('/bin')) {
+        nodeHome = nodeHome.slice(0, -'/bin'.length);
+    }
+    var buildCmd = `cd ${grandDirectory} && export NODE_HOME=${nodeHome} && export ONLY_BUILD_Flutter=1 && flutter build har --debug --target lib/main.dart`;
+    if (AppContext.getBuildMode() != 'debug')
+        buildCmd = `cd ${grandDirectory} && export NODE_HOME=${nodeHome} && export ONLY_BUILD_Flutter=1 && flutter build har --release --target lib/main.dart`;
+    console.log(buildCmd);
+    const output = execSync(buildCmd, { maxBuffer: 1024 * 1024 * 1000 });
+    console.log('编译完成');
+}
 
 export default {
-    system: harTasks,  /* Built-in plugin of Hvigor. It cannot be modified. */
-    plugins:[]         /* Custom plugin to extend the functionality of Hvigor. */
+    system: harTasks, // Hvigor内置插件，不可修改
+        plugins: [
+        buildFlutterPlugin(),
+    ]
 }
