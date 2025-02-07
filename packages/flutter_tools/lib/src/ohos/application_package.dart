@@ -244,21 +244,31 @@ class OhosModule {
   String flavor;
 
   static List<OhosModule> fromOhosProject(OhosProject ohosProject) {
-    final File buildProfileFile = ohosProject.ohosRoot.childFile('build-profile.json5');
+    final List<OhosModule> result = <OhosModule>[];
+    final File buildProfileFile =
+        ohosProject.ohosRoot.childFile('build-profile.json5');
     if (!buildProfileFile.existsSync()) {
-      return <OhosModule>[];
+      return result;
     }
-    final Map<String, dynamic> buildProfile = JSON5.parse(buildProfileFile.readAsStringSync()) as Map<String, dynamic>;
+    final Map<String, dynamic> buildProfile = JSON5
+        .parse(buildProfileFile.readAsStringSync()) as Map<String, dynamic>;
     if (!buildProfile.containsKey('modules')) {
-      return <OhosModule>[];
+      return result;
     }
     final List<dynamic> modules = buildProfile['modules'] as List<dynamic>;
-    return modules.map((dynamic e) {
+    for (final dynamic e in modules) {
       final Map<String, dynamic> module = e as Map<String, dynamic>;
       final String srcPath = module['srcPath'] as String;
-      return OhosModule.fromModulePath(
-          modulePath: globals.fs.path.join(ohosProject.ohosRoot.path, srcPath));
-    }).toList();
+      final String modulePath =
+          globals.fs.path.join(ohosProject.ohosRoot.path, srcPath);
+      if (globals.fs.isLinkSync(modulePath) ||
+          globals.fs.isDirectorySync(modulePath)) {
+        result.add(OhosModule.fromModulePath(
+          modulePath: modulePath,
+        ));
+      }
+    }
+    return result;
   }
 
   static OhosModule fromModulePath({
